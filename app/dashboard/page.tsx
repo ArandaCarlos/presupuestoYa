@@ -1,0 +1,181 @@
+import { createClient } from '@/lib/supabase/server'
+import Link from 'next/link'
+import { Plus, FileText, CheckCircle, Clock, Send, TrendingUp } from 'lucide-react'
+import type { Quote } from '@/lib/types'
+
+function StatCard({ label, value, icon: Icon, color }: {
+    label: string; value: number | string; icon: any; color: string
+}) {
+    return (
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{
+                width: 48, height: 48, borderRadius: 12,
+                background: `${color}18`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+            }}>
+                <Icon size={22} color={color} />
+            </div>
+            <div>
+                <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--gray-900)', lineHeight: 1 }}>{value}</div>
+                <div style={{ fontSize: 13, color: 'var(--gray-400)', marginTop: 4 }}>{label}</div>
+            </div>
+        </div>
+    )
+}
+
+function QuoteStatusBadge({ status }: { status: string }) {
+    const map: Record<string, { label: string; cls: string }> = {
+        sent: { label: 'Enviado', cls: 'badge-blue' },
+        viewed: { label: 'Visto ✓', cls: 'badge-yellow' },
+        accepted: { label: 'Aceptado ✓', cls: 'badge-green' },
+        rejected: { label: 'Rechazado', cls: 'badge-red' },
+        expired: { label: 'Vencido', cls: 'badge-gray' },
+        draft: { label: 'Borrador', cls: 'badge-gray' },
+    }
+    const { label, cls } = map[status] || { label: status, cls: 'badge-gray' }
+    return <span className={`badge ${cls}`}>{label}</span>
+}
+
+export default async function DashboardPage() {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // Buscar profesional por user_id (aislado)
+    const { data: professional } = await supabase
+        .from('professionals')
+        .select('*')
+        .eq('user_id', user!.id)
+        .maybeSingle()
+
+    // Obtener presupuestos del profesional actual
+    const { data: quotes } = await supabase
+        .from('quotes')
+        .select('*')
+        .eq('professional_id', professional?.id ?? '00000000-0000-0000-0000-000000000000')
+        .order('created_at', { ascending: false })
+        .limit(10)
+
+    const all = quotes || []
+    const sent = all.filter(q => ['sent', 'viewed'].includes(q.status)).length
+    const accepted = all.filter(q => q.status === 'accepted').length
+    const total = all.length
+
+    function formatCurrency(n: number) {
+        return `$${n.toLocaleString('es-AR', { minimumFractionDigits: 0 })}`
+    }
+
+    function formatDate(d: string) {
+        return new Date(d).toLocaleDateString('es-AR', { day: '2-digit', month: 'short' })
+    }
+
+    return (
+        <div className="fade-in">
+            {/* Header */}
+            <div style={{ marginBottom: 32 }}>
+                <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--gray-900)', marginBottom: 6 }}>
+                    Hola, {professional?.name?.split(' ')[0] || 'bienvenido'} 👋
+                </h1>
+                <p style={{ color: 'var(--gray-500)', fontSize: 15 }}>
+                    Aquí está el resumen de tu actividad
+                </p>
+            </div>
+
+            {/* CTA si no hay presupuestos */}
+            {total === 0 && (
+                <div style={{
+                    background: 'linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-accent) 100%)',
+                    borderRadius: 20, padding: '32px', marginBottom: 32, color: 'white', textAlign: 'center'
+                }}>
+                    <div style={{ fontSize: 48, marginBottom: 16 }}>⚡</div>
+                    <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>
+                        Creá tu primer presupuesto
+                    </h2>
+                    <p style={{ color: 'rgba(255,255,255,0.75)', marginBottom: 24, fontSize: 15 }}>
+                        Generá un presupuesto profesional en menos de 60 segundos.
+                    </p>
+                    <Link href="/dashboard/quotes/new" className="btn"
+                        style={{ background: 'white', color: 'var(--brand-blue)', fontWeight: 700, fontSize: 15, padding: '12px 28px', borderRadius: 12 }}>
+                        <Plus size={18} /> Nuevo presupuesto
+                    </Link>
+                </div>
+            )}
+
+            {/* Stats */}
+            {total > 0 && (
+                <div style={{
+                    display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                    gap: 16, marginBottom: 32
+                }}>
+                    <StatCard label="Total enviados" value={total} icon={FileText} color="var(--brand-accent)" />
+                    <StatCard label="Pendientes" value={sent} icon={Clock} color="#f59e0b" />
+                    <StatCard label="Aceptados" value={accepted} icon={CheckCircle} color="var(--brand-green)" />
+                    <StatCard label="Tasa de cierre" value={total > 0 ? `${Math.round((accepted / total) * 100)}%` : '—'} icon={TrendingUp} color="#8b5cf6" />
+                </div>
+            )}
+
+            {/* Presupuestos recientes */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--gray-900)' }}>
+                    Presupuestos recientes
+                </h2>
+                <div style={{ display: 'flex', gap: 10 }}>
+                    <Link href="/dashboard/quotes" className="btn btn-secondary btn-sm">Ver todos</Link>
+                    <Link href="/dashboard/quotes/new" className="btn btn-primary btn-sm"><Plus size={14} /> Nuevo</Link>
+                </div>
+            </div>
+
+            {all.length === 0 ? (
+                <div className="card" style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--gray-400)' }}>
+                    <FileText size={40} style={{ margin: '0 auto 12px', opacity: 0.4 }} />
+                    <p>No hay presupuestos aún</p>
+                </div>
+            ) : (
+                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead>
+                            <tr style={{ background: 'var(--gray-50)', borderBottom: '1px solid var(--gray-200)' }}>
+                                {['#', 'Trabajo', 'Cliente', 'Total', 'Estado', 'Fecha', ''].map(h => (
+                                    <th key={h} style={{
+                                        padding: '10px 16px', textAlign: 'left',
+                                        fontSize: 11, fontWeight: 700, textTransform: 'uppercase',
+                                        letterSpacing: '0.8px', color: 'var(--gray-400)'
+                                    }}>{h}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {all.map((q: Quote) => (
+                                <tr key={q.id} style={{ borderBottom: '1px solid var(--gray-100)' }}
+                                    className="card-hover">
+                                    <td style={{ padding: '12px 16px', fontSize: 12, fontFamily: 'monospace', color: 'var(--gray-400)' }}>
+                                        #{q.slug.toUpperCase()}
+                                    </td>
+                                    <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>
+                                        {q.trade}
+                                    </td>
+                                    <td style={{ padding: '12px 16px', fontSize: 14, color: 'var(--gray-500)' }}>
+                                        {q.client_name || <span style={{ color: 'var(--gray-300)', fontStyle: 'italic' }}>Sin nombre</span>}
+                                    </td>
+                                    <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 700, color: 'var(--gray-900)' }}>
+                                        {formatCurrency(q.total_amount)}
+                                    </td>
+                                    <td style={{ padding: '12px 16px' }}>
+                                        <QuoteStatusBadge status={q.status} />
+                                    </td>
+                                    <td style={{ padding: '12px 16px', fontSize: 13, color: 'var(--gray-400)' }}>
+                                        {formatDate(q.created_at)}
+                                    </td>
+                                    <td style={{ padding: '12px 16px' }}>
+                                        <Link href={`/dashboard/quotes/${q.id}`} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
+                                            Ver →
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
+    )
+}

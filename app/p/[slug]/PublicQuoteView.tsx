@@ -1,0 +1,402 @@
+'use client'
+
+import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import type { Quote } from '@/lib/types'
+import { CheckCircle, XCircle, MessageCircle, Clock, MapPin, Wrench, Calendar, ChevronDown, ChevronUp } from 'lucide-react'
+
+interface Props {
+    quote: Quote
+}
+
+function formatCurrency(amount: number) {
+    return `$${amount.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+}
+
+function formatDate(dateStr: string | null) {
+    if (!dateStr) return 'N/A'
+    return new Date(dateStr).toLocaleDateString('es-AR', {
+        day: '2-digit', month: 'long', year: 'numeric'
+    })
+}
+
+function StatusBanner({ status }: { status: string }) {
+    if (status === 'accepted') {
+        return (
+            <div style={{
+                background: 'linear-gradient(135deg, #15803d, #16a34a)',
+                color: 'white',
+                padding: '16px 24px',
+                textAlign: 'center',
+                fontSize: 15,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8
+            }}>
+                <CheckCircle size={20} />
+                ¡Presupuesto aceptado! El profesional fue notificado.
+            </div>
+        )
+    }
+    if (status === 'rejected') {
+        return (
+            <div style={{
+                background: '#fee2e2',
+                color: '#dc2626',
+                padding: '16px 24px',
+                textAlign: 'center',
+                fontSize: 15,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8
+            }}>
+                <XCircle size={20} />
+                Presupuesto rechazado.
+            </div>
+        )
+    }
+    return null
+}
+
+export default function PublicQuoteView({ quote }: Props) {
+    const [status, setStatus] = useState(quote.status)
+    const [loading, setLoading] = useState<'accept' | 'reject' | null>(null)
+    const [showDetail, setShowDetail] = useState(false)
+    const [rejectReason, setRejectReason] = useState('')
+    const [showRejectModal, setShowRejectModal] = useState(false)
+
+    const professional = quote.professionals as any
+    const isExpired = quote.expires_at && new Date(quote.expires_at) < new Date()
+    const canAct = status === 'viewed' || status === 'sent'
+
+    const handleAccept = async () => {
+        setLoading('accept')
+        const supabase = createClient()
+        await supabase
+            .from('quotes')
+            .update({ status: 'accepted', accepted_at: new Date().toISOString() })
+            .eq('slug', quote.slug)
+        setStatus('accepted')
+        setLoading(null)
+    }
+
+    const handleReject = async () => {
+        setLoading('reject')
+        const supabase = createClient()
+        await supabase
+            .from('quotes')
+            .update({ status: 'rejected', rejected_at: new Date().toISOString() })
+            .eq('slug', quote.slug)
+        setStatus('rejected')
+        setLoading(null)
+        setShowRejectModal(false)
+    }
+
+    const whatsappUrl = professional?.whatsapp_number
+        ? `https://wa.me/${professional.whatsapp_number.replace('+', '')}?text=Hola! Vi el presupuesto %23${quote.slug.toUpperCase()} y quiero consultar algo.`
+        : null
+
+    return (
+        <div style={{ minHeight: '100vh', background: 'var(--gray-50)' }}>
+            {/* Status banner */}
+            <StatusBanner status={status} />
+
+            {/* Header profesional */}
+            <div style={{
+                background: 'linear-gradient(135deg, var(--brand-blue) 0%, #1e40af 100%)',
+                padding: '28px 24px 24px',
+            }}>
+                <div style={{ maxWidth: 600, margin: '0 auto' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
+                        {professional?.logo_url ? (
+                            <img
+                                src={professional.logo_url}
+                                alt="Logo"
+                                style={{ width: 52, height: 52, borderRadius: 12, objectFit: 'cover', background: 'white' }}
+                            />
+                        ) : (
+                            <div style={{
+                                width: 52, height: 52, borderRadius: 12,
+                                background: 'rgba(255,255,255,0.15)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 22, fontWeight: 700, color: 'white'
+                            }}>
+                                {(professional?.name || 'P')[0].toUpperCase()}
+                            </div>
+                        )}
+                        <div>
+                            <div style={{ color: 'white', fontWeight: 700, fontSize: 18, lineHeight: 1.2 }}>
+                                {professional?.name || 'Profesional'}
+                            </div>
+                            <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13 }}>
+                                {professional?.trade || quote.trade}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                        <div style={{
+                            background: 'rgba(255,255,255,0.12)',
+                            borderRadius: 8, padding: '6px 12px',
+                            fontSize: 12, color: 'rgba(255,255,255,0.85)'
+                        }}>
+                            Presupuesto #{quote.slug.toUpperCase()}
+                        </div>
+                        <div style={{
+                            background: 'rgba(255,255,255,0.12)',
+                            borderRadius: 8, padding: '6px 12px',
+                            fontSize: 12, color: 'rgba(255,255,255,0.85)',
+                            display: 'flex', alignItems: 'center', gap: 4
+                        }}>
+                            <Calendar size={12} />
+                            Válido hasta: {formatDate(quote.expires_at)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Body */}
+            <div style={{ maxWidth: 600, margin: '0 auto', padding: '24px 16px 40px' }}>
+
+                {/* Trabajo */}
+                <div className="card fade-in" style={{ marginBottom: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                        <Wrench size={16} color="var(--brand-accent)" />
+                        <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--gray-400)' }}>
+                            Trabajo a realizar
+                        </span>
+                    </div>
+                    <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--gray-900)', marginBottom: 4 }}>
+                        {quote.trade}
+                    </div>
+                    {quote.description && (
+                        <div style={{ fontSize: 14, color: 'var(--gray-500)', lineHeight: 1.6 }}>
+                            {quote.description}
+                        </div>
+                    )}
+                    {quote.address && (
+                        <div style={{
+                            display: 'flex', alignItems: 'center', gap: 6,
+                            marginTop: 10, fontSize: 13, color: 'var(--gray-500)'
+                        }}>
+                            <MapPin size={14} color="var(--gray-400)" />
+                            {quote.address}
+                        </div>
+                    )}
+                </div>
+
+                {/* Detalle de precios */}
+                <div className="card fade-in" style={{ marginBottom: 16 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--gray-400)' }}>
+                            Detalle del presupuesto
+                        </span>
+                        <button
+                            onClick={() => setShowDetail(!showDetail)}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--gray-400)', display: 'flex', alignItems: 'center', gap: 4, fontSize: 12 }}
+                        >
+                            {showDetail ? 'Ocultar' : 'Ver detalle'} {showDetail ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </button>
+                    </div>
+
+                    {/* Filas */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--gray-100)' }}>
+                            <span style={{ fontSize: 14, color: 'var(--gray-700)' }}>
+                                Mano de obra
+                                {showDetail && quote.labor_description && (
+                                    <div style={{ fontSize: 12, color: 'var(--gray-400)', marginTop: 2 }}>{quote.labor_description}</div>
+                                )}
+                            </span>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>
+                                {formatCurrency(quote.labor_amount)}
+                            </span>
+                        </div>
+
+                        {quote.materials_included && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--gray-100)' }}>
+                                <span style={{ fontSize: 14, color: 'var(--gray-700)' }}>
+                                    Materiales
+                                    {showDetail && quote.materials_detail && (
+                                        <div style={{ fontSize: 12, color: 'var(--gray-400)', marginTop: 2, whiteSpace: 'pre-wrap' }}>{quote.materials_detail}</div>
+                                    )}
+                                </span>
+                                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>
+                                    {formatCurrency(quote.materials_amount)}
+                                </span>
+                            </div>
+                        )}
+
+                        {!quote.materials_included && (
+                            <div style={{ padding: '10px 0', borderBottom: '1px solid var(--gray-100)' }}>
+                                <span style={{ fontSize: 13, color: 'var(--gray-400)', fontStyle: 'italic' }}>
+                                    * Materiales no incluidos en este presupuesto
+                                </span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Total */}
+                    <div style={{
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        marginTop: 16,
+                        background: 'linear-gradient(135deg, var(--brand-blue), #1e40af)',
+                        borderRadius: 12, padding: '16px 20px'
+                    }}>
+                        <span style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 600, fontSize: 15 }}>TOTAL</span>
+                        <span style={{ color: 'white', fontWeight: 800, fontSize: 26 }}>
+                            {formatCurrency(quote.total_amount)}
+                        </span>
+                    </div>
+
+                    {/* Vigencia */}
+                    <div style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        marginTop: 12, fontSize: 12, color: 'var(--gray-400)'
+                    }}>
+                        <Clock size={12} />
+                        Vigencia: {quote.validity_days} días a partir de la fecha de emisión
+                        {isExpired && <span className="badge badge-red" style={{ marginLeft: 4 }}>Vencido</span>}
+                    </div>
+                </div>
+
+                {/* Acciones */}
+                {canAct && !isExpired && (
+                    <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        <button
+                            className="btn btn-green"
+                            style={{ width: '100%', justifyContent: 'center', padding: '18px', fontSize: 17, borderRadius: 14 }}
+                            onClick={handleAccept}
+                            disabled={loading !== null}
+                        >
+                            {loading === 'accept' ? (
+                                <><div className="spinner" style={{ borderTopColor: 'white' }} /> Procesando...</>
+                            ) : (
+                                <><CheckCircle size={20} /> ACEPTAR PRESUPUESTO</>
+                            )}
+                        </button>
+
+                        <div style={{ display: 'flex', gap: 10 }}>
+                            {whatsappUrl && (
+                                <a
+                                    href={whatsappUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-secondary"
+                                    style={{ flex: 1, justifyContent: 'center', padding: '12px' }}
+                                >
+                                    <MessageCircle size={16} color="#25D366" />
+                                    Solicitar cambios
+                                </a>
+                            )}
+                            <button
+                                className="btn btn-danger"
+                                style={{ flex: whatsappUrl ? 1 : 'auto', justifyContent: 'center', padding: '12px' }}
+                                onClick={() => setShowRejectModal(true)}
+                                disabled={loading !== null}
+                            >
+                                <XCircle size={16} />
+                                Rechazar
+                            </button>
+                        </div>
+
+                        <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--gray-400)' }}>
+                            Al aceptar, el profesional recibirá una notificación inmediata.
+                        </p>
+                    </div>
+                )}
+
+                {/* Estado aceptado */}
+                {status === 'accepted' && (
+                    <div className="card fade-in" style={{ textAlign: 'center', borderColor: '#86efac', background: '#f0fdf4' }}>
+                        <CheckCircle size={40} color="var(--brand-green)" style={{ margin: '0 auto 12px' }} />
+                        <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--brand-green)', marginBottom: 6 }}>
+                            ¡Presupuesto aceptado!
+                        </div>
+                        <div style={{ fontSize: 14, color: 'var(--gray-500)' }}>
+                            El profesional fue notificado. Vas a recibir
+                            confirmación de contacto a la brevedad.
+                        </div>
+                    </div>
+                )}
+
+                {/* Estado rechazado */}
+                {status === 'rejected' && (
+                    <div className="card fade-in" style={{ textAlign: 'center', borderColor: '#fecaca', background: '#fff5f5' }}>
+                        <XCircle size={40} color="#dc2626" style={{ margin: '0 auto 12px' }} />
+                        <div style={{ fontSize: 18, fontWeight: 700, color: '#dc2626', marginBottom: 6 }}>
+                            Presupuesto rechazado
+                        </div>
+                        {whatsappUrl && (
+                            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ marginTop: 8 }}>
+                                <MessageCircle size={14} color="#25D366" />
+                                Contactar al profesional
+                            </a>
+                        )}
+                    </div>
+                )}
+
+                {/* Expirado */}
+                {isExpired && status !== 'accepted' && (
+                    <div className="card fade-in" style={{ textAlign: 'center', borderColor: 'var(--gray-200)' }}>
+                        <Clock size={40} color="var(--gray-400)" style={{ margin: '0 auto 12px' }} />
+                        <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--gray-500)', marginBottom: 6 }}>
+                            Este presupuesto venció
+                        </div>
+                        <div style={{ fontSize: 14, color: 'var(--gray-400)' }}>
+                            Pedile al profesional que te genere uno nuevo.
+                        </div>
+                    </div>
+                )}
+
+                {/* Footer */}
+                <div style={{ textAlign: 'center', marginTop: 32, fontSize: 12, color: 'var(--gray-400)' }}>
+                    Generado con{' '}
+                    <span style={{ color: 'var(--brand-accent)', fontWeight: 600 }}>PresupuestoYA</span>
+                    {' '}— Presupuestos profesionales en 60 segundos
+                </div>
+            </div>
+
+            {/* Modal Rechazar */}
+            {showRejectModal && (
+                <div style={{
+                    position: 'fixed', inset: 0,
+                    background: 'rgba(0,0,0,0.5)',
+                    display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+                    zIndex: 50, backdropFilter: 'blur(4px)'
+                }}>
+                    <div style={{
+                        background: 'white', borderRadius: '20px 20px 0 0',
+                        padding: '28px 24px', width: '100%', maxWidth: 600
+                    }}>
+                        <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>¿Rechazar el presupuesto?</h3>
+                        <p style={{ fontSize: 14, color: 'var(--gray-500)', marginBottom: 16 }}>
+                            Si querés cambios, es mejor usar "Solicitar cambios" para hablar con el profesional.
+                        </p>
+                        <div style={{ display: 'flex', gap: 10 }}>
+                            <button
+                                className="btn btn-secondary"
+                                style={{ flex: 1 }}
+                                onClick={() => setShowRejectModal(false)}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                className="btn btn-danger"
+                                style={{ flex: 1 }}
+                                onClick={handleReject}
+                                disabled={loading !== null}
+                            >
+                                {loading === 'reject' ? 'Procesando...' : 'Sí, rechazar'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    )
+}
