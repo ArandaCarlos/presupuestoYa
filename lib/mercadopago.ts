@@ -24,7 +24,6 @@ export async function createSubscription({
         body: {
             preapproval_plan_id: process.env.MERCADOPAGO_PLAN_ID!,
             payer_email: payerEmail,
-            card_token_id: undefined, // el usuario lo ingresa en el checkout
             back_url: backUrl,
             // metadata para identificar al profesional en el webhook
             external_reference: professionalId,
