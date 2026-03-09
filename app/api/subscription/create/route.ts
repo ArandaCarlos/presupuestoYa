@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSubscription } from '@/lib/mercadopago'
 import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
@@ -11,7 +10,6 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
         }
 
-        // Verificar que el usuario existe como profesional
         const { data: professional } = await supabase
             .from('professionals')
             .select('id, plan')
@@ -27,27 +25,51 @@ export async function POST(request: NextRequest) {
         }
 
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+        const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN
+        const planId = process.env.MERCADOPAGO_PLAN_ID
 
-        // Crear la suscripción en MercadoPago
-        const subscription = await createSubscription({
-            payerEmail: user.email!,
-            professionalId: professional.id,
-            backUrl: `${appUrl}/dashboard/upgrade?status=success`,
+        if (!accessToken || !planId) {
+            return NextResponse.json({ error: 'Configuración de MercadoPago incompleta' }, { status: 500 })
+        }
+
+        // Llamada directa a la API REST de MercadoPago (sin SDK)
+        const mpResponse = await fetch('https://api.mercadopago.com/preapproval', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+                preapproval_plan_id: planId,
+                payer_email: user.email,
+                back_url: `${appUrl}/dashboard/upgrade?status=success`,
+                external_reference: professional.id,
+                reason: 'PresupuestoYA Pro — presupuestos ilimitados',
+            }),
         })
+
+        const mpData = await mpResponse.json()
+
+        if (!mpResponse.ok) {
+            console.error('Error MercadoPago:', mpData)
+            return NextResponse.json(
+                { error: mpData.message || JSON.stringify(mpData) },
+                { status: mpResponse.status }
+            )
+        }
 
         // Guardar el ID de suscripción pendiente
         await supabase
             .from('professionals')
             .update({
-                mp_subscription_id: subscription.id,
+                mp_subscription_id: mpData.id,
                 subscription_status: 'pending',
             })
             .eq('id', professional.id)
 
-        // Devolver la URL de pago de MercadoPago
         return NextResponse.json({
-            init_point: subscription.init_point,
-            subscription_id: subscription.id,
+            init_point: mpData.init_point,
+            subscription_id: mpData.id,
         })
 
     } catch (error: any) {
