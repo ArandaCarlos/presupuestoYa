@@ -1,4 +1,4 @@
-import { MercadoPagoConfig, PreApproval } from 'mercadopago'
+import { MercadoPagoConfig, Preference } from 'mercadopago'
 
 // Inicializar cliente MP
 export function getMPClient() {
@@ -7,62 +7,19 @@ export function getMPClient() {
     })
 }
 
-// Crear una suscripción para un usuario
-export async function createSubscription({
-    payerEmail,
-    professionalId,
-    backUrl,
-}: {
-    payerEmail: string
-    professionalId: string
-    backUrl: string
-}) {
-    const client = getMPClient()
-    const preApproval = new PreApproval(client)
-
-    const response = await preApproval.create({
-        body: {
-            preapproval_plan_id: process.env.MERCADOPAGO_PLAN_ID!,
-            payer_email: payerEmail,
-            back_url: backUrl,
-            // metadata para identificar al profesional en el webhook
-            external_reference: professionalId,
-        }
-    })
-
-    return response
-}
-
-// Obtener el estado de una suscripción
-export async function getSubscription(subscriptionId: string) {
-    const client = getMPClient()
-    const preApproval = new PreApproval(client)
-    return await preApproval.get({ id: subscriptionId })
-}
-
-// Verificar si un webhook viene realmente de MercadoPago
-export function verifyWebhookSignature(
-    xSignature: string | null,
-    xRequestId: string | null,
-    dataId: string,
-): boolean {
-    // En producción podés verificar la firma HMAC-SHA256
-    // Por ahora validamos que el secret esté presente
-    const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET
-    if (!secret) return true // skip en dev si no está configurado
-    return xSignature !== null
-}
-
-// Mapeo de estado MP → plan interno
-export function mpStatusToPlan(mpStatus: string): { plan: string; subscriptionStatus: string } {
+// Mapeo de estado MP (pago único) → plan interno
+export function mpPaymentStatusToPlan(mpStatus: string): { plan: string; statusDesc: string } {
     switch (mpStatus) {
-        case 'authorized':
-            return { plan: 'pro', subscriptionStatus: 'active' }
-        case 'paused':
-            return { plan: 'free', subscriptionStatus: 'paused' }
-        case 'cancelled':
+        case 'approved':
+            return { plan: 'pro', statusDesc: 'active' }
+        case 'in_process':
         case 'pending':
+            return { plan: 'free', statusDesc: 'pending_payment' }
+        case 'rejected':
+        case 'cancelled':
+        case 'refunded':
+        case 'charged_back':
         default:
-            return { plan: 'free', subscriptionStatus: mpStatus }
+            return { plan: 'free', statusDesc: mpStatus }
     }
 }

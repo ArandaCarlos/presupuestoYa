@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getMPClient } from '@/lib/mercadopago'
+import { Preference } from 'mercadopago'
 import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
@@ -25,57 +27,47 @@ export async function POST(request: NextRequest) {
         }
 
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-        const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN
-        const planId = process.env.MERCADOPAGO_PLAN_ID
-
-        if (!accessToken || !planId) {
-            return NextResponse.json({ error: 'Configuración de MercadoPago incompleta' }, { status: 500 })
-        }
-
-        // Llamada directa a la API REST de MercadoPago (sin SDK)
-        const mpResponse = await fetch('https://api.mercadopago.com/preapproval', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({
-                preapproval_plan_id: planId,
-                payer_email: user.email,
-                back_url: `${appUrl}/dashboard/upgrade?status=success`,
+        
+        // Crear la Preferencia (pago simple) en MercadoPago
+        const client = getMPClient()
+        const preference = new Preference(client)
+        
+        const response = await preference.create({
+            body: {
+                items: [
+                    {
+                        id: 'pro_plan',
+                        title: 'PresupuestoYA Pro',
+                        description: 'Suscripción por 30 días con presupuestos ilimitados',
+                        quantity: 1,
+                        unit_price: 14000, 
+                        // Nota: el monto real dependerá de lo que quieras setear, lo dejé en 14000
+                    }
+                ],
+                payer: {
+                    email: user.email,
+                },
+                back_urls: {
+                    success: `${appUrl}/dashboard/upgrade?status=success`,
+                    failure: `${appUrl}/dashboard/upgrade?status=failure`,
+                    pending: `${appUrl}/dashboard/upgrade?status=pending`,
+                },
+                auto_return: 'approved',
+                // Clave: enviamos el ID del profesional para idenficarlo en el webhook
                 external_reference: professional.id,
-                reason: 'PresupuestoYA Pro — presupuestos ilimitados',
-            }),
+            }
         })
 
-        const mpData = await mpResponse.json()
-
-        if (!mpResponse.ok) {
-            console.error('Error MercadoPago:', mpData)
-            return NextResponse.json(
-                { error: mpData.message || JSON.stringify(mpData) },
-                { status: mpResponse.status }
-            )
-        }
-
-        // Guardar el ID de suscripción pendiente
-        await supabase
-            .from('professionals')
-            .update({
-                mp_subscription_id: mpData.id,
-                subscription_status: 'pending',
-            })
-            .eq('id', professional.id)
-
+        // Obtener el init_point de la respuesta para redirigir al usuario al checkout
         return NextResponse.json({
-            init_point: mpData.init_point,
-            subscription_id: mpData.id,
+            init_point: response.init_point,
+            preference_id: response.id,
         })
 
     } catch (error: any) {
-        console.error('Error creando suscripción:', error)
+        console.error('Error creando preferencia PM:', error)
         return NextResponse.json(
-            { error: error.message || 'Error al crear la suscripción' },
+            { error: error.message || 'Error al crear la preferencia de pago' },
             { status: 500 }
         )
     }
