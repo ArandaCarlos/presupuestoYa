@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Star, Check, Zap, ArrowRight, Shield } from 'lucide-react'
 import Link from 'next/link'
@@ -18,48 +18,19 @@ export default function UpgradePage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const [mpReady, setMpReady] = useState(false)
-
-    useEffect(() => {
-        // Cargar script de MercadoPago
-        const script = document.createElement('script')
-        script.src = 'https://sdk.mercadopago.com/js/v2'
-        script.onload = () => setMpReady(true)
-        document.body.appendChild(script)
-
-        return () => {
-            document.body.removeChild(script)
-        }
-    }, [])
 
     const handleUpgrade = async () => {
-        if (!mpReady) {
-            setError('MercadoPago aún se está cargando, intentá de nuevo en unos segundos.')
-            return
-        }
         setLoading(true)
         setError('')
         try {
             const res = await fetch('/api/subscription/create', { method: 'POST' })
             const data = await res.json()
 
-            if (!res.ok) throw new Error(data.error || 'Error al crear la suscripción')
-            if (!data.preference_id) throw new Error('No se recibió la ID de preferencia')
+            if (!res.ok) throw new Error(data.error || 'Error al crear la preferencia de pago')
+            if (!data.init_point) throw new Error('No se recibió la URL de pago de MP')
 
-            // Inicializar MercadoPago Checkout Pro
-            // @ts-ignore
-            const mp = new window.MercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, {
-                locale: 'es-AR'
-            })
-
-            // Abrir el modal de pago
-            mp.checkout({
-                preference: {
-                    id: data.preference_id
-                },
-                autoOpen: true, // Se abre automáticamente
-            })
-            setLoading(false) // Dejar de mostrar loading porque el modal ya está abierto
+            // Redirección clásica a pantalla completa de MercadoPago
+            window.location.href = data.init_point
 
         } catch (err: any) {
             setError(err.message)

@@ -57,6 +57,8 @@ export async function POST(request: NextRequest) {
                     pending: `${appUrl}/dashboard?payment=pending`,
                 },
                 auto_return: 'approved',
+                // Webhook explícito para asegurar que MP nos avise del pago
+                notification_url: `${appUrl}/api/webhooks/mercadopago`,
                 // Clave: enviamos el ID del profesional para idenficarlo en el webhook
                 external_reference: professional.id,
             }
