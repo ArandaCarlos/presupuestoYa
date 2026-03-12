@@ -52,9 +52,9 @@ export async function POST(request: NextRequest) {
                     email: user.email,
                 },
                 back_urls: {
-                    success: `${appUrl}/dashboard/upgrade?status=success`,
-                    failure: `${appUrl}/dashboard/upgrade?status=failure`,
-                    pending: `${appUrl}/dashboard/upgrade?status=pending`,
+                    success: `${appUrl}/dashboard?payment=success`,
+                    failure: `${appUrl}/dashboard?payment=failure`,
+                    pending: `${appUrl}/dashboard?payment=pending`,
                 },
                 auto_return: 'approved',
                 // Clave: enviamos el ID del profesional para idenficarlo en el webhook

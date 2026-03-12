@@ -36,7 +36,14 @@ function QuoteStatusBadge({ status }: { status: string }) {
     return <span className={`badge ${cls}`}>{label}</span>
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+    const params = await searchParams
+    const paymentStatus = params.payment
+
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
@@ -79,6 +86,40 @@ export default async function DashboardPage() {
                     Aquí está el resumen de tu actividad
                 </p>
             </div>
+
+            {/* Alerta de pago exitoso MP */}
+            {paymentStatus === 'success' && (
+                <div style={{
+                    background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: 12,
+                    padding: '16px 20px', marginBottom: 32, display: 'flex', gap: 12, alignItems: 'flex-start'
+                }}>
+                    <CheckCircle size={24} color="#10b981" style={{ flexShrink: 0 }} />
+                    <div>
+                        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#065f46', marginBottom: 4 }}>
+                            ¡Pago completado con éxito!
+                        </h3>
+                        <p style={{ fontSize: 14, color: '#047857' }}>
+                            Ya tenés activo el Plan Pro por 30 días. Recordá recargar la página en unos segundos si tu estado aún no se actualiza (puede demorar un instante en procesarse).
+                        </p>
+                    </div>
+                </div>
+            )}
+            {paymentStatus === 'failure' && (
+                <div style={{
+                    background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 12,
+                    padding: '16px 20px', marginBottom: 32, display: 'flex', gap: 12, alignItems: 'flex-start'
+                }}>
+                    <div style={{ fontSize: 24 }}>⚠️</div>
+                    <div>
+                        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#991b1b', marginBottom: 4 }}>
+                            El pago no se pudo completar
+                        </h3>
+                        <p style={{ fontSize: 14, color: '#b91c1c' }}>
+                            Ocurrió un problema al procesar tu pago. Podés volver a intentarlo desde la sección "Pasarte al Pro".
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {/* CTA si no hay presupuestos */}
             {total === 0 && (
