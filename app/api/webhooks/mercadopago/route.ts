@@ -13,15 +13,30 @@ function getServiceClient() {
 
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json()
-        const { type, data, action } = body
+        // MercadoPago envía notificaciones de dos maneras:
+        // 1. Webhooks (Dashboard): body JSON { action: "payment.created", data: { id: "123" } }
+        // 2. IPN (notification_url): query params ?topic=payment&id=123
 
-        // Solo procesar notificaciones de pagos (nuevo formato es action = payment.created o type = payment)
-        if (type !== 'payment' && !action?.startsWith('payment.')) {
+        // Extraer de Query Params (IPN)
+        const searchParams = request.nextUrl.searchParams
+        const topicParam = searchParams.get('topic') || searchParams.get('type')
+        const idParam = searchParams.get('data.id') || searchParams.get('id')
+        
+        // Extraer de Body (Webhook)
+        let body: any = {}
+        try {
+            body = await request.json()
+        } catch(e) { /* body vacío o no JSON */ }
+
+        const type = body?.type || topicParam
+        const action = body?.action
+        const paymentId = body?.data?.id || idParam
+
+        // Solo procesar notificaciones de pagos
+        if (type !== 'payment' && !action?.startsWith('payment.') && topicParam !== 'payment') {
             return NextResponse.json({ received: true })
         }
 
-        const paymentId = data?.id
         if (!paymentId) {
             return NextResponse.json({ error: 'Sin ID de pago' }, { status: 400 })
         }
