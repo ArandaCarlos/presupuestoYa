@@ -26,7 +26,11 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Ya tenés el plan Pro activo' }, { status: 400 })
         }
 
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+        // Remover slash final si existe en NEXT_PUBLIC_APP_URL para evitar doble slash
+        let appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+        if (appUrl.endsWith('/')) {
+            appUrl = appUrl.slice(0, -1)
+        }
         
         // Crear la Preferencia (pago simple) en MercadoPago
         const client = getMPClient()
@@ -40,8 +44,8 @@ export async function POST(request: NextRequest) {
                         title: 'PresupuestoYA Pro',
                         description: 'Suscripción por 30 días con presupuestos ilimitados',
                         quantity: 1,
-                        unit_price: 14000, 
-                        // Nota: el monto real dependerá de lo que quieras setear, lo dejé en 14000
+                        unit_price: 20, 
+                        // Nota: el monto real dependerá de lo que quieras setear, lo bajé a 20 para pruebas
                     }
                 ],
                 payer: {

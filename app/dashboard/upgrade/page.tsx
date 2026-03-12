@@ -1,6 +1,4 @@
-'use client'
-
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Star, Check, Zap, ArrowRight, Shield } from 'lucide-react'
 import Link from 'next/link'
@@ -18,8 +16,25 @@ export default function UpgradePage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const [mpReady, setMpReady] = useState(false)
+
+    useEffect(() => {
+        // Cargar script de MercadoPago
+        const script = document.createElement('script')
+        script.src = 'https://sdk.mercadopago.com/js/v2'
+        script.onload = () => setMpReady(true)
+        document.body.appendChild(script)
+
+        return () => {
+            document.body.removeChild(script)
+        }
+    }, [])
 
     const handleUpgrade = async () => {
+        if (!mpReady) {
+            setError('MercadoPago aún se está cargando, intentá de nuevo en unos segundos.')
+            return
+        }
         setLoading(true)
         setError('')
         try {
@@ -27,10 +42,22 @@ export default function UpgradePage() {
             const data = await res.json()
 
             if (!res.ok) throw new Error(data.error || 'Error al crear la suscripción')
-            if (!data.init_point) throw new Error('No se recibió la URL de pago')
+            if (!data.preference_id) throw new Error('No se recibió la ID de preferencia')
 
-            // Redirigir al checkout de MercadoPago
-            window.location.href = data.init_point
+            // Inicializar MercadoPago Checkout Pro
+            // @ts-ignore
+            const mp = new window.MercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY, {
+                locale: 'es-AR'
+            })
+
+            // Abrir el modal de pago
+            mp.checkout({
+                preference: {
+                    id: data.preference_id
+                },
+                autoOpen: true, // Se abre automáticamente
+            })
+            setLoading(false) // Dejar de mostrar loading porque el modal ya está abierto
 
         } catch (err: any) {
             setError(err.message)
@@ -118,7 +145,7 @@ export default function UpgradePage() {
                     }}
                 >
                     {loading
-                        ? <><div className="spinner" style={{ borderTopColor: '#1e3a8a', borderWidth: 2 }} /> Redirigiendo a MercadoPago...</>
+                        ? <><div className="spinner" style={{ borderTopColor: '#1e3a8a', borderWidth: 2 }} /> Cargando checkout...</>
                         : <>Suscribirme ahora <ArrowRight size={18} /></>
                     }
                 </button>
@@ -141,6 +168,8 @@ export default function UpgradePage() {
                     Ver comparativa completa de planes →
                 </Link>
             </div>
+            
+            <div id="wallet_container" />
         </div>
     )
 }
