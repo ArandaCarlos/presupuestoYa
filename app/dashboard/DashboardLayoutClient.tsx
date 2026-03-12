@@ -18,10 +18,11 @@ const NAV = [
 ]
 
 export default function DashboardLayoutClient({
-    children, user
+    children, user, plan
 }: {
     children: React.ReactNode
     user: User
+    plan?: string
 }) {
     const [menuOpen, setMenuOpen] = useState(false)
     const pathname = usePathname()
@@ -92,14 +93,25 @@ export default function DashboardLayoutClient({
                         <div style={{ fontWeight: 600, color: 'var(--gray-700)', marginBottom: 4 }}>
                             {user.email?.split('@')[0]}
                         </div>
-                        <Link href="/dashboard/upgrade" style={{
-                            display: 'inline-flex', alignItems: 'center', gap: 4,
-                            fontSize: 11, fontWeight: 700, textDecoration: 'none',
-                            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-                            color: 'white', padding: '2px 8px', borderRadius: 20
-                        }}>
-                            <Star size={9} fill="white" /> Pasate al Pro
-                        </Link>
+                        {plan === 'pro' ? (
+                            <span style={{
+                                display: 'inline-flex', alignItems: 'center', gap: 4,
+                                fontSize: 11, fontWeight: 700,
+                                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                                color: 'white', padding: '2px 8px', borderRadius: 20
+                            }}>
+                                <Star size={9} fill="white" /> Plan PRO
+                            </span>
+                        ) : (
+                            <Link href="/dashboard/upgrade" style={{
+                                display: 'inline-flex', alignItems: 'center', gap: 4,
+                                fontSize: 11, fontWeight: 700, textDecoration: 'none',
+                                background: 'var(--brand-accent)',
+                                color: 'white', padding: '2px 8px', borderRadius: 20
+                            }}>
+                                <Star size={9} fill="white" /> Pasate al Pro
+                            </Link>
+                        )}
                     </div>
                     <button onClick={handleLogout} className="btn btn-ghost btn-sm" style={{ width: '100%', justifyContent: 'flex-start' }}>
                         <LogOut size={14} /> Cerrar sesión

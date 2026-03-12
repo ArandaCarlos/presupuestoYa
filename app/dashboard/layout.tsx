@@ -18,7 +18,7 @@ export default async function DashboardLayout({
     // Sin perfil → onboarding obligatorio
     const { data: professional } = await supabase
         .from('professionals')
-        .select('id')
+        .select('id, plan')
         .eq('user_id', user.id)
         .maybeSingle()
 
@@ -26,5 +26,5 @@ export default async function DashboardLayout({
         redirect('/onboarding')
     }
 
-    return <DashboardLayoutClient user={user}>{children}</DashboardLayoutClient>
+    return <DashboardLayoutClient user={user} plan={professional.plan}>{children}</DashboardLayoutClient>
 }
