@@ -1,7 +1,7 @@
 const https = require('https');
 
-const token = "APP_USR-1784155304537631-072912-fdbe076724da15ee54c65b1d95f16f6f-2523873477";
-const preapproval_plan_id = "f3fdfc71771f4eb3b874dee456afe529";
+const token = "--";
+const preapproval_plan_id = "--";
 
 const data = JSON.stringify({
   auto_recurring: {
