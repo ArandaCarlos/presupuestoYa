@@ -26,12 +26,10 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Ya tenés el plan Pro activo' }, { status: 400 })
         }
 
-        // Remover slash final si existe en NEXT_PUBLIC_APP_URL para evitar doble slash
-        let appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-        if (appUrl.endsWith('/')) {
-            appUrl = appUrl.slice(0, -1)
-        }
-        
+        // Obtener la URL base desde el request para soportar las URLs dinámicas de Vercel Preview
+        const protocol = request.headers.get('x-forwarded-proto') || 'https'
+        const host = request.headers.get('x-forwarded-host') || request.headers.get('host')
+        const appUrl = `${protocol}://${host}`
         // Crear la Preferencia (pago simple) en MercadoPago
         const client = getMPClient()
         const preference = new Preference(client)
