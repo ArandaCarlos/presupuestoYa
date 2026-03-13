@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Check, Zap, Star, ArrowRight } from 'lucide-react'
 
 const FREE_FEATURES = [
-    'Hasta 5 presupuestos por mes',
+    'Hasta 3 presupuestos por mes',
     'Link compartible por WhatsApp',
     'Vista profesional para el cliente',
     'Botón Aceptar / Rechazar',
@@ -12,12 +12,11 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
     'Presupuestos ilimitados',
-    'Estadísticas avanzadas',
+    'Panel de métricas y estadísticas',
     'Historial completo',
-    'Recordatorios automáticos al cliente',
     'Perfil con logo incluido',
     'Soporte prioritario',
-    'Próximamente: bot WhatsApp',
+    'Próximamente: Recordatorios y bot WhatsApp',
 ]
 
 export default async function PricingPage() {

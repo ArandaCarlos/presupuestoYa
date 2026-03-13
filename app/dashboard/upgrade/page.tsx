@@ -7,11 +7,10 @@ import Link from 'next/link'
 
 const PRO_FEATURES = [
     'Presupuestos ilimitados',
-    'Estadísticas avanzadas',
+    'Panel de métricas y estadísticas',
     'Historial completo',
-    'Recordatorios automáticos',
     'Soporte prioritario',
-    'Próximamente: bot WhatsApp',
+    'Próximamente: Recordatorios y bot WhatsApp',
 ]
 
 export default function UpgradePage() {

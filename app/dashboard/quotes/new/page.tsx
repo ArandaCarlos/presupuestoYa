@@ -66,7 +66,7 @@ function NewQuoteForm() {
                 const currentCount = sameMonth ? (prof.monthly_quote_count || 0) : 0
 
                 setQuotaInfo({ count: currentCount, plan: prof.plan })
-                if (isPlanFree && currentCount >= 5) {
+                if (isPlanFree && currentCount >= 3) {
                     setQuotaBlocked(true)
                 }
             }
@@ -227,10 +227,10 @@ function NewQuoteForm() {
                         Alcanzaste tu límite del mes
                     </h2>
                     <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 15, marginBottom: 8 }}>
-                        En el plan gratuito podés crear hasta <strong style={{ color: 'white' }}>5 presupuestos por mes</strong>.
+                        En el plan gratuito podés crear hasta <strong style={{ color: 'white' }}>3 presupuestos por mes</strong>.
                     </p>
                     <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, marginBottom: 28 }}>
-                        Usaste {quotaInfo.count} de 5 este mes. El contador se resetea el 1° del mes.
+                        Usaste {quotaInfo.count} de 3 este mes. El contador se resetea el 1° del mes.
                     </p>
 
                     <Link href="/dashboard/upgrade" style={{
