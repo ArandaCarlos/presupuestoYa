@@ -64,7 +64,7 @@ export default function SettingsPage() {
             .from('professionals')
             .upsert({
                 user_id: user.id,
-                whatsapp_number: form.whatsapp_number || user.email || user.id,
+                whatsapp_number: form.whatsapp_number || null,
                 name: form.name || null,
                 trade: form.trade || null,
                 logo_url: form.logo_url || null,
@@ -197,7 +197,7 @@ export default function SettingsPage() {
                 {/* WhatsApp */}
                 <div className="input-group">
                     <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Phone size={14} color="var(--gray-400)" /> Número de WhatsApp
+                        <Phone size={14} color="var(--gray-400)" /> Número de WhatsApp *
                     </label>
                     <input style={inputStyle} placeholder="+5491155..."
                         value={form.whatsapp_number} onChange={e => set('whatsapp_number', e.target.value)} />
@@ -219,7 +219,7 @@ export default function SettingsPage() {
                 </div>
 
                 <button className="btn btn-primary btn-lg" style={{ width: '100%' }}
-                    onClick={handleSave} disabled={saving || !form.name}>
+                    onClick={handleSave} disabled={saving || !form.name || form.whatsapp_number.trim().length < 8}>
                     {saving
                         ? <><div className="spinner" style={{ borderTopColor: 'white' }} /> Guardando...</>
                         : <><Save size={16} /> Guardar perfil</>

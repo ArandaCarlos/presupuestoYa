@@ -35,7 +35,7 @@ export default function OnboardingPage() {
 
         const { error: err } = await supabase.from('professionals').upsert({
             user_id: user.id,
-            whatsapp_number: form.whatsapp_number || user.email || user.id,
+            whatsapp_number: form.whatsapp_number || null,
             name: form.name,
             trade: form.trade,
             logo_url: form.logo_url || null,
@@ -57,7 +57,7 @@ export default function OnboardingPage() {
         background: 'white', outline: 'none'
     }
 
-    const isValid = form.name.trim().length >= 2 && form.trade
+    const isValid = form.name.trim().length >= 2 && form.trade && form.whatsapp_number.trim().length >= 8
 
     return (
         <div style={{
@@ -158,12 +158,12 @@ export default function OnboardingPage() {
                         {/* WhatsApp */}
                         <div className="input-group">
                             <label className="input-label">
-                                WhatsApp <span style={{ color: 'var(--gray-400)', fontWeight: 400 }}>(opcional)</span>
+                                WhatsApp *
                             </label>
                             <input style={inputStyle} placeholder="+5491155..."
                                 value={form.whatsapp_number} onChange={e => set('whatsapp_number', e.target.value)} />
                             <span style={{ fontSize: 12, color: 'var(--gray-400)' }}>
-                                Aparece en el botón "Consultar" que ve tu cliente. Formato: +549XXXXXXXXXX
+                                Fundamental para compartir tus presupuestos. Formato recomendado: +549XXXXXXXXXX
                             </span>
                         </div>
 

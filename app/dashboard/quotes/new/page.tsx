@@ -44,10 +44,9 @@ function NewQuoteForm() {
         validity_days: 7,
     })
 
-    // Verificar quota al montar (solo si no es duplicado de otro presupuesto)
+    // Verificar quota al montar
     useEffect(() => {
         const checkQuota = async () => {
-            if (fromId) { setCheckingQuota(false); return } // los duplicados no cuentan como nuevos hasta guardar
             const supabase = createClient()
             const { data: { user } } = await supabase.auth.getUser()
             if (!user) { setCheckingQuota(false); return }

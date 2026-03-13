@@ -97,7 +97,7 @@ export default function PublicQuoteView({ quote }: Props) {
     }
 
     const whatsappUrl = professional?.whatsapp_number
-        ? `https://wa.me/${professional.whatsapp_number.replace('+', '')}?text=Hola! Vi el presupuesto %23${quote.slug.toUpperCase()} y quiero consultar algo.`
+        ? `https://wa.me/${professional.whatsapp_number.replace(/\D/g, '')}?text=Hola! Vi el presupuesto %23${quote.slug.toUpperCase()} y quiero consultar algo.`
         : null
 
     return (
