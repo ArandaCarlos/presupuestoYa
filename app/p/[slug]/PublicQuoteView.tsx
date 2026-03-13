@@ -20,6 +20,18 @@ function formatDate(dateStr: string | null) {
     })
 }
 
+// Helper to render basic markdown bold
+const renderMarkdown = (text: string | null | undefined) => {
+    if (!text) return null;
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, j) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+            return <strong key={j}>{part.slice(2, -2)}</strong>;
+        }
+        return <span key={j}>{part}</span>;
+    });
+};
+
 function StatusBanner({ status }: { status: string }) {
     if (status === 'accepted') {
         return (
@@ -174,8 +186,8 @@ export default function PublicQuoteView({ quote }: Props) {
                         {quote.trade}
                     </div>
                     {quote.description && (
-                        <div style={{ fontSize: 14, color: 'var(--gray-500)', lineHeight: 1.6 }}>
-                            {quote.description}
+                        <div style={{ fontSize: 14, color: 'var(--gray-500)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                            {renderMarkdown(quote.description)}
                         </div>
                     )}
                     {quote.address && (
@@ -357,7 +369,7 @@ export default function PublicQuoteView({ quote }: Props) {
                 <div style={{ textAlign: 'center', marginTop: 32, fontSize: 12, color: 'var(--gray-400)' }}>
                     Generado con{' '}
                     <a href="/" style={{ color: 'var(--brand-accent)', fontWeight: 600, textDecoration: 'none' }}>PresupuestosYA</a>
-                    {' '}— Presupuestos profesionales en 60 segundos
+                    {' '}{"— Presupuestos profesionales en 60 segundos"}
                 </div>
             </div>
 
@@ -375,7 +387,7 @@ export default function PublicQuoteView({ quote }: Props) {
                     }}>
                         <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>¿Rechazar el presupuesto?</h3>
                         <p style={{ fontSize: 14, color: 'var(--gray-500)', marginBottom: 16 }}>
-                            Si querés cambios, es mejor usar "Solicitar cambios" para hablar con el profesional.
+                            Si querés cambios, es mejor usar &quot;Solicitar cambios&quot; para hablar con el profesional.
                         </p>
                         <div style={{ display: 'flex', gap: 10 }}>
                             <button

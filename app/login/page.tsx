@@ -40,7 +40,7 @@ export default function LoginPage() {
             setSuccess('¡Listo! Revisá tu email para confirmar la cuenta.')
         } else if (mode === 'forgot') {
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/dashboard`
+                redirectTo: `${window.location.origin}/update-password`
             })
             if (error) {
                 setError(error.message)
@@ -215,7 +215,7 @@ export default function LoginPage() {
                 </div>
 
                 <p style={{ textAlign: 'center', marginTop: 20, fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-                    Plan Free: 3 presupuestos/mes sin tarjeta
+                    Plan Free: 5 presupuestos/mes sin tarjeta
                 </p>
             </div>
         </div>

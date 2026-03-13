@@ -27,26 +27,24 @@ export async function POST(request: NextRequest) {
                     messages: [
                         {
                             role: 'system',
-                            content: `Sos un asistente para profesionales de oficios en Argentina (electricistas, plomeros, gasistas, pintores, etc.).
-Tu tarea es mejorar la redacción de descripciones de trabajos para presupuestos profesionales.
+                            content: `Actuá como un redactor experto en propuestas comerciales para profesionales de oficios en Argentina (electricistas, plomeros, gasistas, técnicos, etc.).
+Tu objetivo es transformar notas desordenadas en descripciones de presupuesto altamente profesionales, persuasivas y estéticas.
 
 Reglas ESTRICTAS:
-- NO inventés ni agregues información que no esté en el texto original
-- NO cambies precios, cantidades, materiales ni datos específicos
-- SÍ corregí ortografía y puntuación
-- SÍ mejorá la redacción para que suene profesional y clara
-- SÍ organizá mejor las oraciones si es necesario
-- Usá español de Argentina (vos, etc.)
-- El resultado debe ser directo, sin explicaciones ni comentarios tuyos
-- Longitud similar al original, no agregues párrafos extra`
+1. Embellecé la redacción usando vocabulario técnico profesional (ej: en lugar de 'mano de obra', podés usar 'Mano de obra especializada').
+2. Estructurá el texto con viñetas (- o •) si hay varios ítems, para facilitar la lectura.
+3. Hacé que suene seguro, claro y confiable. Transmití profesionalismo.
+4. Usá español de Argentina (voseo), pero manteniendo un tono muy formal y educado.
+5. NO agregues servicios, cantidades ni precios irreales que el usuario no haya mencionado. Si no hay precios, solo listá los servicios.
+6. Mantené el presupuesto al punto, sin introducciones largas ni firmas finales. Solo la descripción del trabajo embellecida.`
                         },
                         {
                             role: 'user',
-                            content: `Mejorá esta descripción de trabajo para un presupuesto:\n\n"${text}"`
+                            content: `Mejorá esta descripción de trabajo para un presupuesto haciéndola mucho más profesional y estructurada:\n\n"${text}"`
                         }
                     ],
-                    max_tokens: 500,
-                    temperature: 0.3,
+                    max_tokens: 600,
+                    temperature: 0.5,
                 }),
             })
 
@@ -71,23 +69,23 @@ Reglas ESTRICTAS:
                     body: JSON.stringify({
                         contents: [{
                             parts: [{
-                                text: `Sos un asistente para profesionales de oficios en Argentina (electricistas, plomeros, gasistas, pintores, etc.).
-Tu tarea es mejorar la redacción de esta descripción de trabajo para un presupuesto profesional.
+                                text: `Actuá como un redactor experto en propuestas comerciales para profesionales de oficios en Argentina (electricistas, plomeros, gasistas, técnicos, etc.).
+Tu objetivo es transformar notas desordenadas en descripciones de presupuesto altamente profesionales, persuasivas y estéticas.
 
-REGLAS:
-- NO inventés información que no esté en el texto
-- NO cambies precios, cantidades ni materiales específicos
-- SÍ corregí ortografía y puntuación
-- SÍ hacé la redacción más clara y profesional
-- Usá español argentino
-- Respondé SOLO con el texto mejorado, sin comentarios
+Reglas ESTRICTAS:
+1. Embellecé la redacción usando vocabulario técnico profesional (ej: en lugar de 'mano de obra', podés usar 'Mano de obra especializada').
+2. Estructurá el texto con viñetas (- o •) si hay varios ítems, para facilitar la lectura.
+3. Hacé que suene seguro, claro y confiable. Transmití profesionalismo.
+4. Usá español de Argentina (voseo), pero manteniendo un tono muy formal y educado.
+5. NO agregues servicios, cantidades ni precios irreales que el usuario no haya mencionado. Si no hay precios, solo listá los servicios.
+6. Mantené el presupuesto al punto, sin introducciones largas ni firmas finales. Solo la descripción del trabajo embellecida.
 
-Texto a mejorar: "${text}"`
+Texto crudo a transformar: "${text}"`
                             }]
                         }],
                         generationConfig: {
-                            temperature: 0.3,
-                            maxOutputTokens: 500,
+                            temperature: 0.5,
+                            maxOutputTokens: 600,
                         }
                     }),
                 }
@@ -107,10 +105,10 @@ Texto a mejorar: "${text}"`
 
         return NextResponse.json({ error: 'Sin API key configurada' }, { status: 500 })
 
-    } catch (error: any) {
+    } catch (error) {
         console.error('Error en improve-description:', error)
         return NextResponse.json(
-            { error: error.message || 'Error al procesar' },
+            { error: error instanceof Error ? error.message : 'Error al procesar' },
             { status: 500 }
         )
     }

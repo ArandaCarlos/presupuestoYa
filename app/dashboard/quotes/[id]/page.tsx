@@ -14,10 +14,24 @@ function formatCurrency(n: number) {
     return `$${n.toLocaleString('es-AR', { minimumFractionDigits: 0 })}`
 }
 
-function formatDate(d: string | null) {
-    if (!d) return '—'
-    return new Date(d).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })
+function formatDate(dateStr: string | null) {
+    if (!dateStr) return '—'
+    return new Date(dateStr).toLocaleDateString('es-AR', {
+        day: '2-digit', month: 'long', year: 'numeric'
+    })
 }
+
+// Helper to render basic markdown bold
+const renderMarkdown = (text: string | null | undefined) => {
+    if (!text) return null;
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, j) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+            return <strong key={j}>{part.slice(2, -2)}</strong>;
+        }
+        return <span key={j}>{part}</span>;
+    });
+};
 
 export default async function QuoteDetailPage({ params, searchParams }: Props) {
     const { id } = await params
@@ -105,8 +119,8 @@ export default async function QuoteDetailPage({ params, searchParams }: Props) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                     <Row label="Mano de obra" value={formatCurrency(quote.labor_amount)} />
                     {quote.labor_description && (
-                        <div style={{ fontSize: 12, color: 'var(--gray-400)', padding: '0 0 12px 0', borderBottom: '1px solid var(--gray-100)', marginTop: -8 }}>
-                            {quote.labor_description}
+                        <div style={{ fontSize: 12, color: 'var(--gray-400)', padding: '0 0 12px 0', borderBottom: '1px solid var(--gray-100)', marginTop: -8, whiteSpace: 'pre-wrap' }}>
+                            {renderMarkdown(quote.labor_description)}
                         </div>
                     )}
                     {quote.materials_included && <Row label="Materiales" value={formatCurrency(quote.materials_amount)} />}

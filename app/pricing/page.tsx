@@ -3,9 +3,9 @@ import Link from 'next/link'
 import { Check, Zap, Star, ArrowRight } from 'lucide-react'
 
 const FREE_FEATURES = [
-    'Hasta 3 presupuestos por mes',
-    'Link compartible por WhatsApp',
-    'Vista profesional para el cliente',
+    'Hasta 5 presupuestos por mes',
+    'Link público para clientes',
+    'Formato profesional para el cliente',
     'Botón Aceptar / Rechazar',
     'Mejora de texto con IA',
 ]
