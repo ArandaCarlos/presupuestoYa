@@ -73,7 +73,7 @@ export default function LoginPage() {
                         borderRadius: 16, padding: '10px 20px', marginBottom: 16
                     }}>
                         <Zap size={20} color="#60a5fa" fill="#60a5fa" />
-                        <span style={{ color: 'white', fontWeight: 800, fontSize: 18 }}>PresupuestoYA</span>
+                        <span style={{ color: 'white', fontWeight: 800, fontSize: 18 }}>PresupuestosYA</span>
                     </div>
                     <h1 style={{ color: 'white', fontSize: 22, fontWeight: 700, marginBottom: 6 }}>
                         {mode === 'login' ? 'Bienvenido de vuelta' : 'Crear cuenta gratis'}

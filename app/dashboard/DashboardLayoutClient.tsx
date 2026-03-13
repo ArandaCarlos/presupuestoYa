@@ -46,7 +46,7 @@ export default function DashboardLayoutClient({
                 className="hidden-mobile">
                 {/* Logo */}
                 <div style={{ padding: '0 20px 20px', borderBottom: '1px solid var(--gray-100)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
                         <div style={{
                             background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))',
                             borderRadius: 10, padding: 8, display: 'flex'
@@ -54,10 +54,10 @@ export default function DashboardLayoutClient({
                             <Zap size={18} color="white" fill="white" />
                         </div>
                         <div>
-                            <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--brand-blue)' }}>PresupuestoYA</div>
+                            <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--brand-blue)' }}>PresupuestosYA</div>
                             <div style={{ fontSize: 11, color: 'var(--gray-400)' }}>Panel profesional</div>
                         </div>
-                    </div>
+                    </Link>
                 </div>
 
                 {/* Nav */}
@@ -125,10 +125,10 @@ export default function DashboardLayoutClient({
                 background: 'white', borderBottom: '1px solid var(--gray-200)',
                 padding: '12px 16px', alignItems: 'center', justifyContent: 'space-between'
             }} className="mobile-header">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
                     <Zap size={18} color="var(--brand-accent)" fill="var(--brand-accent)" />
-                    <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--brand-blue)' }}>PresupuestoYA</span>
-                </div>
+                    <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--brand-blue)' }}>PresupuestosYA</span>
+                </Link>
                 <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                     {menuOpen ? <X size={22} color="var(--gray-700)" /> : <Menu size={22} color="var(--gray-700)" />}
                 </button>

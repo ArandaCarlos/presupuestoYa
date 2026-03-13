@@ -76,7 +76,7 @@ export default function OnboardingPage() {
                         borderRadius: 14, padding: '10px 18px', marginBottom: 20
                     }}>
                         <Zap size={20} color="white" fill="white" />
-                        <span style={{ color: 'white', fontWeight: 800, fontSize: 17 }}>PresupuestoYA</span>
+                        <span style={{ color: 'white', fontWeight: 800, fontSize: 17 }}>PresupuestosYA</span>
                     </div>
 
                     <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--gray-900)', marginBottom: 8 }}>
@@ -184,7 +184,7 @@ export default function OnboardingPage() {
                         >
                             {saving
                                 ? <><div className="spinner" style={{ borderTopColor: 'white' }} /> Guardando...</>
-                                : <>Empezar a usar PresupuestoYA <ChevronRight size={18} /></>
+                                : <>Empezar a usar PresupuestosYA <ChevronRight size={18} /></>
                             }
                         </button>
 

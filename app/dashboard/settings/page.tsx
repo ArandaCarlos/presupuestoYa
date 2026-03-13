@@ -21,6 +21,7 @@ export default function SettingsPage() {
         trade: '',
         whatsapp_number: '',
         logo_url: '',
+        plan: 'free',
     })
 
     const supabase = createClient()
@@ -43,6 +44,7 @@ export default function SettingsPage() {
                     trade: prof.trade || '',
                     whatsapp_number: prof.whatsapp_number || '',
                     logo_url: prof.logo_url || '',
+                    plan: prof.plan || 'free',
                 })
             }
             setLoading(false)
@@ -95,7 +97,19 @@ export default function SettingsPage() {
     return (
         <div className="fade-in" style={{ maxWidth: 560 }}>
             <div style={{ marginBottom: 28 }}>
-                <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--gray-900)' }}>Mi perfil</h1>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--gray-900)' }}>Mi perfil</h1>
+                    {form.plan === 'pro' && (
+                        <span style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 4,
+                            fontSize: 12, fontWeight: 700,
+                            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                            color: 'white', padding: '4px 10px', borderRadius: 20
+                        }}>
+                            Plan PRO
+                        </span>
+                    )}
+                </div>
                 <p style={{ color: 'var(--gray-500)', fontSize: 14, marginTop: 4 }}>
                     Esta información aparece en los presupuestos que enviás a tus clientes.
                 </p>

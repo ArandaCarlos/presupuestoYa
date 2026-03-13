@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
                 items: [
                     {
                         id: 'pro_plan',
-                        title: 'PresupuestoYA Pro',
+                        title: 'PresupuestosYA Pro',
                         description: 'Suscripción por 30 días con presupuestos ilimitados',
                         quantity: 1,
                         unit_price: 20, 

@@ -356,7 +356,7 @@ export default function PublicQuoteView({ quote }: Props) {
                 {/* Footer */}
                 <div style={{ textAlign: 'center', marginTop: 32, fontSize: 12, color: 'var(--gray-400)' }}>
                     Generado con{' '}
-                    <span style={{ color: 'var(--brand-accent)', fontWeight: 600 }}>PresupuestoYA</span>
+                    <a href="/" style={{ color: 'var(--brand-accent)', fontWeight: 600, textDecoration: 'none' }}>PresupuestosYA</a>
                     {' '}— Presupuestos profesionales en 60 segundos
                 </div>
             </div>
