@@ -21,7 +21,7 @@ export default function LandingPage() {
                     <span style={{ fontWeight: 800, fontSize: 18, color: 'var(--brand-blue)' }}>PresupuestosYA</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <Link href="/pricing" style={{ fontSize: 15, fontWeight: 600, color: 'var(--gray-500)', textDecoration: 'none' }}>Tarifas</Link>
+                    <Link href="/pricing" className="hide-mobile" style={{ fontSize: 15, fontWeight: 600, color: 'var(--gray-500)', textDecoration: 'none' }}>Tarifas</Link>
                     <Link href="/login" style={{ fontSize: 15, fontWeight: 600, color: 'var(--brand-blue)', textDecoration: 'none' }}>Iniciar Sesión</Link>
                 </div>
             </nav>
@@ -362,7 +362,6 @@ export default function LandingPage() {
                         max-width: 100%; 
                     }
                 }
-                
                 @media (max-width: 640px) {
                     nav {
                         padding: 16px !important;
@@ -370,6 +369,9 @@ export default function LandingPage() {
                     header, section, footer {
                         padding-left: 16px !important;
                         padding-right: 16px !important;
+                    }
+                    .hide-mobile {
+                        display: none !important;
                     }
                 }
             `}} />
