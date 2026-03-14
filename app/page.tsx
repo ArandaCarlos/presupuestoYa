@@ -9,7 +9,7 @@ export default function LandingPage() {
             {/* Navbar */}
             <nav style={{
                 padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                maxWidth: 1200, margin: '0 auto', width: '100%'
+                maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div style={{
@@ -33,7 +33,7 @@ export default function LandingPage() {
             }}>
                 <div style={{
                     maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr',
-                    gap: 60, alignItems: 'center'
+                    gap: 60, alignItems: 'center', boxSizing: 'border-box'
                 }} className="hero-grid">
 
                     {/* Hero Left (Text) */}
@@ -49,7 +49,7 @@ export default function LandingPage() {
                         </div>
 
                         <h1 style={{
-                            fontSize: 'clamp(40px, 5vw, 56px)', fontWeight: 900,
+                            fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900,
                             color: '#0f172a', lineHeight: 1.1, letterSpacing: '-1.5px', marginBottom: 24
                         }}>
                             Creá presupuestos profesionales en <span style={{ color: 'var(--brand-blue)' }}>60 segundos</span>
@@ -76,12 +76,12 @@ export default function LandingPage() {
                     </div>
                     {/* Hero Right (Visual) - Demo Interactiva */}
                     <div style={{ display: 'flex', justifyContent: 'center' }} className="hero-visual">
-                        <Link href="/p/d2qryeg6" target="_blank" style={{ textDecoration: 'none' }}>
+                        <Link href="/p/d2qryeg6" target="_blank" style={{ textDecoration: 'none', width: '100%', maxWidth: 420 }}>
                             <div style={{
-                                background: 'white', borderRadius: 24, padding: 32, width: '100%', maxWidth: 420,
+                                background: 'white', borderRadius: 24, padding: 32, width: '100%',
                                 boxShadow: '0 25px 50px rgba(0,0,0,0.1)', border: '1px solid var(--gray-100)',
                                 transform: 'rotate(2deg)', transition: 'transform 0.3s, box-shadow 0.3s',
-                                cursor: 'pointer'
+                                cursor: 'pointer', boxSizing: 'border-box'
                             }} className="ticket-card"
                                 onMouseEnter={e => { e.currentTarget.style.transform = 'rotate(0deg) translateY(-5px)'; e.currentTarget.style.boxShadow = '0 30px 60px rgba(0,0,0,0.15)' }}
                                 onMouseLeave={e => { e.currentTarget.style.transform = 'rotate(2deg)'; e.currentTarget.style.boxShadow = '0 25px 50px rgba(0,0,0,0.1)' }}>
@@ -120,7 +120,7 @@ export default function LandingPage() {
                                     background: '#f8fafc', borderRadius: 12, padding: 16, display: 'flex', justifyContent: 'space-between',
                                     alignItems: 'center', marginBottom: 24
                                 }}>
-                                    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--gray-500)' }}>TOTAL TOTAL</span>
+                                    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--gray-500)' }}>TOTAL</span>
                                     <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--brand-blue)' }}>$290.000</span>
                                 </div>
 
@@ -140,8 +140,7 @@ export default function LandingPage() {
             {/* The Problem Section */}
             <section style={{ padding: '80px 24px', background: 'white' }}>
                 <div style={{
-                    maxWidth: 600
-                    , margin: '0 auto', display: 'center', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center'
+                    maxWidth: 600, margin: '0 auto', boxSizing: 'border-box'
                 }} className="problem-grid">
 
                     {/* Problem Left */}
@@ -167,7 +166,7 @@ export default function LandingPage() {
                                     fontSize: 16, color: 'var(--gray-700)', fontWeight: 500,
                                     border: '1px solid #f1f5f9'
                                 }}>
-                                    <div style={{ background: '#fee2e2', borderRadius: '50%', padding: 4, display: 'flex' }}>
+                                    <div style={{ background: '#fee2e2', borderRadius: '50%', padding: 4, display: 'flex', flexShrink: 0 }}>
                                         <XCircle size={20} color="#ef4444" />
                                     </div>
                                     <span>{prob}</span>
@@ -179,15 +178,12 @@ export default function LandingPage() {
                             Muchas veces el trabajo lo gana el primero que envía un presupuesto claro.
                         </div>
                     </div>
-
-
-
                 </div>
             </section>
 
             {/* The Solution Section */}
             <section style={{ padding: '80px 24px', background: '#0f172a', color: 'white', textAlign: 'center' }}>
-                <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+                <div style={{ maxWidth: 1000, margin: '0 auto', boxSizing: 'border-box' }}>
                     <h2 style={{ fontSize: 36, fontWeight: 800, marginBottom: 16, color: 'white' }}>
                         Con PresupuestosYA lo resolvés en segundos
                     </h2>
@@ -195,7 +191,7 @@ export default function LandingPage() {
                         Simple, rápido y profesional.
                     </p>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 32 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 32 }}>
                         {[
                             { num: '1️⃣', text: 'Creás el presupuesto en menos de 1 minuto' },
                             { num: '2️⃣', text: 'Se genera un link profesional automáticamente' },
@@ -213,7 +209,7 @@ export default function LandingPage() {
 
             {/* Benefits & Emotional Benefit */}
             <section style={{ padding: '80px 24px', background: '#f8fafc' }}>
-                <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 60 }}>
+                <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 350px), 1fr))', gap: 60, boxSizing: 'border-box' }}>
 
                     {/* Benefits */}
                     <div style={{ background: 'white', padding: 48, borderRadius: 24, boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
@@ -230,12 +226,12 @@ export default function LandingPage() {
                                 { text: 'Imagen profesional frente al cliente', icon: <CheckCircle2 size={20} color="#16a34a" /> }
                             ].map((ben, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 16, color: 'var(--gray-700)', fontWeight: 500 }}>
-                                    {ben.icon}
+                                    <div style={{ flexShrink: 0 }}>{ben.icon}</div>
                                     {ben.text === 'Mejorá tu redacción con Inteligencia Artificial' ?
                                         <span>Mejorá tu redacción con <strong style={{ color: '#a855f7' }}>Inteligencia Artificial</strong></span>
                                         : ben.text === 'Firma electrónica de tu cliente como comprobante' ?
-                                        <span><strong style={{ color: '#1e40af' }}>Acuerdos Firmados:</strong> evidencia sólida y confianza total</span>
-                                        : ben.text}
+                                            <span><strong style={{ color: '#1e40af' }}>Acuerdos Firmados:</strong> evidencia sólida y confianza total</span>
+                                            : ben.text}
                                 </div>
                             ))}
                         </div>
@@ -268,8 +264,8 @@ export default function LandingPage() {
 
             {/* Final CTA */}
             <section style={{ padding: '100px 24px', background: 'white', textAlign: 'center' }}>
-                <div style={{ maxWidth: 800, margin: '0 auto' }}>
-                    <h2 style={{ fontSize: 48, fontWeight: 900, color: '#0f172a', marginBottom: 16, letterSpacing: '-1px' }}>
+                <div style={{ maxWidth: 800, margin: '0 auto', boxSizing: 'border-box' }}>
+                    <h2 style={{ fontSize: 'clamp(32px, 6vw, 48px)', fontWeight: 900, color: '#0f172a', marginBottom: 16, letterSpacing: '-1px' }}>
                         Probalo gratis
                     </h2>
                     <p style={{ fontSize: 20, color: 'var(--gray-500)', marginBottom: 40 }}>
@@ -305,13 +301,13 @@ export default function LandingPage() {
 
             {/* Footer */}
             <footer style={{ background: '#0f172a', padding: '60px 24px 24px', color: 'rgba(255,255,255,0.6)' }}>
-                <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+                <div style={{ maxWidth: 1200, margin: '0 auto', boxSizing: 'border-box' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 40, marginBottom: 24, flexWrap: 'wrap', gap: 32 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <Zap size={24} color="#60a5fa" fill="#60a5fa" />
                             <span style={{ fontWeight: 800, fontSize: 20, color: 'white' }}>PresupuestosYA</span>
                         </div>
-                        <div style={{ display: 'flex', gap: 24 }}>
+                        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                             <Link href="/login" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Iniciar Sesión</Link>
                             <Link href="/pricing" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Tarifas</Link>
                             <a href="mailto:soporte@presupuestosya.app" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Soporte</a>
@@ -319,7 +315,7 @@ export default function LandingPage() {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, fontSize: 14 }}>
                         <div>© {new Date().getFullYear()} PresupuestosYA. Todos los derechos reservados.</div>
-                        <div style={{ display: 'flex', gap: 16 }}>
+                        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                             <Link href="/terminos" style={{ color: 'inherit', textDecoration: 'none' }}>Términos y Condiciones</Link>
                             <Link href="/privacidad" style={{ color: 'inherit', textDecoration: 'none' }}>Privacidad</Link>
                         </div>
@@ -330,14 +326,51 @@ export default function LandingPage() {
             {/* CSS Additions for responsiveness */}
             <style dangerouslySetInnerHTML={{
                 __html: `
+                * {
+                    box-sizing: border-box;
+                }
+                
                 @media (max-width: 900px) {
-                    .hero-grid, .problem-grid { grid-template-columns: 1fr !important; text-align: center; }
-                    .hero-grid > div:first-child { display: flex; flex-direction: column; alignItems: center; }
-                    .hero-grid h1, .problem-grid h2 { font-size: 36px !important; }
-                    .hero-grid p { margin: 0 auto 32px !important; }
-                    .hero-visual { justify-content: center !important; }
-                    .ticket-card { transform: none !important; }
-                    .problem-grid > div:first-child { padding: 0 16px; margin: 0 auto; max-width: 480px; }
+                    .hero-grid, .problem-grid { 
+                        grid-template-columns: 1fr !important; 
+                        text-align: center; 
+                    }
+                    .hero-grid > div:first-child { 
+                        display: flex; 
+                        flex-direction: column; 
+                        align-items: center; 
+                    }
+                    .hero-grid h1 { 
+                        font-size: clamp(28px, 8vw, 36px) !important; 
+                    }
+                    .problem-grid h2 { 
+                        font-size: clamp(24px, 6vw, 36px) !important; 
+                    }
+                    .hero-grid p { 
+                        margin: 0 auto 32px !important; 
+                    }
+                    .hero-visual { 
+                        justify-content: center !important; 
+                    }
+                    .ticket-card { 
+                        transform: none !important; 
+                        max-width: 100% !important;
+                    }
+                    .problem-grid > div:first-child { 
+                        padding: 0; 
+                        margin: 0 auto; 
+                        max-width: 100%; 
+                    }
+                }
+                
+                @media (max-width: 640px) {
+                    nav {
+                        padding: 16px !important;
+                    }
+                    header, section, footer {
+                        padding-left: 16px !important;
+                        padding-right: 16px !important;
+                    }
                 }
             `}} />
         </div>
