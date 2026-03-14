@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { Plus, FileText, CheckCircle, Clock, Send, TrendingUp } from 'lucide-react'
 import type { Quote } from '@/lib/types'
+import QuotesTable from '../components/QuotesTable'
 
 function StatCard({ label, value, icon: Icon, color }: {
     label: string; value: number | string; icon: any; color: string
@@ -21,19 +22,6 @@ function StatCard({ label, value, icon: Icon, color }: {
             </div>
         </div>
     )
-}
-
-function QuoteStatusBadge({ status }: { status: string }) {
-    const map: Record<string, { label: string; cls: string }> = {
-        sent: { label: 'Enviado', cls: 'badge-blue' },
-        viewed: { label: 'Visto ✓', cls: 'badge-yellow' },
-        accepted: { label: 'Aceptado ✓', cls: 'badge-green' },
-        rejected: { label: 'Rechazado', cls: 'badge-red' },
-        expired: { label: 'Vencido', cls: 'badge-gray' },
-        draft: { label: 'Borrador', cls: 'badge-gray' },
-    }
-    const { label, cls } = map[status] || { label: status, cls: 'badge-gray' }
-    return <span className={`badge ${cls}`}>{label}</span>
 }
 
 export default async function DashboardPage({
@@ -66,14 +54,6 @@ export default async function DashboardPage({
     const sent = all.filter(q => ['sent', 'viewed'].includes(q.status)).length
     const accepted = all.filter(q => q.status === 'accepted').length
     const total = all.length
-
-    function formatCurrency(n: number) {
-        return `$${n.toLocaleString('es-AR', { minimumFractionDigits: 0 })}`
-    }
-
-    function formatDate(d: string) {
-        return new Date(d).toLocaleDateString('es-AR', { day: '2-digit', month: 'short' })
-    }
 
     return (
         <div className="fade-in">
@@ -171,51 +151,7 @@ export default async function DashboardPage({
                     <p>No hay presupuestos aún</p>
                 </div>
             ) : (
-                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr style={{ background: 'var(--gray-50)', borderBottom: '1px solid var(--gray-200)' }}>
-                                {['#', 'Trabajo', 'Cliente', 'Total', 'Estado', 'Fecha', ''].map(h => (
-                                    <th key={h} style={{
-                                        padding: '10px 16px', textAlign: 'left',
-                                        fontSize: 11, fontWeight: 700, textTransform: 'uppercase',
-                                        letterSpacing: '0.8px', color: 'var(--gray-400)'
-                                    }}>{h}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {all.map((q: Quote) => (
-                                <tr key={q.id} style={{ borderBottom: '1px solid var(--gray-100)' }}
-                                    className="card-hover">
-                                    <td style={{ padding: '12px 16px', fontSize: 12, fontFamily: 'monospace', color: 'var(--gray-400)' }}>
-                                        #{q.slug.toUpperCase()}
-                                    </td>
-                                    <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>
-                                        {q.trade}
-                                    </td>
-                                    <td style={{ padding: '12px 16px', fontSize: 14, color: 'var(--gray-500)' }}>
-                                        {q.client_name || <span style={{ color: 'var(--gray-300)', fontStyle: 'italic' }}>Sin nombre</span>}
-                                    </td>
-                                    <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 700, color: 'var(--gray-900)' }}>
-                                        {formatCurrency(q.total_amount)}
-                                    </td>
-                                    <td style={{ padding: '12px 16px' }}>
-                                        <QuoteStatusBadge status={q.status} />
-                                    </td>
-                                    <td style={{ padding: '12px 16px', fontSize: 13, color: 'var(--gray-400)' }}>
-                                        {formatDate(q.created_at)}
-                                    </td>
-                                    <td style={{ padding: '12px 16px' }}>
-                                        <Link href={`/dashboard/quotes/${q.id}`} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
-                                            Ver →
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <QuotesTable quotes={all} />
             )}
         </div>
     )
