@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import SignatureCanvas from 'react-signature-canvas'
 import { createClient } from '@/lib/supabase/client'
 import type { Quote } from '@/lib/types'
 import { CheckCircle, XCircle, MessageCircle, Clock, MapPin, Wrench, Calendar, ChevronDown, ChevronUp } from 'lucide-react'
@@ -80,20 +81,51 @@ export default function PublicQuoteView({ quote }: Props) {
     const [showDetail, setShowDetail] = useState(false)
     const [rejectReason, setRejectReason] = useState('')
     const [showRejectModal, setShowRejectModal] = useState(false)
+    const [showAcceptModal, setShowAcceptModal] = useState(false)
+    const [signatureName, setSignatureName] = useState('')
+    const [signatureDNI, setSignatureDNI] = useState('')
+    const [signatureError, setSignatureError] = useState('')
+    const sigCanvas = useRef<SignatureCanvas>(null)
 
     const professional = quote.professionals as any
     const isExpired = quote.expires_at && new Date(quote.expires_at) < new Date()
     const canAct = status === 'viewed' || status === 'sent'
 
     const handleAccept = async () => {
+        if (!signatureName.trim() || !signatureDNI.trim()) {
+            setSignatureError('Por favor completá tu nombre y DNI.')
+            return
+        }
+        if (sigCanvas.current?.isEmpty()) {
+            setSignatureError('Por favor realizá tu firma en el recuadro.')
+            return
+        }
+        setSignatureError('')
         setLoading('accept')
+        
+        const signatureData = sigCanvas.current?.getTrimmedCanvas().toDataURL('image/png')
+        
         const supabase = createClient()
         await supabase
             .from('quotes')
-            .update({ status: 'accepted', accepted_at: new Date().toISOString() })
+            .update({ 
+                status: 'accepted', 
+                accepted_at: new Date().toISOString(),
+                client_signature_name: signatureName.trim(),
+                client_signature_dni: signatureDNI.trim(),
+                client_signature_data: signatureData || null,
+                client_signature_date: new Date().toISOString()
+            })
             .eq('slug', quote.slug)
+            
+        // Reflejar localmente para la UI sin recargar
+        quote.client_signature_name = signatureName.trim()
+        quote.client_signature_dni = signatureDNI.trim()
+        quote.client_signature_data = signatureData || null
+        
         setStatus('accepted')
         setLoading(null)
+        setShowAcceptModal(false)
     }
 
     const handleReject = async () => {
@@ -282,14 +314,10 @@ export default function PublicQuoteView({ quote }: Props) {
                         <button
                             className="btn btn-green"
                             style={{ width: '100%', justifyContent: 'center', padding: '18px', fontSize: 17, borderRadius: 14 }}
-                            onClick={handleAccept}
+                            onClick={() => setShowAcceptModal(true)}
                             disabled={loading !== null}
                         >
-                            {loading === 'accept' ? (
-                                <><div className="spinner" style={{ borderTopColor: 'white' }} /> Procesando...</>
-                            ) : (
-                                <><CheckCircle size={20} /> ACEPTAR PRESUPUESTO</>
-                            )}
+                            <CheckCircle size={20} /> ACEPTAR Y FIRMAR
                         </button>
 
                         <div style={{ display: 'flex', gap: 10 }}>
@@ -327,8 +355,18 @@ export default function PublicQuoteView({ quote }: Props) {
                     <div className="card fade-in" style={{ textAlign: 'center', borderColor: '#86efac', background: '#f0fdf4' }}>
                         <CheckCircle size={40} color="var(--brand-green)" style={{ margin: '0 auto 12px' }} />
                         <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--brand-green)', marginBottom: 6 }}>
-                            ¡Presupuesto aceptado!
+                            ¡Acuerdo Firmado!
                         </div>
+                        {quote.client_signature_name && (
+                            <div style={{ fontSize: 14, color: 'var(--gray-700)', marginBottom: 12, fontWeight: 500 }}>
+                                Firmado por: {quote.client_signature_name} (DNI: {quote.client_signature_dni})
+                            </div>
+                        )}
+                        {quote.client_signature_data && (
+                            <div style={{ background: 'white', border: '1px solid var(--gray-200)', borderRadius: 8, padding: 16, display: 'inline-block', marginBottom: 16 }}>
+                                <img src={quote.client_signature_data} alt="Firma del cliente" style={{ maxHeight: 80, maxWidth: '100%' }} />
+                            </div>
+                        )}
                         <div style={{ fontSize: 14, color: 'var(--gray-500)' }}>
                             El profesional fue notificado. Vas a recibir
                             confirmación de contacto a la brevedad.
@@ -405,6 +443,111 @@ export default function PublicQuoteView({ quote }: Props) {
                             >
                                 {loading === 'reject' ? 'Procesando...' : 'Sí, rechazar'}
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal Aceptar / Firmar */}
+            {showAcceptModal && (
+                <div style={{
+                    position: 'fixed', inset: 0,
+                    background: 'rgba(0,0,0,0.5)',
+                    display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+                    zIndex: 50, backdropFilter: 'blur(4px)'
+                }}>
+                    <div style={{
+                        background: 'white', borderRadius: '20px 20px 0 0',
+                        padding: '24px', width: '100%', maxWidth: 600,
+                        maxHeight: '90vh', overflowY: 'auto'
+                    }}>
+                        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, color: 'var(--gray-900)' }}>
+                            Firma del Acuerdo
+                        </h3>
+                        <p style={{ fontSize: 14, color: 'var(--gray-500)', marginBottom: 20, lineHeight: 1.5 }}>
+                            Para confirmar formalmente este presupuesto, completá tus datos y realizá tu firma.
+                        </p>
+                        
+                        {signatureError && (
+                            <div style={{ background: '#fee2e2', color: '#dc2626', padding: '10px 14px', borderRadius: 8, fontSize: 14, marginBottom: 16 }}>
+                                {signatureError}
+                            </div>
+                        )}
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--gray-700)', marginBottom: 6 }}>
+                                    Nombre y Apellido
+                                </label>
+                                <input 
+                                    type="text" 
+                                    className="input" 
+                                    placeholder="Ej: Juan Perez"
+                                    value={signatureName}
+                                    onChange={e => setSignatureName(e.target.value)}
+                                    style={{ width: '100%' }}
+                                />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--gray-700)', marginBottom: 6 }}>
+                                    DNI / Documento
+                                </label>
+                                <input 
+                                    type="text" 
+                                    className="input" 
+                                    placeholder="Ej: 30123456"
+                                    value={signatureDNI}
+                                    onChange={e => setSignatureDNI(e.target.value)}
+                                    style={{ width: '100%' }}
+                                />
+                            </div>
+                            <div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--gray-700)' }}>
+                                        Tu firma manuscrita
+                                    </label>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => sigCanvas.current?.clear()}
+                                        style={{ background: 'none', border: 'none', color: 'var(--brand-accent)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+                                    >
+                                        Borrar
+                                    </button>
+                                </div>
+                                <div style={{ border: '2px dashed var(--gray-300)', borderRadius: 12, background: 'var(--gray-50)', overflow: 'hidden' }}>
+                                    <SignatureCanvas 
+                                        ref={sigCanvas} 
+                                        penColor="#0f172a"
+                                        canvasProps={{ 
+                                            width: 500,
+                                            height: 180,
+                                            className: 'sigCanvas',
+                                            style: { width: '100%', height: 180, cursor: 'crosshair', touchAction: 'none' }
+                                        }} 
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: 10 }}>
+                            <button
+                                className="btn btn-secondary"
+                                style={{ flex: 1, padding: 14 }}
+                                onClick={() => setShowAcceptModal(false)}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                className="btn btn-green"
+                                style={{ flex: 1, padding: 14 }}
+                                onClick={handleAccept}
+                                disabled={loading !== null}
+                            >
+                                {loading === 'accept' ? 'Procesando...' : 'Firmar y aceptar'}
+                            </button>
+                        </div>
+                        <div style={{ textAlign: 'center', fontSize: 11, color: 'var(--gray-400)', marginTop: 16 }}>
+                            Al firmar, estás aceptando formalmente los términos, precios y alcance detallados en este documento para la realización del trabajo.
                         </div>
                     </div>
                 </div>

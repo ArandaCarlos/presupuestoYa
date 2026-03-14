@@ -200,7 +200,7 @@ export default function LandingPage() {
                             { num: '1️⃣', text: 'Creás el presupuesto en menos de 1 minuto' },
                             { num: '2️⃣', text: 'Se genera un link profesional automáticamente' },
                             { num: '3️⃣', text: 'Se lo enviás al cliente por WhatsApp' },
-                            { num: '4️⃣', text: 'El cliente puede aceptarlo con un clic' }
+                            { num: '4️⃣', text: 'El cliente puede aceptarlo y firmarlo online' }
                         ].map((step, i) => (
                             <div key={i} style={{ background: 'rgba(255,255,255,0.05)', padding: 32, borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)' }}>
                                 <div style={{ fontSize: 40, marginBottom: 16 }}>{step.num}</div>
@@ -223,6 +223,7 @@ export default function LandingPage() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
                             {[
                                 { text: 'Presupuestos claros y profesionales', icon: <CheckCircle2 size={20} color="#16a34a" /> },
+                                { text: 'Firma electrónica de tu cliente como comprobante', icon: <ShieldCheck size={20} color="#3b82f6" /> },
                                 { text: 'Mejorá tu redacción con Inteligencia Artificial', icon: <Sparkles size={20} color="#a855f7" /> },
                                 { text: 'Envío por link listo para WhatsApp', icon: <CheckCircle2 size={20} color="#16a34a" /> },
                                 { text: 'Saber cuáles aceptaron o rechazaron', icon: <CheckCircle2 size={20} color="#16a34a" /> },
@@ -232,6 +233,8 @@ export default function LandingPage() {
                                     {ben.icon}
                                     {ben.text === 'Mejorá tu redacción con Inteligencia Artificial' ?
                                         <span>Mejorá tu redacción con <strong style={{ color: '#a855f7' }}>Inteligencia Artificial</strong></span>
+                                        : ben.text === 'Firma electrónica de tu cliente como comprobante' ?
+                                        <span><strong style={{ color: '#1e40af' }}>Acuerdos Firmados:</strong> evidencia sólida y confianza total</span>
                                         : ben.text}
                                 </div>
                             ))}

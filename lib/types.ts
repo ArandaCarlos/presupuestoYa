@@ -38,6 +38,10 @@ export interface Quote {
     viewed_at: string | null
     accepted_at: string | null
     rejected_at: string | null
+    client_signature_name: string | null
+    client_signature_dni: string | null
+    client_signature_data: string | null
+    client_signature_date: string | null
     created_at: string
     updated_at: string
     // Join con professionals (cuando se hace select con *)
