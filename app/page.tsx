@@ -60,12 +60,12 @@ export default function LandingPage() {
                         </p>
 
                         <div>
-                            <Link href="/login" style={{
+                            <Link href="/login" className="btn-hover" style={{
                                 display: 'inline-flex', alignItems: 'center', gap: 10,
                                 background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))',
                                 color: 'white', textDecoration: 'none', padding: '18px 36px', borderRadius: 16,
                                 fontSize: 18, fontWeight: 800, boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)',
-                                marginBottom: 16
+                                marginBottom: 16, transition: 'all 0.2s ease'
                             }}>
                                 Crear mi primer presupuesto gratis <ArrowRight size={20} />
                             </Link>
@@ -124,11 +124,12 @@ export default function LandingPage() {
                                     <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--brand-blue)' }}>$290.000</span>
                                 </div>
 
-                                <div style={{
-                                    width: '100%', background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))', 
+                                <div className="btn-hover" style={{
+                                    width: '100%', background: 'linear-gradient(135deg, #22c55e, #16a34a)', 
                                     color: 'white', border: 'none',
                                     padding: 16, borderRadius: 12, fontSize: 15, fontWeight: 700,
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                    transition: 'all 0.2s ease', cursor: 'pointer'
                                 }}>
                                     Aceptar presupuesto <CheckCircle2 size={18} />
                                 </div>
@@ -384,7 +385,7 @@ export default function LandingPage() {
 
                         {/* Pro */}
                         <div style={{ 
-                            background: 'linear-gradient(145deg, #1e3a8a, #2563eb)', 
+                            background: 'linear-gradient(145deg, #1e3a8a, hsl(142 71% 45%))', 
                             borderRadius: 24, padding: 32, 
                             boxShadow: '0 20px 60px rgba(37,99,235,0.30)',
                             textAlign: 'left', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden'
@@ -421,10 +422,11 @@ export default function LandingPage() {
                                 ))}
                             </div>
                             
-                            <Link href="/login" style={{ 
+                            <Link href="/login" className="btn-hover" style={{ 
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                                 padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
-                                background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a'
+                                background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a',
+                                transition: 'all 0.2s ease'
                             }}>
                                 Empezar con Pro <ArrowRight size={16} />
                             </Link>
@@ -443,13 +445,14 @@ export default function LandingPage() {
                         Creá tu cuenta en segundos. Sin tarjeta, sin compromiso.
                     </p>
 
-                    <Link href="/login" style={{
+                    <Link href="/login" className="btn-hover" style={{
                         display: 'inline-flex', alignItems: 'center', gap: 10,
                         background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))', 
                         color: 'white', textDecoration: 'none',
                         padding: '16px 40px', borderRadius: 12,
                         fontSize: 18, fontWeight: 800,
                         boxShadow: '0 10px 25px rgba(37, 99, 235, 0.25)',
+                        transition: 'all 0.2s ease'
                     }}>
                         Crear cuenta gratis
                     </Link>
@@ -485,6 +488,12 @@ export default function LandingPage() {
                 __html: `
                 * {
                     box-sizing: border-box;
+                }
+
+                .btn-hover:hover {
+                    transform: translateY(-2px);
+                    filter: brightness(1.1);
+                    box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
                 }
                 
                 @media (max-width: 900px) {

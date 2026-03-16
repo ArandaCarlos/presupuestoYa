@@ -126,7 +126,7 @@ export default async function PricingPage() {
 
                     {/* PRO */}
                     <div style={{
-                        background: 'linear-gradient(145deg, #1e3a8a, #2563eb)',
+                        background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
                         borderRadius: 24, padding: 32,
                         boxShadow: '0 20px 60px rgba(37,99,235,0.30)',
                         position: 'relative', overflow: 'hidden'
@@ -176,19 +176,21 @@ export default async function PricingPage() {
                                     ✓ Tu plan actual — Pro
                                 </div>
                             ) : (
-                                <Link href="/dashboard/upgrade" style={{
+                                <Link href="/dashboard/upgrade" onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.1)' }} onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none' }} style={{
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                                     padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
-                                    background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a'
+                                    background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a',
+                                    transition: 'all 0.2s ease'
                                 }}>
                                     Pasarme al Pro <ArrowRight size={16} />
                                 </Link>
                             )
                         ) : (
-                            <Link href="/login" style={{
+                            <Link href="/login" onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.1)' }} onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none' }} style={{
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                                 padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
-                                background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a'
+                                background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a',
+                                transition: 'all 0.2s ease'
                             }}>
                                 Empezar con Pro <ArrowRight size={16} />
                             </Link>
