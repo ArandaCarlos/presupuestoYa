@@ -144,7 +144,7 @@ export default async function PricingPage() {
                                 <span style={{ fontSize: 14, fontWeight: 700, color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '1px' }}>Pro</span>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
-                                <span style={{ fontSize: 48, fontWeight: 900, color: 'white', lineHeight: 1 }}>$14.000</span>
+                                <span style={{ fontSize: 48, fontWeight: 900, color: 'white', lineHeight: 1 }}>$10.000</span>
                                 <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', paddingBottom: 6 }}>ARS / mes</span>
                             </div>
                             <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>

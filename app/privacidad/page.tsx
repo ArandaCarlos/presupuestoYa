@@ -35,7 +35,7 @@ export default function PrivacyPage() {
 
                     <section>
                         <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', marginBottom: 16 }}>5. Contacto DPO</h2>
-                        <p>Si deseas borrar tu cuenta íntegramente de nuestros registros, acceder a tus datos, revocarlos o rectificarlos, contactate a <strong>soporte@presupuestosya.app</strong> y te ayudaremos con total celeridad técnica.</p>
+                        <p>Si deseas borrar tu cuenta íntegramente de nuestros registros, acceder a tus datos, revocarlos o rectificarlos, contactate a <strong>soporte.presupuestoya@gmail.com</strong> y te ayudaremos con total celeridad técnica.</p>
                     </section>
                 </div>
             </div>

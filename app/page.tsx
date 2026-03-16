@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Zap, CheckCircle2, ArrowRight, XCircle, Search, Smartphone, Star, ShieldCheck, Check, Sparkles } from 'lucide-react'
+import { Zap, CheckCircle2, ArrowRight, XCircle, Search, Smartphone, Star, ShieldCheck, Check, Sparkles, FileText, Send, CheckCircle } from 'lucide-react'
 
 export default function LandingPage() {
     return (
@@ -125,7 +125,8 @@ export default function LandingPage() {
                                 </div>
 
                                 <div style={{
-                                    width: '100%', background: '#16a34a', color: 'white', border: 'none',
+                                    width: '100%', background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))', 
+                                    color: 'white', border: 'none',
                                     padding: 16, borderRadius: 12, fontSize: 15, fontWeight: 700,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
                                 }}>
@@ -137,70 +138,44 @@ export default function LandingPage() {
                 </div>
             </header>
 
-            {/* The Problem Section */}
-            <section style={{ padding: '80px 24px', background: 'white' }}>
-                <div style={{
-                    maxWidth: 600, margin: '0 auto', boxSizing: 'border-box'
-                }} className="problem-grid">
 
-                    {/* Problem Left */}
-                    <div>
-                        <div style={{ display: 'inline-flex', background: '#f1f5f9', color: '#64748b', padding: '6px 12px', borderRadius: 20, fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>
-                            Problema
-                        </div>
-                        <h2 style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', marginBottom: 32, lineHeight: 1.1 }}>
-                            ¿Te pasa esto cuando mandás presupuestos?
-                        </h2>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 40 }}>
-                            {[
-                                'Mandás precios por WhatsApp desordenados',
-                                'Tardás demasiado en responder',
-                                'Perdés trabajos porque otro respondió antes',
-                                'Tus presupuestos no se ven profesionales',
-                                'Después no sabés cuáles aceptaron'
-                            ].map((prob, i) => (
-                                <div key={i} style={{
-                                    display: 'flex', alignItems: 'center', gap: 16,
-                                    background: '#f8fafc', padding: '16px 20px', borderRadius: 16,
-                                    fontSize: 16, color: 'var(--gray-700)', fontWeight: 500,
-                                    border: '1px solid #f1f5f9'
-                                }}>
-                                    <div style={{ background: '#fee2e2', borderRadius: '50%', padding: 4, display: 'flex', flexShrink: 0 }}>
-                                        <XCircle size={20} color="#ef4444" />
-                                    </div>
-                                    <span>{prob}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div style={{ background: '#fff1f2', color: '#be123c', padding: '20px 24px', borderRadius: 16, fontSize: 16, fontWeight: 700, borderLeft: '4px solid #ef4444' }}>
-                            Muchas veces el trabajo lo gana el primero que envía un presupuesto claro.
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* The Solution Section */}
-            <section style={{ padding: '80px 24px', background: '#0f172a', color: 'white', textAlign: 'center' }}>
+            {/* How it Works Section */}
+            <section style={{ padding: '100px 24px', background: 'white', textAlign: 'center' }}>
                 <div style={{ maxWidth: 1000, margin: '0 auto', boxSizing: 'border-box' }}>
-                    <h2 style={{ fontSize: 36, fontWeight: 800, marginBottom: 16, color: 'white' }}>
-                        Con PresupuestosYA lo resolvés en segundos
+                    <h2 style={{ fontSize: 40, fontWeight: 800, marginBottom: 12, color: '#0f172a' }}>
+                        ¿Cómo funciona?
                     </h2>
-                    <p style={{ fontSize: 18, color: '#94a3b8', marginBottom: 60 }}>
-                        Simple, rápido y profesional.
+                    <p style={{ fontSize: 18, color: '#64748b', marginBottom: 80 }}>
+                        Tres pasos. Sin complicaciones.
                     </p>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 32 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 40 }}>
                         {[
-                            { num: '1️⃣', text: 'Creás el presupuesto en menos de 1 minuto' },
-                            { num: '2️⃣', text: 'Se genera un link profesional automáticamente' },
-                            { num: '3️⃣', text: 'Se lo enviás al cliente por WhatsApp' },
-                            { num: '4️⃣', text: 'El cliente puede aceptarlo y firmarlo online' }
+                            { 
+                                icon: <FileText size={24} color="#4b5563" />, 
+                                title: 'Creás el presupuesto en 1 minuto', 
+                                desc: 'Completá los datos del trabajo, los materiales y el precio. Listo.' 
+                            },
+                            { 
+                                icon: <Send size={24} color="#4b5563" />, 
+                                title: 'Enviás el link por WhatsApp', 
+                                desc: 'Tu cliente recibe un link profesional que puede abrir desde cualquier celular.' 
+                            },
+                            { 
+                                icon: <CheckCircle size={24} color="#4b5563" />, 
+                                title: 'El cliente lo acepta con un botón', 
+                                desc: 'Sin llamadas, sin idas y vueltas. Aceptá y vos recibís la confirmación.' 
+                            }
                         ].map((step, i) => (
-                            <div key={i} style={{ background: 'rgba(255,255,255,0.05)', padding: 32, borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)' }}>
-                                <div style={{ fontSize: 40, marginBottom: 16 }}>{step.num}</div>
-                                <div style={{ fontSize: 16, fontWeight: 600, lineHeight: 1.5 }}>{step.text}</div>
+                            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <div style={{ 
+                                    background: '#f3f4f6', padding: 12, borderRadius: 12, marginBottom: 24,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    {step.icon}
+                                </div>
+                                <h3 style={{ fontSize: 18, fontWeight: 800, color: '#0f172a', marginBottom: 12 }}>{step.title}</h3>
+                                <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6, maxWidth: 240 }}>{step.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -262,40 +237,222 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Final CTA */}
+            {/* Visual Quote Section */}
             <section style={{ padding: '100px 24px', background: 'white', textAlign: 'center' }}>
-                <div style={{ maxWidth: 800, margin: '0 auto', boxSizing: 'border-box' }}>
-                    <h2 style={{ fontSize: 'clamp(32px, 6vw, 48px)', fontWeight: 900, color: '#0f172a', marginBottom: 16, letterSpacing: '-1px' }}>
-                        Probalo gratis
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <h2 style={{ fontSize: 40, fontWeight: 900, color: '#0f172a', marginBottom: 60, lineHeight: 1.1 }}>
+                        Así se ve el presupuesto <br /> que recibe tu cliente
                     </h2>
-                    <p style={{ fontSize: 20, color: 'var(--gray-500)', marginBottom: 40 }}>
-                        Creá tu primer presupuesto ahora y empezá a trabajar de forma más profesional.
+                    
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center', textAlign: 'left' }}>
+                        {/* Mockup del Presupuesto */}
+                        <div style={{ position: 'relative' }}>
+                            <div style={{ 
+                                background: 'white', borderRadius: 24, overflow: 'hidden',
+                                boxShadow: '0 30px 60px rgba(0,0,0,0.12)', border: '1px solid #f1f5f9'
+                            }}>
+                                {/* Top bar */}
+                                <div style={{ background: '#16a34a', color: 'white', padding: '10px 16px', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <CheckCircle size={14} /> Presupuesto aceptado! El profesional fue notificado.
+                                </div>
+                                {/* Header */}
+                                <div style={{ background: '#1e3a8a', padding: 24, color: 'white' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                                        <div style={{ width: 40, height: 40, background: 'rgba(255,255,255,0.2)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>J</div>
+                                        <div>
+                                            <div style={{ fontWeight: 700, fontSize: 16 }}>Juan Garcia</div>
+                                            <div style={{ fontSize: 12, opacity: 0.7 }}>Electricista</div>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, opacity: 0.6 }}>
+                                        <span>Presupuesto #D2QRYEG6</span>
+                                        <span>Válido hasta: 23 de marzo de 2026</span>
+                                    </div>
+                                </div>
+                                {/* Body */}
+                                <div style={{ padding: 24 }}>
+                                    <div style={{ fontSize: 12, fontWeight: 700, color: '#3b82f6', textTransform: 'uppercase', marginBottom: 4 }}>Trabajo a realizar</div>
+                                    <div style={{ fontSize: 16, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>Instalación eléctrica</div>
+                                    <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5, marginBottom: 20 }}>
+                                        Reemplazo de llaves térmicas antiguas por disyuntores normalizados, asegurando la máxima seguridad...
+                                    </div>
+
+                                    <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 20, marginBottom: 20 }}>
+                                        <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 12 }}>Detalle del presupuesto</div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 13 }}>
+                                            <span style={{ color: '#64748b' }}>Mano de obra</span>
+                                            <span style={{ fontWeight: 600 }}>$200.000</span>
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16, fontSize: 13 }}>
+                                            <span style={{ color: '#64748b' }}>Materiales</span>
+                                            <span style={{ fontWeight: 600 }}>$90.000</span>
+                                        </div>
+                                        <div style={{ background: '#1e3a8a', color: 'white', padding: '12px 16px', borderRadius: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <span style={{ fontSize: 12, fontWeight: 600 }}>TOTAL</span>
+                                            <span style={{ fontSize: 20, fontWeight: 800 }}>$290.000</span>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ background: '#f0fdf4', border: '1px solid #dcfce7', borderRadius: 12, padding: 16, textAlign: 'center' }}>
+                                        <div style={{ color: '#16a34a', fontWeight: 800, fontSize: 14, marginBottom: 4 }}>¡Acuerdo Firmado!</div>
+                                        <div style={{ fontSize: 11, color: '#15803d' }}>El profesional fue notificado. Vas a recibir confirmación de contacto a la brevedad.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Text Detail */}
+                        <div>
+                            <p style={{ fontSize: 18, color: '#64748b', lineHeight: 1.6, marginBottom: 40 }}>
+                                Tu cliente recibe un link que abre una página profesional con todos los detalles del trabajo y el precio. Sin archivos adjuntos, sin PDFs. Simple.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                                {[
+                                    'Aspecto profesional',
+                                    'Precio claro y detallado',
+                                    'Botón para aceptar al instante'
+                                ].map((item, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                        <div style={{ background: '#dcfce7', padding: 8, borderRadius: '50%', display: 'flex' }}>
+                                            <Check size={20} color="#16a34a" strokeWidth={3} />
+                                        </div>
+                                        <span style={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Pricing Section - Synced with /pricing */}
+            <section style={{ padding: '100px 24px', background: '#f8fafc', textAlign: 'center' }}>
+                <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+                    <h2 style={{ fontSize: 40, fontWeight: 900, color: '#0f172a', marginBottom: 12, lineHeight: 1.2 }}>
+                        Planes simples y transparentes
+                    </h2>
+                    <p style={{ fontSize: 18, color: '#64748b', marginBottom: 64 }}>
+                        Empezá gratis. Subí al Pro cuando necesites más.
+                    </p>
+
+                    <div style={{ 
+                        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                        gap: 24, alignItems: 'start', maxWidth: 840, margin: '0 auto'
+                    }}>
+                        {/* Gratis */}
+                        <div style={{ 
+                            background: 'white', borderRadius: 24, padding: 32, 
+                            border: '2px solid #e2e8f0', textAlign: 'left',
+                            display: 'flex', flexDirection: 'column',
+                            boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
+                        }}>
+                            <div style={{ marginBottom: 24 }}>
+                                <div style={{ fontSize: 14, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 8 }}>Free</div>
+                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
+                                    <span style={{ fontSize: 48, fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>$0</span>
+                                    <span style={{ fontSize: 15, color: '#94a3b8', paddingBottom: 6 }}>/ mes</span>
+                                </div>
+                                <p style={{ fontSize: 14, color: '#64748b' }}>Para empezar y probar la herramienta sin comprometerte.</p>
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
+                                {[
+                                    'Hasta 5 presupuestos por mes',
+                                    'Link público para clientes',
+                                    'Formato profesional para el cliente',
+                                    'Botón Aceptar / Rechazar',
+                                    'Mejora de texto con IA'
+                                ].map((feat, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                                        <div style={{ width: 20, height: 20, borderRadius: 10, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                                            <Check size={12} color="#64748b" strokeWidth={2.5} />
+                                        </div>
+                                        <span style={{ fontSize: 14, color: '#475569' }}>{feat}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            <Link href="/login" style={{ 
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
+                                border: '2px solid #e2e8f0', fontSize: 15, fontWeight: 700,
+                                color: '#0f172a', background: 'white'
+                            }}>
+                                Empezar gratis <ArrowRight size={16} />
+                            </Link>
+                        </div>
+
+                        {/* Pro */}
+                        <div style={{ 
+                            background: 'linear-gradient(145deg, #1e3a8a, #2563eb)', 
+                            borderRadius: 24, padding: 32, 
+                            boxShadow: '0 20px 60px rgba(37,99,235,0.30)',
+                            textAlign: 'left', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden'
+                        }}>
+                            <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
+                            
+                            <div style={{ marginBottom: 24, position: 'relative' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                                    <Star size={14} color="#fbbf24" fill="#fbbf24" />
+                                    <span style={{ fontSize: 14, fontWeight: 700, color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '1px' }}>Pro</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
+                                    <span style={{ fontSize: 48, fontWeight: 900, color: 'white', lineHeight: 1 }}>$10.000</span>
+                                    <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', paddingBottom: 6 }}>ARS / mes</span>
+                                </div>
+                                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>Para el profesional que quiere crecer y cerrar más trabajos.</p>
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28, position: 'relative' }}>
+                                {[
+                                    'Presupuestos ilimitados',
+                                    'Panel de métricas y estadísticas',
+                                    'Historial completo',
+                                    'Perfil con logo incluido',
+                                    'Soporte prioritario',
+                                    'Recordatorios y bot WhatsApp'
+                                ].map((feat, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                                        <div style={{ width: 20, height: 20, borderRadius: 10, background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                                            <Check size={12} color="white" strokeWidth={2.5} />
+                                        </div>
+                                        <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)' }}>{feat}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            <Link href="/login" style={{ 
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
+                                background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a'
+                            }}>
+                                Empezar con Pro <ArrowRight size={16} />
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Final CTA */}
+            <section style={{ padding: '120px 24px', background: 'white', textAlign: 'center' }}>
+                <div style={{ maxWidth: 800, margin: '0 auto', boxSizing: 'border-box' }}>
+                    <h2 style={{ fontSize: 48, fontWeight: 800, color: '#0f172a', marginBottom: 16, letterSpacing: '-1.5px' }}>
+                        Empezá a enviar presupuestos profesionales hoy
+                    </h2>
+                    <p style={{ fontSize: 18, color: '#64748b', marginBottom: 40 }}>
+                        Creá tu cuenta en segundos. Sin tarjeta, sin compromiso.
                     </p>
 
                     <Link href="/login" style={{
                         display: 'inline-flex', alignItems: 'center', gap: 10,
-                        background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))',
+                        background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))', 
                         color: 'white', textDecoration: 'none',
-                        padding: '20px 48px', borderRadius: 100,
-                        fontSize: 20, fontWeight: 800,
-                        boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)',
-                        marginBottom: 40
+                        padding: '16px 40px', borderRadius: 12,
+                        fontSize: 18, fontWeight: 800,
+                        boxShadow: '0 10px 25px rgba(37, 99, 235, 0.25)',
                     }}>
-                        Crear mi primer presupuesto gratis
+                        Crear cuenta gratis
                     </Link>
-
-                    <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>
-                            Ideal para:
-                        </div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12 }}>
-                            {['Electricistas', 'Plomeros', 'Pintores', 'Carpinteros', 'Técnicos', 'Freelancers', 'Mecánicos'].map((trade, i) => (
-                                <span key={i} style={{ background: '#f1f5f9', color: '#475569', padding: '6px 16px', borderRadius: 20, fontSize: 14, fontWeight: 600 }}>
-                                    {trade}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -310,7 +467,7 @@ export default function LandingPage() {
                         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                             <Link href="/login" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Iniciar Sesión</Link>
                             <Link href="/pricing" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Tarifas</Link>
-                            <a href="mailto:soporte@presupuestosya.app" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Soporte</a>
+                            <a href="mailto:soporte.presupuestoya@gmail.com" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Soporte</a>
                         </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, fontSize: 14 }}>
@@ -331,7 +488,7 @@ export default function LandingPage() {
                 }
                 
                 @media (max-width: 900px) {
-                    .hero-grid, .problem-grid { 
+                    .hero-grid { 
                         grid-template-columns: 1fr !important; 
                         text-align: center; 
                     }

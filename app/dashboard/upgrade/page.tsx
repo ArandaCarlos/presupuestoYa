@@ -73,7 +73,7 @@ export default function UpgradePage() {
 
                 <div style={{ marginBottom: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                        <span style={{ fontSize: 52, fontWeight: 900, color: 'white', lineHeight: 1 }}>$14.000</span>
+                        <span style={{ fontSize: 52, fontWeight: 900, color: 'white', lineHeight: 1 }}>$10.000</span>
                         <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, paddingBottom: 6 }}>ARS / mes</span>
                     </div>
                     <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 14 }}>
@@ -140,7 +140,7 @@ export default function UpgradePage() {
                     Ver comparativa completa de planes →
                 </Link>
             </div>
-            
+
             <div id="wallet_container" />
         </div>
     )

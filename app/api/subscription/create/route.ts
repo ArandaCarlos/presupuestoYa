@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         // Crear la Preferencia (pago simple) en MercadoPago
         const client = getMPClient()
         const preference = new Preference(client)
-        
+
         const response = await preference.create({
             body: {
                 items: [
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
                         title: 'PresupuestosYA Pro',
                         description: 'Suscripción por 30 días con presupuestos ilimitados',
                         quantity: 1,
-                        unit_price: 20, 
+                        unit_price: 10000,
                         // Nota: el monto real dependerá de lo que quieras setear, lo bajé a 20 para pruebas
                     }
                 ],

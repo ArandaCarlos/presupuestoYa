@@ -239,7 +239,7 @@ function NewQuoteForm() {
                         background: 'white', fontSize: 16, fontWeight: 800, color: '#1e3a8a',
                         boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
                     }}>
-                        Pasarme al Pro — $14.000/mes →
+                        Pasarme al Pro — $10.000/mes →
                     </Link>
 
                     <div style={{ marginTop: 20 }}>

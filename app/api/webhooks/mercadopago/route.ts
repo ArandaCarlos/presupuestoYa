@@ -1,15 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getMPClient, mpPaymentStatusToPlan } from '@/lib/mercadopago'
 import { Payment } from 'mercadopago'
-import { createClient } from '@supabase/supabase-js'
-
-// Usar service_role para el webhook (no hay sesión de usuario)
-function getServiceClient() {
-    return createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    )
-}
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function POST(request: NextRequest) {
     try {
@@ -66,7 +58,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Actualizar el profesional en Supabase
-        const supabase = getServiceClient()
+        const supabase = createAdminClient()
         const { error } = await supabase
             .from('professionals')
             .update({

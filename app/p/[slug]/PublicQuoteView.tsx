@@ -83,7 +83,6 @@ export default function PublicQuoteView({ quote }: Props) {
     const [showRejectModal, setShowRejectModal] = useState(false)
     const [showAcceptModal, setShowAcceptModal] = useState(false)
     const [signatureName, setSignatureName] = useState('')
-    const [signatureDNI, setSignatureDNI] = useState('')
     const [signatureError, setSignatureError] = useState('')
     const sigCanvas = useRef<SignatureCanvas>(null)
 
@@ -92,8 +91,8 @@ export default function PublicQuoteView({ quote }: Props) {
     const canAct = status === 'viewed' || status === 'sent'
 
     const handleAccept = async () => {
-        if (!signatureName.trim() || !signatureDNI.trim()) {
-            setSignatureError('Por favor completá tu nombre y DNI.')
+        if (!signatureName.trim()) {
+            setSignatureError('Por favor completá tu nombre.')
             return
         }
         if (sigCanvas.current?.isEmpty()) {
@@ -112,7 +111,6 @@ export default function PublicQuoteView({ quote }: Props) {
                 status: 'accepted', 
                 accepted_at: new Date().toISOString(),
                 client_signature_name: signatureName.trim(),
-                client_signature_dni: signatureDNI.trim(),
                 client_signature_data: signatureData || null,
                 client_signature_date: new Date().toISOString()
             })
@@ -120,12 +118,15 @@ export default function PublicQuoteView({ quote }: Props) {
             
         // Reflejar localmente para la UI sin recargar
         quote.client_signature_name = signatureName.trim()
-        quote.client_signature_dni = signatureDNI.trim()
         quote.client_signature_data = signatureData || null
         
         setStatus('accepted')
         setLoading(null)
         setShowAcceptModal(false)
+
+        // Enviar notificación por email al profesional (sin bloquear la UI)
+        fetch(`/api/quotes/${quote.slug}/accept-notify`, { method: 'POST' })
+            .catch(err => console.error('Error enviando notificación:', err))
     }
 
     const handleReject = async () => {
@@ -359,7 +360,7 @@ export default function PublicQuoteView({ quote }: Props) {
                         </div>
                         {quote.client_signature_name && (
                             <div style={{ fontSize: 14, color: 'var(--gray-700)', marginBottom: 12, fontWeight: 500 }}>
-                                Firmado por: {quote.client_signature_name} (DNI: {quote.client_signature_dni})
+                                Firmado por: {quote.client_signature_name}
                             </div>
                         )}
                         {quote.client_signature_data && (
@@ -485,19 +486,6 @@ export default function PublicQuoteView({ quote }: Props) {
                                     placeholder="Ej: Juan Perez"
                                     value={signatureName}
                                     onChange={e => setSignatureName(e.target.value)}
-                                    style={{ width: '100%' }}
-                                />
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--gray-700)', marginBottom: 6 }}>
-                                    DNI / Documento
-                                </label>
-                                <input 
-                                    type="text" 
-                                    className="input" 
-                                    placeholder="Ej: 30123456"
-                                    value={signatureDNI}
-                                    onChange={e => setSignatureDNI(e.target.value)}
                                     style={{ width: '100%' }}
                                 />
                             </div>
