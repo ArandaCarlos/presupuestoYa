@@ -42,6 +42,7 @@ export async function POST(
         const { data, error: resendError } = await resend.emails.send({
             from: DEFAULT_FROM_EMAIL,
             to: [user.email],
+            replyTo: 'soporte.presupuestoya@gmail.com',
             subject: '🎉 Tu presupuesto fue aceptado',
             html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #334155;">
@@ -61,10 +62,13 @@ export async function POST(
                 </div>
             `
         })
-
+ 
         if (resendError) {
-            console.error('Resend error:', resendError)
-            return NextResponse.json({ error: 'Error al enviar el email' }, { status: 500 })
+            console.error('Resend error full details:', JSON.stringify(resendError, null, 2))
+            return NextResponse.json({ 
+                error: 'Error al enviar el email',
+                details: resendError.message 
+            }, { status: 500 })
         }
 
         return NextResponse.json({ success: true, id: data?.id })
