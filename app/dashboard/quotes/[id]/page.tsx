@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowLeft, Copy, CheckCircle, Clock, ExternalLink, Share2, RefreshCcw } from 'lucide-react'
 import type { Quote } from '@/lib/types'
 import QuoteDetailActions from './QuoteDetailActions'
+import GenerateInvoiceButton from './GenerateInvoiceButton'
 
 interface Props {
     params: Promise<{ id: string }>
@@ -45,6 +46,13 @@ export default async function QuoteDetailPage({ params, searchParams }: Props) {
         .single()
 
     if (error || !quote) redirect('/dashboard/quotes')
+
+    // Check if invoice exists
+    const { data: invoice } = await supabase
+        .from('invoices')
+        .select('id')
+        .eq('quote_id', id)
+        .single()
 
     const statusMap: Record<string, { label: string; cls: string; icon: any }> = {
         sent: { label: 'Enviado', cls: 'badge-blue', icon: '📤' },
@@ -175,6 +183,10 @@ export default async function QuoteDetailPage({ params, searchParams }: Props) {
                         <RefreshCcw size={16} />
                         {quote.status === 'rejected' ? 'Duplicar y corregir' : 'Duplicar'}
                     </Link>
+                )}
+
+                {quote.status === 'accepted' && (
+                    <GenerateInvoiceButton quoteId={quote.id} existingInvoiceId={invoice?.id} />
                 )}
             </div>
         </div>

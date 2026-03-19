@@ -58,6 +58,31 @@ export interface QuoteItem {
     sort_order: number
 }
 
+export interface Invoice {
+    id: string
+    quote_id: string
+    invoice_number: string
+    professional_id: string | null
+    client_name: string | null
+    client_phone: string | null
+    client_address: string | null
+    trade: string | null
+    description: string | null
+    client_signature_name: string | null
+    client_signature_data: string | null
+    client_signature_date: string | null
+    materials_amount: number
+    labor_amount: number
+    total_amount: number
+    items_snapshot: any
+    public_url: string | null
+    created_at: string
+    updated_at: string
+    // Relaciones
+    quotes?: Quote
+    professionals?: Professional
+}
+
 export interface CreateQuoteInput {
     client_name?: string
     client_phone?: string
