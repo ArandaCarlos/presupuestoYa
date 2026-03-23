@@ -24,20 +24,22 @@ export default function SettingsPage() {
         plan: 'free',
     })
 
+    const [uploading, setUploading] = useState(false)
+ 
     const supabase = createClient()
-
+ 
     useEffect(() => {
         const loadProfile = async () => {
             const { data: { user } } = await supabase.auth.getUser()
             if (!user) return
-
+ 
             // Buscar perfil por user_id
             const { data: prof } = await supabase
                 .from('professionals')
                 .select('*')
                 .eq('user_id', user.id)
                 .maybeSingle()
-
+ 
             if (prof) {
                 setForm({
                     name: prof.name || '',
@@ -51,15 +53,49 @@ export default function SettingsPage() {
         }
         loadProfile()
     }, [])
-
+ 
     const set = (key: string, value: string) => setForm(f => ({ ...f, [key]: value }))
-
+ 
+    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+ 
+        setUploading(true)
+        setError('')
+ 
+        try {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (!user) throw new Error('No user')
+ 
+            const fileExt = file.name.split('.').pop()
+            const fileName = `${user.id}-${Math.random()}.${fileExt}`
+            const filePath = `${user.id}/${fileName}`
+ 
+            const { error: uploadError } = await supabase.storage
+                .from('profiles')
+                .upload(filePath, file)
+ 
+            if (uploadError) throw uploadError
+ 
+            const { data: { publicUrl } } = supabase.storage
+                .from('profiles')
+                .getPublicUrl(filePath)
+ 
+            set('logo_url', publicUrl)
+        } catch (err: any) {
+            console.error('Upload error:', err)
+            setError('Error subiendo la imagen. Intentá con un archivo más chico o formato JPG/PNG.')
+        } finally {
+            setUploading(false)
+        }
+    }
+ 
     const handleSave = async () => {
         setSaving(true)
         setError('')
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
-
+ 
         const { error: upsertError } = await supabase
             .from('professionals')
             .upsert({
@@ -69,7 +105,7 @@ export default function SettingsPage() {
                 trade: form.trade || null,
                 logo_url: form.logo_url || null,
             }, { onConflict: 'user_id' })
-
+ 
         if (upsertError) {
             setError('No se pudo guardar el perfil. Intentá de nuevo.')
         } else {
@@ -78,14 +114,14 @@ export default function SettingsPage() {
         }
         setSaving(false)
     }
-
+ 
     const inputStyle = {
         width: '100%', padding: '11px 14px',
         border: '1.5px solid var(--gray-200)', borderRadius: 10,
         fontSize: 15, fontFamily: 'inherit', color: 'var(--gray-900)',
         background: 'white', outline: 'none'
     }
-
+ 
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 80 }}>
@@ -93,7 +129,7 @@ export default function SettingsPage() {
             </div>
         )
     }
-
+ 
     return (
         <div className="fade-in" style={{ maxWidth: 560 }}>
             <div style={{ marginBottom: 28 }}>
@@ -114,14 +150,14 @@ export default function SettingsPage() {
                     Esta información aparece en los presupuestos que enviás a tus clientes.
                 </p>
             </div>
-
+ 
             {error && (
                 <div style={{
                     background: '#fee2e2', borderRadius: 10, padding: '12px 16px',
                     fontSize: 13, color: '#dc2626', marginBottom: 16
                 }}>{error}</div>
             )}
-
+ 
             {saved && (
                 <div style={{
                     background: '#dcfce7', borderRadius: 10, padding: '12px 16px',
@@ -131,9 +167,9 @@ export default function SettingsPage() {
                     <CheckCircle size={16} /> Perfil guardado correctamente
                 </div>
             )}
-
+ 
             <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-
+ 
                 {/* Preview del encabezado del presupuesto */}
                 <div style={{
                     background: 'linear-gradient(135deg, var(--brand-blue), #1e40af)',
@@ -164,7 +200,7 @@ export default function SettingsPage() {
                         Preview del presupuesto
                     </div>
                 </div>
-
+ 
                 {/* Nombre */}
                 <div className="input-group">
                     <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -173,7 +209,7 @@ export default function SettingsPage() {
                     <input style={inputStyle} placeholder="Ej: Juan García"
                         value={form.name} onChange={e => set('name', e.target.value)} />
                 </div>
-
+ 
                 {/* Oficio */}
                 <div className="input-group">
                     <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -193,7 +229,7 @@ export default function SettingsPage() {
                         ))}
                     </div>
                 </div>
-
+ 
                 {/* WhatsApp */}
                 <div className="input-group">
                     <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -205,16 +241,50 @@ export default function SettingsPage() {
                         El cliente usa este número para contactarte. Formato: +549XXXXXXXXXX
                     </span>
                 </div>
-
-                {/* Logo URL */}
+ 
+                {/* Foto de Perfil / Logo */}
                 <div className="input-group">
                     <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <ImagePlus size={14} color="var(--gray-400)" /> Logo (URL de imagen)
+                        <ImagePlus size={14} color="var(--gray-400)" /> Foto de perfil / Logo
                     </label>
-                    <input style={inputStyle} placeholder="https://... (opcional)"
-                        value={form.logo_url} onChange={e => set('logo_url', e.target.value)} />
-                    <span style={{ fontSize: 12, color: 'var(--gray-400)' }}>
-                        Pegá la URL de tu logo. Aparecerá en el encabezado del presupuesto.
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                        {form.logo_url && (
+                            <div style={{ position: 'relative' }}>
+                                <img src={form.logo_url} alt="Preview" style={{ width: 80, height: 80, borderRadius: 12, objectFit: 'cover', border: '1px solid var(--gray-200)' }} />
+                                <button 
+                                    onClick={() => set('logo_url', '')}
+                                    style={{
+                                        position: 'absolute', top: -8, right: -8, background: '#ef4444', color: 'white',
+                                        width: 24, height: 24, borderRadius: '50%', border: 'none', cursor: 'pointer',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 'bold'
+                                    }}
+                                >×</button>
+                            </div>
+                        )}
+                        
+                        <label style={{
+                            flex: 1, height: 80, border: '2px dashed var(--gray-200)', borderRadius: 12,
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', background: 'var(--gray-50)', transition: 'all 0.2s',
+                            opacity: uploading ? 0.6 : 1
+                        }} className="upload-label">
+                            {uploading ? (
+                                <div className="spinner" style={{ width: 20, height: 20 }} />
+                            ) : (
+                                <>
+                                    <ImagePlus size={20} color="var(--gray-400)" />
+                                    <span style={{ fontSize: 13, color: 'var(--gray-500)', marginTop: 4 }}>
+                                        {form.logo_url ? 'Cambiar imagen' : 'Subir imagen'}
+                                    </span>
+                                </>
+                            )}
+                            <input type="file" accept="image/*" onChange={handleLogoUpload} style={{ display: 'none' }} disabled={uploading} />
+                        </label>
+                    </div>
+ 
+                    <span style={{ fontSize: 12, color: 'var(--gray-400)', marginTop: 8 }}>
+                        Recomendado: imagen cuadrada (JPG o PNG). Máx 2MB.
                     </span>
                 </div>
 

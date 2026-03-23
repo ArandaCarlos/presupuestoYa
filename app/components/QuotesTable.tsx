@@ -37,63 +37,123 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
     }
 
     return (
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-            {/* Wrapper para scroll horizontal en mobile */}
-            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
-                    <thead>
-                        <tr style={{ background: 'var(--gray-50)', borderBottom: '1px solid var(--gray-200)' }}>
-                            {['#', 'Trabajo', 'Cliente', 'Total', 'Estado', 'Fecha', ''].map(h => (
-                                <th key={h} style={{
-                                    padding: '10px 16px', textAlign: 'left',
-                                    fontSize: 11, fontWeight: 700, textTransform: 'uppercase',
-                                    letterSpacing: '0.8px', color: 'var(--gray-400)'
-                                }}>{h}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {quotes.map((q: Quote) => (
-                            <tr
-                                key={q.id}
-                                onClick={() => handleRowClick(q.id)}
-                                style={{
-                                    borderBottom: '1px solid var(--gray-100)',
-                                    cursor: 'pointer',
-                                    transition: 'background 0.2s'
-                                }}
-                                className="card-hover"
-                                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--gray-50)'}
-                                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                            >
-                                <td style={{ padding: '12px 16px', fontSize: 12, fontFamily: 'monospace', color: 'var(--gray-400)' }}>
-                                    #{q.slug.toUpperCase()}
-                                </td>
-                                <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>
-                                    {q.trade}
-                                </td>
-                                <td style={{ padding: '12px 16px', fontSize: 14, color: 'var(--gray-500)' }}>
-                                    {q.client_name || <span style={{ color: 'var(--gray-300)', fontStyle: 'italic' }}>Sin nombre</span>}
-                                </td>
-                                <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 700, color: 'var(--gray-900)' }}>
-                                    {formatCurrency(q.total_amount)}
-                                </td>
-                                <td style={{ padding: '12px 16px' }}>
-                                    <QuoteStatusBadge status={q.status} />
-                                </td>
-                                <td style={{ padding: '12px 16px', fontSize: 13, color: 'var(--gray-400)' }}>
-                                    {formatDate(q.created_at)}
-                                </td>
-                                <td style={{ padding: '12px 16px' }} onClick={(e) => e.stopPropagation()}>
-                                    <Link href={`/dashboard/quotes/${q.id}`} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
-                                        Ver →
-                                    </Link>
-                                </td>
+        <>
+            <style dangerouslySetInnerHTML={{ __html: `
+                .quotes-desktop { display: block; }
+                .quotes-mobile { display: none; }
+                
+                @media (max-width: 768px) {
+                    .quotes-desktop { display: none; }
+                    .quotes-mobile { display: flex; flex-direction: column; gap: 12px; }
+                }
+
+                .quote-card-mobile {
+                    background: white;
+                    border-radius: 16px;
+                    padding: 16px;
+                    border: 1px solid var(--gray-100);
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+                .quote-card-mobile:active {
+                    transform: scale(0.98);
+                }
+            `}} />
+
+            {/* VISTA DESKTOP: Tabla Tradicional */}
+            <div className="quotes-desktop card" style={{ padding: 0, overflow: 'hidden' }}>
+                <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+                        <thead>
+                            <tr style={{ background: 'var(--gray-50)', borderBottom: '1px solid var(--gray-200)' }}>
+                                {['#', 'Trabajo', 'Cliente', 'Total', 'Estado', 'Fecha', ''].map(h => (
+                                    <th key={h} style={{
+                                        padding: '10px 16px', textAlign: 'left',
+                                        fontSize: 11, fontWeight: 700, textTransform: 'uppercase',
+                                        letterSpacing: '0.8px', color: 'var(--gray-400)'
+                                    }}>{h}</th>
+                                ))}
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {quotes.map((q: Quote) => (
+                                <tr
+                                    key={q.id}
+                                    onClick={() => handleRowClick(q.id)}
+                                    style={{
+                                        borderBottom: '1px solid var(--gray-100)',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.2s'
+                                    }}
+                                    className="card-hover"
+                                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--gray-50)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                                >
+                                    <td style={{ padding: '12px 16px', fontSize: 12, fontFamily: 'monospace', color: 'var(--gray-400)' }}>
+                                        #{q.slug.toUpperCase()}
+                                    </td>
+                                    <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>
+                                        {q.trade}
+                                    </td>
+                                    <td style={{ padding: '12px 16px', fontSize: 14, color: 'var(--gray-500)' }}>
+                                        {q.client_name || <span style={{ color: 'var(--gray-300)', fontStyle: 'italic' }}>Sin nombre</span>}
+                                    </td>
+                                    <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 700, color: 'var(--gray-900)' }}>
+                                        {formatCurrency(q.total_amount)}
+                                    </td>
+                                    <td style={{ padding: '12px 16px' }}>
+                                        <QuoteStatusBadge status={q.status} />
+                                    </td>
+                                    <td style={{ padding: '12px 16px', fontSize: 13, color: 'var(--gray-400)' }}>
+                                        {formatDate(q.created_at)}
+                                    </td>
+                                    <td style={{ padding: '12px 16px' }} onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/dashboard/quotes/${q.id}`} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
+                                            Ver →
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+
+            {/* VISTA MOBILE: Tarjetas (Cards) */}
+            <div className="quotes-mobile">
+                {quotes.map((q: Quote) => (
+                    <div 
+                        key={q.id} 
+                        className="quote-card-mobile"
+                        onClick={() => handleRowClick(q.id)}
+                    >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                                    #{q.slug.toUpperCase()}
+                                </span>
+                                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--gray-900)' }}>{q.trade}</span>
+                            </div>
+                            <QuoteStatusBadge status={q.status} />
+                        </div>
+                        
+                        <div style={{ marginBottom: 16 }}>
+                            <div style={{ fontSize: 13, color: 'var(--gray-500)' }}>
+                                {q.client_name || 'Sin cliente'}
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--gray-50)', paddingTop: 12 }}>
+                            <span style={{ fontSize: 12, color: 'var(--gray-400)' }}>{formatDate(q.created_at)}</span>
+                            <span style={{ fontSize: 18, fontWeight: 800, color: 'var(--brand-blue)' }}>
+                                {formatCurrency(q.total_amount)}
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </>
     )
-}
+}

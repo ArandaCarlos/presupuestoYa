@@ -60,12 +60,26 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
             }}>
                 {/* Header Factura */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #e5e7eb', paddingBottom: 24, marginBottom: 32 }}>
-                    <div>
-                        <h1 style={{ fontSize: 36, fontWeight: 900, color: '#1f2937', margin: 0, textTransform: 'uppercase', letterSpacing: '-0.5px' }}>
-                            FACTURA
-                        </h1>
-                        <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>
-                            {professional?.trade || invoice.trade}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                        {professional?.logo_url ? (
+                            <img src={professional.logo_url} alt="Logo" style={{ width: 60, height: 60, borderRadius: 12, objectFit: 'cover', background: 'white', border: '1px solid #e5e7eb' }} />
+                        ) : (
+                            <div style={{
+                                width: 60, height: 60, borderRadius: 12,
+                                background: '#f3f4f6', border: '1px solid #e5e7eb',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 24, fontWeight: 700, color: '#9ca3af'
+                            }}>
+                                {(professional?.name || 'P')[0].toUpperCase()}
+                            </div>
+                        )}
+                        <div>
+                            <h1 style={{ fontSize: 32, fontWeight: 900, color: '#1f2937', margin: 0, textTransform: 'uppercase', letterSpacing: '-0.5px', lineHeight: 1 }}>
+                                FACTURA
+                            </h1>
+                            <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>
+                                {professional?.trade || invoice.trade}
+                            </div>
                         </div>
                     </div>
                     

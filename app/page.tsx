@@ -204,6 +204,7 @@ export default function LandingPage() {
                                 { text: 'Mejorá tu redacción con Inteligencia Artificial', icon: <Sparkles size={20} color="#a855f7" /> },
                                 { text: 'Envío por link listo para WhatsApp', icon: <CheckCircle2 size={20} color="#16a34a" /> },
                                 { text: 'Saber cuáles aceptaron o rechazaron', icon: <CheckCircle2 size={20} color="#16a34a" /> },
+                                { text: 'Todo tu historial organizado y seguro en la nube', icon: <ShieldCheck size={20} color="#3b82f6" /> },
                                 { text: 'Imagen profesional frente al cliente', icon: <CheckCircle2 size={20} color="#16a34a" /> }
                             ].map((ben, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 16, color: 'var(--gray-700)', fontWeight: 500 }}>
@@ -216,7 +217,7 @@ export default function LandingPage() {
                                 </div>
                             ))}
                         </div>
-                        <p style={{ color: 'var(--brand-blue)', fontWeight: 700 }}>Todo desde tu celular o computadora.</p>
+                        <p style={{ color: 'var(--brand-blue)', fontWeight: 700 }}>Tu oficina digital: todo guardado, seguro y accesible.</p>
                     </div>
 
                     {/* Emotional */}
@@ -231,12 +232,12 @@ export default function LandingPage() {
                             Cuando respondés rápido y con un presupuesto claro:
                         </p>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, fontWeight: 600 }}><Check size={20} color="var(--brand-accent)" /> transmitís profesionalismo</div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, fontWeight: 600 }}><Check size={20} color="var(--brand-accent)" /> generás confianza</div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, fontWeight: 600 }}><Check size={20} color="var(--brand-accent)" /> aumentás las chances de cerrar el trabajo</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, fontWeight: 600 }}><Check size={20} color="var(--brand-accent)" /> Transmitís profesionalismo a primera vista</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, fontWeight: 600 }}><Check size={20} color="var(--brand-accent)" /> Tenés el control total: encontrás todo en segundos</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, fontWeight: 600 }}><Check size={20} color="var(--brand-accent)" /> No perdés más presupuestos en el caos de WhatsApp</div>
                         </div>
                         <p style={{ fontSize: 16, fontStyle: 'italic', color: 'var(--gray-500)', borderLeft: '4px solid var(--gray-300)', paddingLeft: 16 }}>
-                            A veces el primero que responde es el que gana el cliente.
+                            "La organización es la mitad del trabajo. Acceder a tus datos rápido te hace más productivo."
                         </p>
                     </div>
 

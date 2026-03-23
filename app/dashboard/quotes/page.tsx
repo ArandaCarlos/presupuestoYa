@@ -14,7 +14,7 @@ export default async function QuotesPage({
     const params = await searchParams
     const query = typeof params.query === 'string' ? params.query : ''
     const page = typeof params.page === 'string' ? parseInt(params.page, 10) : 1
-    const PAGE_SIZE = 15
+    const PAGE_SIZE = 10
 
     const supabase = await createClient()
 
