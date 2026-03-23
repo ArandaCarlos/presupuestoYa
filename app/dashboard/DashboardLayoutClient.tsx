@@ -119,63 +119,74 @@ export default function DashboardLayoutClient({
                 </div>
             </aside>
 
-            {/* Mobile header */}
+            {/* Mobile header (Simplified) */}
             <div style={{
                 display: 'none', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40,
                 background: 'white', borderBottom: '1px solid var(--gray-200)',
-                padding: '12px 16px', alignItems: 'center', justifyContent: 'space-between'
+                padding: '12px 16px', alignItems: 'center', justifyContent: 'center'
             }} className="mobile-header">
                 <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
                     <Zap size={18} color="var(--brand-accent)" fill="var(--brand-accent)" />
                     <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--brand-blue)' }}>PresupuestosYA</span>
                 </Link>
-                <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-                    {menuOpen ? <X size={22} color="var(--gray-700)" /> : <Menu size={22} color="var(--gray-700)" />}
-                </button>
             </div>
-
-            {/* Mobile menu */}
-            {menuOpen && (
-                <div style={{
-                    position: 'fixed', inset: 0, zIndex: 30,
-                    background: 'white', paddingTop: 60, display: 'flex', flexDirection: 'column'
-                }}>
-                    <nav style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                        {NAV.map(({ href, label, icon: Icon, highlight }) => (
-                            <Link key={href} href={href} onClick={() => setMenuOpen(false)} style={{
-                                display: 'flex', alignItems: 'center', gap: 12,
-                                padding: '14px 16px', borderRadius: 12, fontSize: 15,
-                                fontWeight: 600, textDecoration: 'none',
-                                background: highlight ? 'linear-gradient(135deg, var(--brand-accent), #1d4ed8)' : 'transparent',
-                                color: highlight ? 'white' : 'var(--gray-700)',
-                                marginTop: highlight ? 8 : 0
-                            }}>
-                                <Icon size={18} />
-                                {label}
-                                {!highlight && <ChevronRight size={16} style={{ marginLeft: 'auto' }} color="var(--gray-300)" />}
-                            </Link>
-                        ))}
-                    </nav>
-                    <div style={{ marginTop: 'auto', padding: 16, borderTop: '1px solid var(--gray-100)' }}>
-                        <button onClick={handleLogout} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
-                            <LogOut size={16} /> Cerrar sesión
-                        </button>
-                    </div>
-                </div>
-            )}
-
+ 
+            {/* Bottom Navbar (Mobile) */}
+            <div style={{
+                display: 'none', position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 40,
+                background: 'white', borderTop: '1px solid var(--gray-200)',
+                padding: '10px 12px 24px', alignItems: 'center', justifyContent: 'space-around',
+                boxShadow: '0 -2px 10px rgba(0,0,0,0.05)'
+            }} className="mobile-nav">
+                {NAV.map(({ href, label, icon: Icon, highlight }) => {
+                    const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
+                    return (
+                        <Link key={href} href={href} style={{
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                            textDecoration: 'none', color: highlight ? 'var(--brand-blue)' : isActive ? 'var(--brand-blue)' : 'var(--gray-400)',
+                            flex: 1, position: 'relative'
+                        }}>
+                            {highlight ? (
+                                <div style={{
+                                    background: 'linear-gradient(135deg, var(--brand-accent), #1d4ed8)',
+                                    width: 44, height: 44, borderRadius: '50%',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    marginTop: -30, border: '4px solid white',
+                                    boxShadow: '0 4px 12px rgba(37,99,235,0.3)'
+                                }}>
+                                    <Icon size={20} color="white" />
+                                </div>
+                            ) : (
+                                <Icon size={20} />
+                            )}
+                            <span style={{ fontSize: 10, fontWeight: 700, marginTop: highlight ? 2 : 0 }}>
+                                {label === 'Dashboard' ? 'Inicio' : label === 'Mi perfil' ? 'Perfil' : label.split(' ')[0]}
+                            </span>
+ 
+                            {isActive && !highlight && (
+                                <div style={{
+                                    position: 'absolute', top: -10, width: 4, height: 4,
+                                    borderRadius: '50%', background: 'var(--brand-blue)'
+                                }} />
+                            )}
+                        </Link>
+                    )
+                })}
+            </div>
+ 
             {/* Main content */}
             <main style={{ flex: 1, minWidth: 0, paddingTop: 0 }}>
                 <div style={{ padding: '32px 24px', maxWidth: 1000, margin: '0 auto' }}>
                     {children}
                 </div>
             </main>
-
+ 
             <style>{`
         @media (max-width: 768px) {
           .hidden-mobile { display: none !important; }
           .mobile-header { display: flex !important; }
-          main > div { padding: 80px 16px 32px !important; }
+          .mobile-nav { display: flex !important; }
+          main > div { padding: 80px 16px 120px !important; }
         }
       `}</style>
         </div>
