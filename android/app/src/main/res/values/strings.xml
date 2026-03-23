@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PresupuestoYa</string>
+    <string name="title_activity_main">PresupuestoYa</string>
+    <string name="package_name">app.presupuestoya.app</string>
+    <string name="custom_url_scheme">app.presupuestoya.app</string>
+</resources>
