@@ -225,7 +225,7 @@ function NewQuoteForm() {
                     <h2 style={{ fontSize: 22, fontWeight: 800, color: 'white', marginBottom: 10 }}>
                         Alcanzaste tu límite del mes
                     </h2>
-                    <p style={{ color: 'var(--gray-500)', fontSize: 14, marginBottom: 24, lineHeight: 1.5 }}>
+                    <p style={{ color: 'white', fontSize: 14, marginBottom: 24, lineHeight: 1.5 }}>
                         Con el Plan Free podés crear hasta 5 presupuestos por mes.
                         ¡Pasate a PRO para crear ilimitados y acceder a métricas avanzadas!
                     </p>
