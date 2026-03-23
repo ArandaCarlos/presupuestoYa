@@ -13,26 +13,26 @@ export default function SearchFilters() {
     // Debounce search update
     useEffect(() => {
         const timeout = setTimeout(() => {
-            const current = new URLSearchParams(Array.from(searchParams.entries()))
+            const params = new URLSearchParams(searchParams.toString())
+            const currentQuery = params.get('query') || ''
             
+            // Si la búsqueda escrita es igual a la que ya está en la URL, no hacemos nada.
+            // Esto evita que al cambiar de página (que actualiza searchParams),
+            // este efecto se dispare y nos resetee a la página 1.
+            if (query.trim() === currentQuery.trim()) return
+ 
             if (query.trim()) {
-                current.set('query', query.trim())
+                params.set('query', query.trim())
             } else {
-                current.delete('query')
+                params.delete('query')
             }
             
-            // Si cambia la búsqueda, volvemos a la página 1
-            current.set('page', '1')
+            // Si realmente cambió el texto de búsqueda, ahí sí volvemos a la página 1
+            params.set('page', '1')
             
-            // Only push if the URL actually changed to avoid infinite loops
-            const urlString = current.toString()
-            const originalString = searchParams.toString()
-            
-            if (urlString !== originalString) {
-                router.push(`?${urlString}`)
-            }
+            router.push(`?${params.toString()}`)
         }, 300)
-
+ 
         return () => clearTimeout(timeout)
     }, [query, router, searchParams])
 
