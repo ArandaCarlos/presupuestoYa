@@ -11,6 +11,20 @@ export const metadata: Metadata = {
   title: 'PresupuestoYA — Presupuestos profesionales en 60 segundos',
   description: 'Generá presupuestos profesionales para oficios desde WhatsApp. Rápido, simple y profesional.',
   keywords: 'presupuesto, electricista, plomero, gasista, pintor, oficio, cotización',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'PresupuestoYA',
+  },
+}
+
+export const viewport = {
+  themeColor: '#2563eb',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({
