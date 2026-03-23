@@ -21,7 +21,8 @@ const PRO_FEATURES = [
 
 export default async function PricingPage() {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data } = await supabase.auth.getUser()
+    const user = data?.user
 
     let currentPlan = 'free'
     if (user) {
@@ -176,7 +177,7 @@ export default async function PricingPage() {
                                     ✓ Tu plan actual — Pro
                                 </div>
                             ) : (
-                                <Link href="/dashboard/upgrade" onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.1)' }} onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none' }} style={{
+                                <Link href="/dashboard/upgrade" className="pro-btn" style={{
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                                     padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
                                     background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a',
@@ -186,7 +187,7 @@ export default async function PricingPage() {
                                 </Link>
                             )
                         ) : (
-                            <Link href="/login" onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.1)' }} onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none' }} style={{
+                            <Link href="/login" className="pro-btn" style={{
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                                 padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
                                 background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a',
@@ -197,7 +198,7 @@ export default async function PricingPage() {
                         )}
                     </div>
                 </div>
-
+ 
                 {/* FAQ */}
                 <div style={{ marginTop: 64, textAlign: 'center' }}>
                     <p style={{ fontSize: 14, color: '#94a3b8' }}>
@@ -213,6 +214,12 @@ export default async function PricingPage() {
                     )}
                 </div>
             </div>
+            <style>{`
+                .pro-btn:hover {
+                    transform: translateY(-2px);
+                    filter: brightness(1.1);
+                }
+            `}</style>
         </div>
     )
 }
