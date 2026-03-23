@@ -56,7 +56,7 @@ export default function LandingPage() {
                         </h1>
 
                         <p style={{ fontSize: 18, color: '#64748b', lineHeight: 1.6, marginBottom: 40, maxWidth: 480 }}>
-                            Dejá de mandar precios desordenados por WhatsApp. Generá un presupuesto prolijo, enviá un link a tu cliente y dejá que lo acepte con un clic.
+                            Dejá de mandar precios desordenados por WhatsApp. Generá un presupuesto prolijo, enviá un link a tu cliente y convertilo en factura en un clic. <strong>Nunca fue tan fácil.</strong>
                         </p>
 
                         <div>
@@ -125,7 +125,7 @@ export default function LandingPage() {
                                 </div>
 
                                 <div className="btn-hover" style={{
-                                    width: '100%', background: 'linear-gradient(135deg, #22c55e, #16a34a)', 
+                                    width: '100%', background: 'linear-gradient(135deg, #22c55e, #16a34a)',
                                     color: 'white', border: 'none',
                                     padding: 16, borderRadius: 12, fontSize: 15, fontWeight: 700,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -147,29 +147,34 @@ export default function LandingPage() {
                         ¿Cómo funciona?
                     </h2>
                     <p style={{ fontSize: 18, color: '#64748b', marginBottom: 80 }}>
-                        Tres pasos. Sin complicaciones.
+                        Cuatro pasos. Sin complicaciones.
                     </p>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 40 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 32 }}>
                         {[
-                            { 
-                                icon: <FileText size={24} color="#4b5563" />, 
-                                title: 'Creás el presupuesto en 1 minuto', 
-                                desc: 'Completá los datos del trabajo, los materiales y el precio. Listo.' 
+                            {
+                                icon: <FileText size={24} color="#4b5563" />,
+                                title: 'Creás el presupuesto en 1 minuto',
+                                desc: 'Completá los datos del trabajo, los materiales y el precio. Listo.'
                             },
-                            { 
-                                icon: <Send size={24} color="#4b5563" />, 
-                                title: 'Enviás el link por WhatsApp', 
-                                desc: 'Tu cliente recibe un link profesional que puede abrir desde cualquier celular.' 
+                            {
+                                icon: <Send size={24} color="#4b5563" />,
+                                title: 'Enviás el link por WhatsApp',
+                                desc: 'Tu cliente recibe un link profesional que puede abrir desde cualquier celular.'
                             },
-                            { 
-                                icon: <CheckCircle size={24} color="#4b5563" />, 
-                                title: 'El cliente lo acepta con un botón', 
-                                desc: 'Sin llamadas, sin idas y vueltas. Aceptá y vos recibís la confirmación.' 
+                            {
+                                icon: <CheckCircle size={24} color="#10b981" />,
+                                title: 'El cliente lo acepta con un clic',
+                                desc: 'Sin llamadas ni idas y vueltas. Recibís la confirmación al instante.'
+                            },
+                            {
+                                icon: <Zap size={24} color="#f59e0b" />,
+                                title: 'Factura en un clic (Opcional)',
+                                desc: '¿Trabajo terminado? Convertí el presupuesto en factura con un solo botón.'
                             }
                         ].map((step, i) => (
                             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <div style={{ 
+                                <div style={{
                                     background: '#f3f4f6', padding: 12, borderRadius: 12, marginBottom: 24,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                                 }}>
@@ -244,11 +249,11 @@ export default function LandingPage() {
                     <h2 style={{ fontSize: 40, fontWeight: 900, color: '#0f172a', marginBottom: 60, lineHeight: 1.1 }}>
                         Así se ve el presupuesto <br /> que recibe tu cliente
                     </h2>
-                    
+
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center', textAlign: 'left' }}>
                         {/* Mockup del Presupuesto */}
                         <div style={{ position: 'relative' }}>
-                            <div style={{ 
+                            <div style={{
                                 background: 'white', borderRadius: 24, overflow: 'hidden',
                                 boxShadow: '0 30px 60px rgba(0,0,0,0.12)', border: '1px solid #f1f5f9'
                             }}>
@@ -326,114 +331,73 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Pricing Section - Synced with /pricing */}
-            <section style={{ padding: '100px 24px', background: '#f8fafc', textAlign: 'center' }}>
-                <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-                    <h2 style={{ fontSize: 40, fontWeight: 900, color: '#0f172a', marginBottom: 12, lineHeight: 1.2 }}>
-                        Planes simples y transparentes
-                    </h2>
-                    <p style={{ fontSize: 18, color: '#64748b', marginBottom: 64 }}>
-                        Empezá gratis. Subí al Pro cuando necesites más.
-                    </p>
-
-                    <div style={{ 
-                        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                        gap: 24, alignItems: 'start', maxWidth: 840, margin: '0 auto'
-                    }}>
-                        {/* Gratis */}
-                        <div style={{ 
-                            background: 'white', borderRadius: 24, padding: 32, 
-                            border: '2px solid #e2e8f0', textAlign: 'left',
-                            display: 'flex', flexDirection: 'column',
-                            boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
+            {/* NEW: Invoice Preview Section */}
+            <section style={{ padding: '100px 24px', background: '#f0fdf4', overflow: 'hidden' }}>
+                <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }} className="hero-grid">
+                    <div style={{ order: 2 }}>
+                        <div style={{
+                            background: 'white', borderRadius: 24, padding: 40,
+                            boxShadow: '0 30px 60px rgba(22, 163, 74, 0.12)',
+                            border: '1px solid #dcfce7', transform: 'rotate(-1deg)'
                         }}>
-                            <div style={{ marginBottom: 24 }}>
-                                <div style={{ fontSize: 14, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 8 }}>Free</div>
-                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
-                                    <span style={{ fontSize: 48, fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>$0</span>
-                                    <span style={{ fontSize: 15, color: '#94a3b8', paddingBottom: 6 }}>/ mes</span>
-                                </div>
-                                <p style={{ fontSize: 14, color: '#64748b' }}>Para empezar y probar la herramienta sin comprometerte.</p>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+                                <div style={{ fontSize: 24, fontWeight: 900, color: 'var(--brand-blue)' }}>FACTURA</div>
+                                <div style={{ background: '#f0fdf4', color: '#16a34a', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 700 }}>FAC-1001</div>
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
-                                {[
-                                    'Hasta 5 presupuestos por mes',
-                                    'Link público para clientes',
-                                    'Formato profesional para el cliente',
-                                    'Botón Aceptar / Rechazar',
-                                    'Mejora de texto con IA'
-                                ].map((feat, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                                        <div style={{ width: 20, height: 20, borderRadius: 10, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                                            <Check size={12} color="#64748b" strokeWidth={2.5} />
-                                        </div>
-                                        <span style={{ fontSize: 14, color: '#475569' }}>{feat}</span>
-                                    </div>
-                                ))}
+                            <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: 24, marginBottom: 24 }}>
+                                <div style={{ fontSize: 13, color: 'var(--gray-500)', marginBottom: 4 }}>Cliente</div>
+                                <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--gray-900)' }}>Juan Garcia</div>
+                                <div style={{ fontSize: 14, color: 'var(--gray-500)' }}>juan.garcia@email.com</div>
                             </div>
-                            
-                            <Link href="/login" style={{ 
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                                padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
-                                border: '2px solid #e2e8f0', fontSize: 15, fontWeight: 700,
-                                color: '#0f172a', background: 'white'
+
+                            <div style={{ marginBottom: 32 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                                    <span style={{ fontWeight: 600 }}>Total a pagar</span>
+                                    <span style={{ fontWeight: 900, fontSize: 24, color: 'var(--brand-blue)' }}>$290.000</span>
+                                </div>
+                            </div>
+
+                            <Link href="https://presupuestosya.app/p/factura/46c3c339-5f98-49c9-82e0-77eaf6987050" target="_blank" className="btn-hover" style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+                                background: 'var(--brand-blue)', color: 'white', padding: '18px', borderRadius: 16,
+                                textDecoration: 'none', fontWeight: 800, fontSize: 16
                             }}>
-                                Empezar gratis <ArrowRight size={16} />
+                                Ver y Descargar Factura Real <FileText size={20} />
                             </Link>
                         </div>
-
-                        {/* Pro */}
-                        <div style={{ 
-                            background: 'linear-gradient(145deg, #1e3a8a, hsl(142 71% 45%))', 
-                            borderRadius: 24, padding: 32, 
-                            boxShadow: '0 20px 60px rgba(37,99,235,0.30)',
-                            textAlign: 'left', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden'
-                        }}>
-                            <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
-                            
-                            <div style={{ marginBottom: 24, position: 'relative' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                                    <Star size={14} color="#fbbf24" fill="#fbbf24" />
-                                    <span style={{ fontSize: 14, fontWeight: 700, color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '1px' }}>Pro</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
-                                    <span style={{ fontSize: 48, fontWeight: 900, color: 'white', lineHeight: 1 }}>$10.000</span>
-                                    <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', paddingBottom: 6 }}>ARS / mes</span>
-                                </div>
-                                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>Para el profesional que quiere crecer y cerrar más trabajos.</p>
-                            </div>
-
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28, position: 'relative' }}>
-                                {[
-                                    'Presupuestos ilimitados',
-                                    'Panel de métricas y estadísticas',
-                                    'Historial completo',
-                                    'Perfil con logo incluido',
-                                    'Soporte prioritario',
-                                    'Recordatorios y bot WhatsApp'
-                                ].map((feat, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                                        <div style={{ width: 20, height: 20, borderRadius: 10, background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                                            <Check size={12} color="white" strokeWidth={2.5} />
-                                        </div>
-                                        <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)' }}>{feat}</span>
+                    </div>
+                    <div style={{ order: 1 }}>
+                        <div style={{ display: 'inline-flex', background: '#dcfce7', color: '#15803d', padding: '6px 12px', borderRadius: 20, fontSize: 13, fontWeight: 700, marginBottom: 16 }}>
+                            NUEVA FUNCIÓN
+                        </div>
+                        <h2 style={{ fontSize: 44, fontWeight: 900, color: '#0f172a', marginBottom: 24, lineHeight: 1.1 }}>
+                            Convertí tus presupuestos en facturas <span style={{ color: '#16a34a' }}>al instante</span>
+                        </h2>
+                        <p style={{ fontSize: 18, color: '#64748b', lineHeight: 1.6, marginBottom: 32 }}>
+                            ¿Terminaste el trabajo? Generá una factura inmutable con un solo clic. Profesional, detallada y lista para descargar en PDF o compartir por WhatsApp.
+                            <strong> Gestionarlos nunca fue tan fácil.</strong>
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                            {[
+                                'Cero carga de datos: se completa sola',
+                                'Numeración correlativa automática',
+                                'Descarga en PDF ultra profesional',
+                                'Mismo link para compartir rápido'
+                            ].map((item, i) => (
+                                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <div style={{ background: '#16a34a', borderRadius: '50%', padding: 4 }}>
+                                        <Check size={14} color="white" strokeWidth={4} />
                                     </div>
-                                ))}
-                            </div>
-                            
-                            <Link href="/login" className="btn-hover" style={{ 
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                                padding: '13px 24px', borderRadius: 12, textDecoration: 'none',
-                                background: 'white', fontSize: 15, fontWeight: 700, color: '#1e3a8a',
-                                transition: 'all 0.2s ease'
-                            }}>
-                                Empezar con Pro <ArrowRight size={16} />
-                            </Link>
+                                    <span style={{ fontWeight: 600, color: 'var(--gray-800)' }}>{item}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </section>
+
+
 
             {/* Final CTA */}
             <section style={{ padding: '120px 24px', background: 'white', textAlign: 'center' }}>
@@ -447,7 +411,7 @@ export default function LandingPage() {
 
                     <Link href="/login" className="btn-hover" style={{
                         display: 'inline-flex', alignItems: 'center', gap: 10,
-                        background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))', 
+                        background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))',
                         color: 'white', textDecoration: 'none',
                         padding: '16px 40px', borderRadius: 12,
                         fontSize: 18, fontWeight: 800,
