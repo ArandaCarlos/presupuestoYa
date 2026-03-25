@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import SignatureCanvas from 'react-signature-canvas'
 import { createClient } from '@/lib/supabase/client'
 import type { Quote } from '@/lib/types'
-import { CheckCircle, XCircle, MessageCircle, Clock, MapPin, Wrench, Calendar, ChevronDown, ChevronUp } from 'lucide-react'
+import { CheckCircle, XCircle, MessageCircle, Clock, MapPin, Wrench, Calendar, ChevronDown, ChevronUp, Printer } from 'lucide-react'
 
 interface Props {
     quote: Quote
@@ -141,6 +141,10 @@ export default function PublicQuoteView({ quote }: Props) {
         setShowRejectModal(false)
     }
 
+    const handlePrint = () => {
+        window.print()
+    }
+
     const whatsappUrl = professional?.whatsapp_number
         ? `https://wa.me/${professional.whatsapp_number.replace(/\D/g, '')}?text=Hola! Vi el presupuesto %23${quote.slug.toUpperCase()} y quiero consultar algo.`
         : null
@@ -149,6 +153,23 @@ export default function PublicQuoteView({ quote }: Props) {
         <div style={{ minHeight: '100vh', background: 'var(--gray-50)' }}>
             {/* Status banner */}
             <StatusBanner status={status} />
+
+            {/* Float actions for print/download */}
+            <div className="no-print" style={{ 
+                background: 'white', 
+                borderBottom: '1px solid var(--gray-200)', 
+                padding: '12px 16px',
+                position: 'sticky',
+                top: 0,
+                zIndex: 40,
+                display: 'flex',
+                justifyContent: 'center',
+                gap: 12
+            }}>
+                <button onClick={handlePrint} className="btn btn-secondary btn-sm" style={{ gap: 6 }}>
+                    <Printer size={16} /> Descargar PDF
+                </button>
+            </div>
 
             {/* Header profesional */}
             <div style={{
@@ -311,7 +332,7 @@ export default function PublicQuoteView({ quote }: Props) {
 
                 {/* Acciones */}
                 {canAct && !isExpired && (
-                    <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div className="no-print fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                         <button
                             className="btn btn-green"
                             style={{ width: '100%', justifyContent: 'center', padding: '18px', fontSize: 17, borderRadius: 14 }}
@@ -411,6 +432,16 @@ export default function PublicQuoteView({ quote }: Props) {
                     {' '}{"— Presupuestos profesionales en 60 segundos"}
                 </div>
             </div>
+
+            <style dangerouslySetInnerHTML={{__html: `
+                @media print {
+                    body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    .no-print { display: none !important; }
+                    .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 24px !important; }
+                    body > div { background: white !important; }
+                    @page { margin: 1.5cm; size: A4 portrait; }
+                }
+            `}} />
 
             {/* Modal Rechazar */}
             {showRejectModal && (

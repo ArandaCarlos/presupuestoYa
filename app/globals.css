@@ -301,3 +301,9 @@ body {
   .section { padding: 32px 0; }
   .card { padding: 16px; }
 }
+
+/* Print utilities */
+@media print {
+  .no-print { display: none !important; }
+  body { background: white !important; }
+}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Copy, Share2, Check } from 'lucide-react'
+import { Copy, Share2, Check, Printer } from 'lucide-react'
 import type { Quote } from '@/lib/types'
 
 export default function QuoteDetailActions({ quote }: { quote: Quote }) {
@@ -25,8 +25,16 @@ export default function QuoteDetailActions({ quote }: { quote: Quote }) {
         }
     }
 
+    const handlePrint = () => {
+        window.print()
+    }
+
     return (
-        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+        <div className="no-print" style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+            <button onClick={handlePrint} className="btn btn-secondary btn-sm" title="Descargar PDF">
+                <Printer size={14} />
+                Descargar
+            </button>
             <button onClick={handleCopy} className="btn btn-secondary btn-sm" title="Copiar link">
                 {copied ? <Check size={14} color="var(--brand-green)" /> : <Copy size={14} />}
                 {copied ? 'Copiado!' : 'Copiar'}
