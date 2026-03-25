@@ -1,4 +1,4 @@
-import { MercadoPagoConfig, Preference } from 'mercadopago'
+import { MercadoPagoConfig, Preference, PreApproval } from 'mercadopago'
 
 // Inicializar cliente MP
 export function getMPClient() {
@@ -19,6 +19,20 @@ export function mpPaymentStatusToPlan(mpStatus: string): { plan: string; statusD
         case 'cancelled':
         case 'refunded':
         case 'charged_back':
+        default:
+            return { plan: 'free', statusDesc: mpStatus }
+    }
+}
+// Mapeo de estado MP (suscripción) → plan interno
+export function mpPreapprovalStatusToPlan(mpStatus: string): { plan: string; statusDesc: string } {
+    switch (mpStatus) {
+        case 'authorized':
+            return { plan: 'pro', statusDesc: 'active' }
+        case 'paused':
+            return { plan: 'pro', statusDesc: 'paused' }
+        case 'pending':
+            return { plan: 'free', statusDesc: 'pending' }
+        case 'cancelled':
         default:
             return { plan: 'free', statusDesc: mpStatus }
     }
