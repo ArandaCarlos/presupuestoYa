@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import SignatureCanvas from 'react-signature-canvas'
 import { createClient } from '@/lib/supabase/client'
 import type { Quote } from '@/lib/types'
@@ -85,6 +86,17 @@ export default function PublicQuoteView({ quote }: Props) {
     const [signatureName, setSignatureName] = useState('')
     const [signatureError, setSignatureError] = useState('')
     const sigCanvas = useRef<SignatureCanvas>(null)
+    const searchParams = useSearchParams()
+
+    useEffect(() => {
+        if (searchParams.get('print') === '1') {
+            // Pequeño delay para asegurar que todo cargó
+            const timer = setTimeout(() => {
+                window.print()
+            }, 800)
+            return () => clearTimeout(timer)
+        }
+    }, [searchParams])
 
     const professional = quote.professionals as any
     const isExpired = quote.expires_at && new Date(quote.expires_at) < new Date()
@@ -439,7 +451,9 @@ export default function PublicQuoteView({ quote }: Props) {
                     .no-print { display: none !important; }
                     .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 24px !important; }
                     body > div { background: white !important; }
+                    footer, .nav-bar, .bottom-nav { display: none !important; }
                     @page { margin: 1.5cm; size: A4 portrait; }
+                    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
                 }
             `}} />
 

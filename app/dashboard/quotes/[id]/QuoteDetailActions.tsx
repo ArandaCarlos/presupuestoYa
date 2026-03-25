@@ -26,7 +26,11 @@ export default function QuoteDetailActions({ quote }: { quote: Quote }) {
     }
 
     const handlePrint = () => {
-        window.print()
+        if (quote.public_url) {
+            window.open(`${quote.public_url}?print=1`, '_blank')
+        } else {
+            window.print()
+        }
     }
 
     return (
