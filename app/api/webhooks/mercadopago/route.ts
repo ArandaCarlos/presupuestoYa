@@ -92,44 +92,48 @@ async function handlePaymentNotification(paymentId: string) {
 }
 
 async function handlePreapprovalNotification(preapprovalId: string) {
+    console.log(`[MP Webhook] Processing Preapproval: ${preapprovalId}`)
     const client = getMPClient()
-    // Nota: El SDK v2 no tiene una clase 'PreApproval' con un método .get igual que Payment
-    // pero podemos usar el endpoint directo o esperar que el SDK se comporte igual.
     const preapproval = new PreApproval(client)
     
-    // Consultamos la suscripción
-    const info = await preapproval.get({ id: preapprovalId })
-    
-    const professionalId = info.external_reference
-    if (!professionalId) {
-        console.error('Suscripción sin external_reference')
-        return NextResponse.json({ error: 'Missing external_reference' }, { status: 400 })
+    try {
+        // Consultamos la suscripción
+        const info = await preapproval.get({ id: preapprovalId })
+        console.log(`[MP Webhook] Preapproval Info Status: ${info.status}, External Ref: ${info.external_reference}`)
+        
+        const professionalId = info.external_reference
+        if (!professionalId) {
+            console.warn(`[MP Webhook] Preapproval ${preapprovalId} doesn't have an external_reference. Might be a test or orphan subscription.`)
+            return NextResponse.json({ received: true, warning: 'No external_reference' })
+        }
+
+        const { plan, statusDesc } = mpPreapprovalStatusToPlan(info.status || 'pending')
+
+        // Si está autorizado, le damos el plan Pro
+        const supabase = createAdminClient()
+        const { error } = await supabase
+            .from('professionals')
+            .update({
+                plan,
+                subscription_status: statusDesc,
+                mp_subscription_id: preapprovalId,
+                // Próxima fecha de cobro como fecha de expiración aproximada
+                subscription_expires_at: info.next_payment_date || null
+            })
+            .eq('id', professionalId)
+
+        if (error) {
+            console.error('[MP Webhook] Error updating professional in DB:', error)
+            return NextResponse.json({ error: 'Database update failed' }, { status: 500 })
+        }
+
+        console.log(`✅ Plan updated to "${plan}" (Subscription) for professional ${professionalId}`)
+        return NextResponse.json({ received: true, plan })
+
+    } catch (err: any) {
+        console.error(`[MP Webhook] Error fetching preapproval ${preapprovalId}:`, err.message)
+        return NextResponse.json({ error: 'Failed to fetch preapproval info' }, { status: 500 })
     }
-
-    const { plan, statusDesc } = mpPreapprovalStatusToPlan(info.status || 'pending')
-
-    // Si está autorizado, le damos el plan Pro
-    // Para suscripciones recurrentes, no necesariamente seteamos expires_at fijo, 
-    // sino que confiamos en que MP nos avisará si se cancela o falla el cobro.
-    const supabase = createAdminClient()
-    const { error } = await supabase
-        .from('professionals')
-        .update({
-            plan,
-            subscription_status: statusDesc,
-            mp_subscription_id: preapprovalId,
-            // Podríamos setear un expiresAt preventivo basado en info.next_payment_date
-            subscription_expires_at: info.next_payment_date || null
-        })
-        .eq('id', professionalId)
-
-    if (error) {
-        console.error('Error actualizando plan (suscripción):', error)
-        return NextResponse.json({ error: 'Error en BD' }, { status: 500 })
-    }
-
-    console.log(`✅ Plan actualizado (Suscripción) a "${plan}" para profesional ${professionalId} (Status: ${statusDesc})`)
-    return NextResponse.json({ received: true, plan })
 }
 
 // MercadoPago necesita poder hacer GET para verificar el endpoint

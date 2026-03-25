@@ -23,25 +23,7 @@ export default function UpgradePage() {
         setLoading(true)
         setError('')
         try {
-            const res = await fetch('/api/subscription/create', { method: 'POST' })
-            const data = await res.json()
-
-            if (!res.ok) throw new Error(data.error || 'Error al crear la preferencia de pago')
-            if (!data.init_point) throw new Error('No se recibió la URL de pago de MP')
-
-            // Redirección clásica a pantalla completa de MercadoPago
-            window.location.href = data.init_point
-
-        } catch (err: any) {
-            setError(err.message)
-            setLoading(false)
-        }
-    }
-
-    const handleSubscription = async () => {
-        setSubLoading(true)
-        setError('')
-        try {
+            // Ahora la suscripción recurrente es el método por defecto
             const res = await fetch('/api/subscription/subscribe', { method: 'POST' })
             const data = await res.json()
 
@@ -52,9 +34,11 @@ export default function UpgradePage() {
 
         } catch (err: any) {
             setError(err.message)
-            setSubLoading(false)
+            setLoading(false)
         }
     }
+
+    // handleSubscription es ahora handleUpgrade
 
     return (
         <div className="fade-in" style={{ maxWidth: 520 }}>
@@ -125,35 +109,20 @@ export default function UpgradePage() {
 
                 <button
                     onClick={handleUpgrade}
-                    disabled={loading || subLoading}
+                    disabled={loading}
                     style={{
                         width: '100%', padding: '14px 24px', borderRadius: 14,
                         background: 'white', border: 'none', cursor: 'pointer',
                         fontSize: 16, fontWeight: 800, color: '#1e3a8a',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                         transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
-                        opacity: loading || subLoading ? 0.7 : 1
+                        opacity: loading ? 0.7 : 1
                     }}
                 >
                     {loading
                         ? <><div className="spinner" style={{ borderTopColor: '#1e3a8a', borderWidth: 2 }} /> Cargando checkout...</>
                         : <>Suscribirme ahora <ArrowRight size={18} /></>
                     }
-                </button>
-
-                {/* Botón de prueba (un poco escondido) */}
-                <button
-                    onClick={handleSubscription}
-                    disabled={loading || subLoading}
-                    style={{
-                        width: '100%', marginTop: 12, padding: '8px 12px', borderRadius: 10,
-                        background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', 
-                        cursor: 'pointer', fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.4)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                        opacity: subLoading ? 0.7 : 1
-                    }}
-                >
-                    {subLoading ? 'Cargando...' : 'Probando Suscripción Recurrente (Beta)'}
                 </button>
             </div>
 

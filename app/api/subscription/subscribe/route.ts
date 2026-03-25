@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
                 auto_recurring: {
                     frequency: 1,
                     frequency_type: 'months',
-                    transaction_amount: 20, // Monto de prueba bajo
+                    transaction_amount: 20, // Monto Pro final
                     currency_id: 'ARS'
                 },
                 status: 'pending'
