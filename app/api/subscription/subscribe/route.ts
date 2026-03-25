@@ -40,11 +40,9 @@ export async function POST(request: NextRequest) {
         const response = await preApproval.create({
             body: {
                 preapproval_plan_id: planId,
-                payer_email: user.email || 'test_user_123@testuser.com', // Email real del usuario
+                payer_email: user.email!,
                 back_url: `${appUrl}/dashboard?subscription=success`,
-                reason: 'PresupuestoYA Pro (Suscripción)',
                 external_reference: professional.id,
-                status: 'pending'
             }
         })
 
