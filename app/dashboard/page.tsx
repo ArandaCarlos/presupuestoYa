@@ -30,7 +30,7 @@ export default async function DashboardPage({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
     const params = await searchParams
-    const paymentStatus = params.payment
+    const paymentStatus = params.payment || params.subscription
 
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -79,7 +79,7 @@ export default async function DashboardPage({
                             ¡Pago completado con éxito!
                         </h3>
                         <p style={{ fontSize: 14, color: '#047857' }}>
-                            Ya tenés activo el Plan Pro por 30 días. Recordá recargar la página en unos segundos si tu estado aún no se actualiza (puede demorar un instante en procesarse).
+                            Tu suscripción se ha procesado. Ya tenés activo el Plan Pro. Recordá recargar la página en unos segundos si tu estado aún no se actualiza (puede demorar un instante en impactar).
                         </p>
                     </div>
                 </div>

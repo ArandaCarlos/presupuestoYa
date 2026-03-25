@@ -11,6 +11,7 @@ export function getMPClient() {
 export function mpPaymentStatusToPlan(mpStatus: string): { plan: string; statusDesc: string } {
     switch (mpStatus) {
         case 'approved':
+        case 'authorized':
             return { plan: 'pro', statusDesc: 'active' }
         case 'in_process':
         case 'pending':

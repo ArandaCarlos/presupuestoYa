@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         const action = body?.action
         const resourceId = body?.data?.id || idParam
 
-        console.log(`[MP Webhook] Received type=${type}, action=${action}, id=${resourceId}`)
+        console.log(`[MP Webhook] Received type=${type}, action=${action}, id=${resourceId}, body=`, JSON.stringify(body))
 
         // 1. Manejar NOTIFICACIONES DE PAGOS ÚNICOS (Preferences)
         if (type === 'payment' || action?.startsWith('payment.') || topicParam === 'payment') {
@@ -33,8 +33,8 @@ export async function POST(request: NextRequest) {
         }
 
         // 2. Manejar NOTIFICACIONES DE SUSCRIPCIONES (Preapprovals)
-        if (type === 'preapproval' || action?.startsWith('preapproval.')) {
-            if (!resourceId) return NextResponse.json({ error: 'Sin ID de preapproval' }, { status: 400 })
+        if (type === 'preapproval' || type === 'subscription' || action?.startsWith('preapproval.') || action?.startsWith('subscription.')) {
+            if (!resourceId) return NextResponse.json({ error: 'Sin ID de recurso (suscripción)' }, { status: 400 })
             return await handlePreapprovalNotification(resourceId)
         }
 
@@ -99,9 +99,11 @@ async function handlePreapprovalNotification(preapprovalId: string) {
     try {
         // Consultamos la suscripción
         const info = await preapproval.get({ id: preapprovalId })
-        console.log(`[MP Webhook] Preapproval Info Status: ${info.status}, External Ref: ${info.external_reference}`)
+        // A veces SDK v2 puede devolver la info dentro de una propiedad 'body'
+        const data = (info as any).body || info
+        console.log(`[MP Webhook] Preapproval Data: Status=${data.status}, ExternalRef=${data.external_reference}`)
         
-        const professionalId = info.external_reference
+        const professionalId = data.external_reference
         if (!professionalId) {
             console.warn(`[MP Webhook] Preapproval ${preapprovalId} doesn't have an external_reference. Might be a test or orphan subscription.`)
             return NextResponse.json({ received: true, warning: 'No external_reference' })
