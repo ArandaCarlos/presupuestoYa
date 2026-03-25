@@ -39,10 +39,17 @@ export async function POST(request: NextRequest) {
 
         const response = await preApproval.create({
             body: {
-                preapproval_plan_id: planId,
+                reason: 'PresupuestoYA Pro (Suscripción)',
                 payer_email: user.email!,
                 back_url: `${appUrl}/dashboard?subscription=success`,
                 external_reference: professional.id,
+                auto_recurring: {
+                    frequency: 1,
+                    frequency_type: 'months',
+                    transaction_amount: 20, // Monto de prueba bajo
+                    currency_id: 'ARS'
+                },
+                status: 'pending'
             }
         })
 
