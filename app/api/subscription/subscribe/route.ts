@@ -47,9 +47,7 @@ export async function POST(request: NextRequest) {
                     frequency: 1,
                     frequency_type: 'months',
                     transaction_amount: 20, // Monto Pro final (para pruebas)
-                    currency_id: 'ARS',
-                    // Redundancia de external_reference
-                    external_reference: professional.id,
+                    currency_id: 'ARS'
                 },
                 status: 'pending'
             }
