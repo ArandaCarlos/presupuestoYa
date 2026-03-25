@@ -50,6 +50,7 @@ export async function POST(req: Request) {
                 client_signature_data: quote.client_signature_data,
                 client_signature_date: quote.client_signature_date,
                 materials_amount: quote.materials_amount,
+                materials_detail: quote.materials_detail,
                 labor_amount: quote.labor_amount,
                 total_amount: quote.total_amount,
                 // The URL can be dynamically generated in frontend or stored here:

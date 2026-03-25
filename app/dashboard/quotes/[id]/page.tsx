@@ -109,12 +109,24 @@ export default async function QuoteDetailPage({ params, searchParams }: Props) {
                 <div style={{
                     background: 'var(--gray-50)', border: '1px solid var(--gray-200)',
                     borderRadius: 10, padding: '12px 14px',
-                    display: 'flex', alignItems: 'center', gap: 10
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    flexWrap: 'wrap'
                 }}>
-                    <div style={{ flex: 1, fontSize: 13, color: 'var(--brand-accent)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div style={{ 
+                        flex: '1 1 200px', 
+                        fontSize: 13, 
+                        color: 'var(--brand-accent)', 
+                        fontWeight: 500, 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis', 
+                        whiteSpace: 'nowrap',
+                        minWidth: 0
+                    }}>
                         {quote.public_url}
                     </div>
-                    <QuoteDetailActions quote={quote as Quote} />
+                    <div style={{ flex: '1 1 auto', display: 'flex', justifyContent: 'flex-end' }}>
+                        <QuoteDetailActions quote={quote as Quote} />
+                    </div>
                 </div>
             </div>
 

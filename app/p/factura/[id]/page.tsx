@@ -145,6 +145,11 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
                             <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
                                 <td style={{ padding: '16px 8px' }}>
                                     <div style={{ fontSize: 15, fontWeight: 600, color: '#111827' }}>Materiales</div>
+                                    {invoice.materials_detail && (
+                                        <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4, whiteSpace: 'pre-wrap' }}>
+                                            {renderMarkdown(invoice.materials_detail)}
+                                        </div>
+                                    )}
                                 </td>
                                 <td style={{ padding: '16px 8px', textAlign: 'right', fontSize: 15, fontWeight: 500, color: '#111827' }}>
                                     {formatCurrency(invoice.materials_amount)}

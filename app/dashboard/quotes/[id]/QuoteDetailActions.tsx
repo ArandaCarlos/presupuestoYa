@@ -34,16 +34,21 @@ export default function QuoteDetailActions({ quote }: { quote: Quote }) {
     }
 
     return (
-        <div className="no-print" style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-            <button onClick={handlePrint} className="btn btn-secondary btn-sm" title="Descargar PDF">
+        <div className="no-print" style={{ 
+            display: 'flex', 
+            gap: 6, 
+            flexWrap: 'wrap',
+            justifyContent: 'flex-end' 
+        }}>
+            <button onClick={handlePrint} className="btn btn-secondary btn-sm" title="Descargar PDF" style={{ flex: '1 1 auto', minWidth: 'fit-content' }}>
                 <Printer size={14} />
                 Descargar
             </button>
-            <button onClick={handleCopy} className="btn btn-secondary btn-sm" title="Copiar link">
+            <button onClick={handleCopy} className="btn btn-secondary btn-sm" title="Copiar link" style={{ flex: '1 1 auto', minWidth: 'fit-content' }}>
                 {copied ? <Check size={14} color="var(--brand-green)" /> : <Copy size={14} />}
                 {copied ? 'Copiado!' : 'Copiar'}
             </button>
-            <button onClick={handleShare} className="btn btn-primary btn-sm" title="Compartir">
+            <button onClick={handleShare} className="btn btn-primary btn-sm" title="Compartir" style={{ flex: '1 1 auto', minWidth: 'fit-content' }}>
                 <Share2 size={14} />
                 Compartir
             </button>

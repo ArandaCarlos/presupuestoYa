@@ -26,7 +26,21 @@ export default function DashboardLayoutClient({
 }) {
     const pathname = usePathname()
     const router = useRouter()
- 
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+
+    useEffect(() => {
+        const handleResize = () => {
+            // Si el viewport es mucho más chico que la pantalla, el teclado está abierto
+            if (window.visualViewport) {
+                const isOpen = window.visualViewport.height < window.innerHeight * 0.75
+                setIsKeyboardVisible(isOpen)
+            }
+        }
+
+        window.visualViewport?.addEventListener('resize', handleResize)
+        return () => window.visualViewport?.removeEventListener('resize', handleResize)
+    }, [])
+
     const handleLogout = async () => {
         const supabase = createClient()
         await supabase.auth.signOut()
@@ -132,11 +146,12 @@ export default function DashboardLayoutClient({
  
             {/* Bottom Navbar (Mobile) - Symmetric 5 Items */}
             <div style={{
-                display: 'none', position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 40,
+                display: 'none', // Se sobreescribe por media query
+                position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 40,
                 background: 'white', borderTop: '1px solid var(--gray-200)',
                 padding: '10px 12px 24px', alignItems: 'center', justifyContent: 'space-around',
                 boxShadow: '0 -2px 10px rgba(0,0,0,0.05)'
-            }} className="mobile-nav">
+            }} className={`mobile-nav ${isKeyboardVisible ? 'kb-hidden' : ''}`}>
                 <NavItem href="/dashboard" label="Inicio" icon={LayoutDashboard} pathname={pathname} />
                 <NavItem href="/dashboard/quotes" label="Historial" icon={FileText} pathname={pathname} />
                 
@@ -182,6 +197,7 @@ export default function DashboardLayoutClient({
           .hidden-mobile { display: none !important; }
           .mobile-header { display: flex !important; }
           .mobile-nav { display: flex !important; }
+          .mobile-nav.kb-hidden { display: none !important; }
           main > div { padding: 80px 16px 120px !important; }
         }
       `}</style>
