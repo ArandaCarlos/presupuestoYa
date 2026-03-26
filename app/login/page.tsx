@@ -8,6 +8,7 @@ import { Mail, Lock, Eye, EyeOff, Zap } from 'lucide-react'
 
 export default function LoginPage() {
     const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login')
+    const [nombre, setNombre] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPass, setShowPass] = useState(false)
@@ -31,12 +32,24 @@ export default function LoginPage() {
             }
             router.push('/dashboard')
         } else if (mode === 'register') {
-            const { error } = await supabase.auth.signUp({ email, password })
-            if (error) {
-                setError(error.message)
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, nombre })
+            })
+            const data = await res.json()
+
+            if (!res.ok) {
+                setError(data.error || 'Error al registrarse')
                 setLoading(false)
                 return
             }
+
+            // Disparar Píxel de Meta con deduplicación (eventId)
+            if (typeof window !== 'undefined' && (window as any).fbq) {
+                (window as any).fbq('track', 'CompleteRegistration', {}, { eventId: data.eventId });
+            }
+
             setSuccess('¡Listo! Revisá tu email para confirmar la cuenta.')
         } else if (mode === 'forgot') {
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -146,6 +159,19 @@ export default function LoginPage() {
                     )}
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        {mode === 'register' && (
+                            <div className="input-group">
+                                <label className="input-label">Nombre completo</label>
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type="text" required value={nombre} onChange={e => setNombre(e.target.value)}
+                                        placeholder="Ej: Juan Pérez"
+                                        className="input"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
                         <div className="input-group">
                             <label className="input-label">Email</label>
                             <div style={{ position: 'relative' }}>

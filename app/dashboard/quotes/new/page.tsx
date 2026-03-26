@@ -138,59 +138,36 @@ function NewQuoteForm() {
     const handleSubmit = async () => {
         setLoading(true)
         setError('')
-        const supabase = createClient()
-        const { data: { user } } = await supabase.auth.getUser()
 
-        // Obtener el professional_id del usuario actual
-        const { data: professional } = await supabase
-            .from('professionals')
-            .select('id')
-            .eq('user_id', user!.id)
-            .maybeSingle()
+        try {
+            const tradeValue = form.trade === 'Otro' ? form.tradeCustom : form.trade
+            const res = await fetch('/api/quotes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...form,
+                    trade: tradeValue
+                })
+            })
 
-        if (!professional) {
-            setError('No se encontró tu perfil de profesional. Actualizá la página.')
+            const data = await res.json()
+
+            if (!res.ok) {
+                setError(data.error || 'Error al guardar el presupuesto')
+                setLoading(false)
+                return
+            }
+
+            // Meta Pixel: StartTrial si el backend retorna eventId
+            if (data.eventId && typeof window !== 'undefined' && (window as any).fbq) {
+                (window as any).fbq('track', 'StartTrial', {}, { eventId: data.eventId });
+            }
+
+            router.push(`/dashboard/quotes/${data.quote.id}?new=1`)
+        } catch (err) {
+            setError('Error de conexión al guardar el presupuesto')
             setLoading(false)
-            return
         }
-
-        // Generar slug único
-        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
-        let slug = ''
-        for (let i = 0; i < 8; i++) slug += chars[Math.floor(Math.random() * chars.length)]
-
-        const tradeValue = form.trade === 'Otro' ? form.tradeCustom : form.trade
-        const expiresAt = new Date()
-        expiresAt.setDate(expiresAt.getDate() + form.validity_days)
-        const publicUrl = `${process.env.NEXT_PUBLIC_APP_URL}/p/${slug}`
-
-        const { data, error: dbError } = await supabase.from('quotes').insert({
-            slug,
-            professional_id: professional.id,
-            client_name: form.client_name || null,
-            client_phone: form.client_phone || null,
-            trade: tradeValue,
-            address: form.address || null,
-            description: form.description || null,
-            materials_included: form.materials_included,
-            materials_detail: form.materials_included ? form.materials_detail || null : null,
-            materials_amount: form.materials_included ? form.materials_amount : 0,
-            labor_description: form.labor_description || null,
-            labor_amount: form.labor_amount,
-            validity_days: form.validity_days,
-            expires_at: expiresAt.toISOString(),
-            status: 'sent',
-            channel: 'web',
-            public_url: publicUrl,
-        }).select().single()
-
-        if (dbError) {
-            setError('Error al guardar el presupuesto. Intentá de nuevo.')
-            setLoading(false)
-            return
-        }
-
-        router.push(`/dashboard/quotes/${data.id}?new=1`)
     }
 
     const inputStyle = {
