@@ -53,6 +53,14 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="antialiased">
+        <noscript>
+          <img 
+            height="1" 
+            width="1" 
+            style={{ display: 'none' }}
+            src={`https://www.facebook.com/tr?id=${process.env.META_PIXEL_ID}&ev=PageView&noscript=1`}
+          />
+        </noscript>
         {children}
       </body>
     </html>
