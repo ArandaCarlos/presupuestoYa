@@ -140,6 +140,48 @@ export default function LandingPage() {
             </header>
 
 
+            {/* Video Demo Section */}
+            <section style={{ 
+                padding: '80px 24px', 
+                background: 'white', 
+                position: 'relative',
+                zIndex: 2
+            }}>
+                <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
+                    <div style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 8,
+                        background: '#eff6ff', color: 'var(--brand-blue)',
+                        padding: '8px 16px', borderRadius: 30, fontSize: 13, fontWeight: 700, marginBottom: 20
+                    }}>
+                        <Sparkles size={16} /> Mirá cómo funciona PresupuestosYA
+                    </div>
+                    <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 900, color: '#0f172a', marginBottom: 40, letterSpacing: '-1px' }}>
+                        De la idea a la firma en <span style={{ color: 'var(--brand-blue)' }}>menos de 2 minutos</span>
+                    </h2>
+                    
+                    <div style={{ 
+                        position: 'relative', 
+                        borderRadius: 32, 
+                        overflow: 'hidden', 
+                        boxShadow: '0 40px 80px -15px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0,0,0,0.05)',
+                        background: '#000',
+                        aspectRatio: '16/9',
+                        border: '8px solid white'
+                    }}>
+                        <iframe 
+                            width="100%" 
+                            height="100%" 
+                            src="https://www.youtube.com/embed/3UwMLo5TDFc?rel=0&modestbranding=1" 
+                            title="PresupuestosYA Demo"
+                            frameBorder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowFullScreen
+                            style={{ display: 'block' }}
+                        ></iframe>
+                    </div>
+                </div>
+            </section>
+
             {/* How it Works Section */}
             <section style={{ padding: '100px 24px', background: 'white', textAlign: 'center' }}>
                 <div style={{ maxWidth: 1000, margin: '0 auto', boxSizing: 'border-box' }}>
