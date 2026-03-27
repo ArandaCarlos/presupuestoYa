@@ -59,13 +59,13 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
                 
                 @media (max-width: 768px) {
                     .quotes-desktop { display: none; }
-                    .quotes-mobile { display: flex; flex-direction: column; gap: 12px; }
+                    .quotes-mobile { display: flex; flex-direction: column; gap: 8px; }
                 }
 
                 .quote-card-mobile {
                     background: white;
                     border-radius: 16px;
-                    padding: 16px;
+                    padding: 12px 16px;
                     border: 1px solid var(--gray-100);
                     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
                     transition: transform 0.2s, box-shadow 0.2s;
@@ -177,35 +177,29 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
                         className="quote-card-mobile"
                         onClick={() => handleRowClick(q.id)}
                     >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                        {/* Row 1: Título y Monto */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                                <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--gray-900)' }}>{q.trade}</span>
+                                <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--gray-400)', textTransform: 'uppercase' }}>
                                     #{q.slug.toUpperCase()}
                                 </span>
-                                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--gray-900)' }}>{q.trade}</span>
                             </div>
-                            <QuoteStatusBadge status={q.status} />
-                        </div>
-                        
-                        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ fontSize: 13, color: 'var(--gray-500)' }}>
-                                {q.client_name || 'Sin cliente'}
-                            </div>
-                            <button 
-                                onClick={(e) => handleCopy(e, q.public_url, q.id)}
-                                className={`btn-copy ${copiedId === q.id ? 'copied' : ''}`}
-                                style={{ padding: '4px 8px' }}
-                            >
-                                {copiedId === q.id ? <Check size={12} /> : <Copy size={12} />}
-                                {copiedId === q.id ? 'Copiado' : 'Link'}
-                            </button>
-                        </div>
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--gray-50)', paddingTop: 12 }}>
-                            <span style={{ fontSize: 12, color: 'var(--gray-400)' }}>{formatDate(q.created_at)}</span>
-                            <span style={{ fontSize: 18, fontWeight: 800, color: 'var(--brand-blue)' }}>
+                            <span style={{ fontSize: 17, fontWeight: 800, color: 'var(--brand-blue)' }}>
                                 {formatCurrency(q.total_amount)}
                             </span>
+                        </div>
+                        
+                        {/* Row 2: Cliente, Fecha y Estado */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ fontSize: 12, color: 'var(--gray-500)', display: 'flex', gap: 6 }}>
+                                <span style={{ maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {q.client_name || 'Sin cliente'}
+                                </span>
+                                <span style={{ color: 'var(--gray-300)' }}>•</span>
+                                <span>{formatDate(q.created_at)}</span>
+                            </div>
+                            <QuoteStatusBadge status={q.status} />
                         </div>
                     </div>
                 ))}
