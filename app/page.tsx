@@ -9,7 +9,7 @@ export default function LandingPage() {
             {/* Navbar */}
             <nav style={{
                 padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box', flexWrap: 'wrap', gap: 12
+                maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box', flexWrap: 'nowrap', gap: 8
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div style={{
@@ -18,7 +18,7 @@ export default function LandingPage() {
                     }}>
                         <Zap size={20} color="white" fill="white" />
                     </div>
-                    <span style={{ fontWeight: 800, fontSize: 18, color: 'var(--brand-blue)' }}>PresupuestosYA</span>
+                    <span className="brand-logo-text" style={{ fontWeight: 800, fontSize: 18, color: 'var(--brand-blue)' }}>PresupuestosYA</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <Link href="/login?mode=login" style={{ fontSize: 13, fontWeight: 600, color: 'var(--gray-500)', textDecoration: 'none' }}>Iniciar Sesión</Link>
@@ -541,6 +541,9 @@ export default function LandingPage() {
                         padding: 0; 
                         margin: 0 auto; 
                         max-width: 100%; 
+                    }
+                    .brand-logo-text {
+                        font-size: 15px !important;
                     }
                 }
                 @media (max-width: 640px) {
