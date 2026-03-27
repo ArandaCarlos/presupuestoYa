@@ -11,9 +11,10 @@ export interface MetaTrackData {
 }
 
 class MetaService {
-    private pixelId = process.env.META_PIXEL_ID;
+    private pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
     private accessToken = process.env.META_ACCESS_TOKEN;
     private apiVersion = process.env.META_API_VERSION || 'v19.0';
+    private testEventCode = process.env.META_TEST_EVENT_CODE;
 
     private hash(value: string): string {
         return crypto.createHash('sha256').update(value.toLowerCase().trim()).digest('hex');
@@ -45,7 +46,8 @@ class MetaService {
                     client_ip_address: data.ip,
                     client_user_agent: data.userAgent,
                 }
-            }]
+            }],
+            ...(this.testEventCode ? { test_event_code: this.testEventCode } : {})
         };
 
         const url = `https://graph.facebook.com/${this.apiVersion}/${this.pixelId}/events?access_token=${this.accessToken}`;
