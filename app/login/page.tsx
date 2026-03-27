@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, Lock, Eye, EyeOff, Zap } from 'lucide-react'
 
-export default function LoginPage() {
+function LoginContent() {
     const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login')
     const [nombre, setNombre] = useState('')
     const [email, setEmail] = useState('')
@@ -15,7 +15,15 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
+    
     const router = useRouter()
+    const searchParams = useSearchParams()
+
+    useEffect(() => {
+        const m = searchParams.get('mode')
+        if (m === 'register') setMode('register')
+        if (m === 'login') setMode('login')
+    }, [searchParams])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -245,5 +253,13 @@ export default function LoginPage() {
                 </p>
             </div>
         </div>
+    )
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div style={{ minHeight: '100vh', background: '#0f172a' }} />}>
+            <LoginContent />
+        </Suspense>
     )
 }

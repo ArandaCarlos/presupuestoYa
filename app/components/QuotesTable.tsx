@@ -1,5 +1,7 @@
 'use client'
 
+import { Plus, FileText, CheckCircle, Clock, Send, TrendingUp, Copy, Check, ExternalLink } from 'lucide-react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { Quote } from '@/lib/types'
@@ -23,6 +25,7 @@ interface QuotesTableProps {
 
 export default function QuotesTable({ quotes }: QuotesTableProps) {
     const router = useRouter()
+    const [copiedId, setCopiedId] = useState<string | null>(null)
 
     function formatCurrency(n: number) {
         return `$${n.toLocaleString('es-AR', { minimumFractionDigits: 0 })}`
@@ -34,6 +37,18 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
 
     const handleRowClick = (quoteId: string) => {
         router.push(`/dashboard/quotes/${quoteId}`)
+    }
+
+    const handleCopy = async (e: React.MouseEvent, url: string | null, id: string) => {
+        e.stopPropagation()
+        if (!url) return
+        try {
+            await navigator.clipboard.writeText(url)
+            setCopiedId(id)
+            setTimeout(() => setCopiedId(null), 2000)
+        } catch (err) {
+            console.error('Failed to copy!', err)
+        }
     }
 
     return (
@@ -60,15 +75,39 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
                 .quote-card-mobile:active {
                     transform: scale(0.98);
                 }
+                
+                .btn-copy {
+                    background: var(--gray-50);
+                    border: 1px solid var(--gray-200);
+                    color: var(--gray-600);
+                    padding: 6px 10px;
+                    border-radius: 8px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    transition: all 0.2s;
+                }
+                .btn-copy:hover {
+                    background: white;
+                    border-color: var(--brand-blue);
+                    color: var(--brand-blue);
+                }
+                .btn-copy.copied {
+                    background: #f0fdf4;
+                    border-color: #86efac;
+                    color: #16a34a;
+                }
             `}} />
 
             {/* VISTA DESKTOP: Tabla Tradicional */}
             <div className="quotes-desktop card" style={{ padding: 0, overflow: 'hidden' }}>
                 <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
                         <thead>
                             <tr style={{ background: 'var(--gray-50)', borderBottom: '1px solid var(--gray-200)' }}>
-                                {['#', 'Trabajo', 'Cliente', 'Total', 'Estado', 'Fecha', ''].map(h => (
+                                {['#', 'Trabajo', 'Cliente', 'Total', 'Estado', 'Fecha', 'Link', 'Acción'].map(h => (
                                     <th key={h} style={{
                                         padding: '10px 16px', textAlign: 'left',
                                         fontSize: 11, fontWeight: 700, textTransform: 'uppercase',
@@ -109,9 +148,18 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
                                     <td style={{ padding: '12px 16px', fontSize: 13, color: 'var(--gray-400)' }}>
                                         {formatDate(q.created_at)}
                                     </td>
+                                    <td style={{ padding: '12px 16px' }}>
+                                        <button 
+                                            onClick={(e) => handleCopy(e, q.public_url, q.id)}
+                                            className={`btn-copy ${copiedId === q.id ? 'copied' : ''}`}
+                                        >
+                                            {copiedId === q.id ? <Check size={14} /> : <Copy size={14} />}
+                                            {copiedId === q.id ? 'Copiado' : 'Link'}
+                                        </button>
+                                    </td>
                                     <td style={{ padding: '12px 16px' }} onClick={(e) => e.stopPropagation()}>
-                                        <Link href={`/dashboard/quotes/${q.id}`} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
-                                            Ver →
+                                        <Link href={`/dashboard/quotes/${q.id}`} className="btn btn-ghost btn-sm" style={{ fontSize: 12, padding: '4px 8px' }}>
+                                            <ExternalLink size={14} />
                                         </Link>
                                     </td>
                                 </tr>
@@ -139,10 +187,18 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
                             <QuoteStatusBadge status={q.status} />
                         </div>
                         
-                        <div style={{ marginBottom: 16 }}>
+                        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div style={{ fontSize: 13, color: 'var(--gray-500)' }}>
                                 {q.client_name || 'Sin cliente'}
                             </div>
+                            <button 
+                                onClick={(e) => handleCopy(e, q.public_url, q.id)}
+                                className={`btn-copy ${copiedId === q.id ? 'copied' : ''}`}
+                                style={{ padding: '4px 8px' }}
+                            >
+                                {copiedId === q.id ? <Check size={12} /> : <Copy size={12} />}
+                                {copiedId === q.id ? 'Copiado' : 'Link'}
+                            </button>
                         </div>
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--gray-50)', paddingTop: 12 }}>
@@ -156,4 +212,6 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
             </div>
         </>
     )
+}
+)
 }

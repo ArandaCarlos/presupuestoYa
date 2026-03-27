@@ -8,8 +8,8 @@ export default function LandingPage() {
         <div style={{ minHeight: '100vh', background: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
             {/* Navbar */}
             <nav style={{
-                padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box'
+                padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box', flexWrap: 'wrap', gap: 12
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div style={{
@@ -20,9 +20,18 @@ export default function LandingPage() {
                     </div>
                     <span style={{ fontWeight: 800, fontSize: 18, color: 'var(--brand-blue)' }}>PresupuestosYA</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <Link href="/pricing" className="hide-mobile" style={{ fontSize: 15, fontWeight: 600, color: 'var(--gray-500)', textDecoration: 'none' }}>Tarifas</Link>
-                    <Link href="/login" style={{ fontSize: 15, fontWeight: 600, color: 'var(--brand-blue)', textDecoration: 'none' }}>Iniciar Sesión</Link>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Link href="/login?mode=login" style={{ fontSize: 13, fontWeight: 600, color: 'var(--gray-500)', textDecoration: 'none' }}>Iniciar Sesión</Link>
+                    <Link href="/login?mode=register" className="btn-hover" style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: 'white',
+                        background: 'var(--brand-blue)',
+                        padding: '8px 14px',
+                        borderRadius: 10,
+                        textDecoration: 'none',
+                        boxShadow: '0 4px 12px rgba(37, 99, 235, 0.2)'
+                    }}>Registrarse</Link>
                 </div>
             </nav>
 
@@ -140,48 +149,6 @@ export default function LandingPage() {
             </header>
 
 
-            {/* Video Demo Section */}
-            <section style={{ 
-                padding: '80px 24px', 
-                background: 'white', 
-                position: 'relative',
-                zIndex: 2
-            }}>
-                <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
-                    <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 8,
-                        background: '#eff6ff', color: 'var(--brand-blue)',
-                        padding: '8px 16px', borderRadius: 30, fontSize: 13, fontWeight: 700, marginBottom: 20
-                    }}>
-                        <Sparkles size={16} /> Mirá cómo funciona PresupuestosYA
-                    </div>
-                    <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 900, color: '#0f172a', marginBottom: 40, letterSpacing: '-1px' }}>
-                        De la idea a la firma en <span style={{ color: 'var(--brand-blue)' }}>menos de 2 minutos</span>
-                    </h2>
-                    
-                    <div style={{ 
-                        position: 'relative', 
-                        borderRadius: 32, 
-                        overflow: 'hidden', 
-                        boxShadow: '0 40px 80px -15px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0,0,0,0.05)',
-                        background: '#000',
-                        aspectRatio: '16/9',
-                        border: '8px solid white'
-                    }}>
-                        <iframe 
-                            width="100%" 
-                            height="100%" 
-                            src="https://www.youtube.com/embed/3UwMLo5TDFc?rel=0&modestbranding=1" 
-                            title="PresupuestosYA Demo"
-                            frameBorder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowFullScreen
-                            style={{ display: 'block' }}
-                        ></iframe>
-                    </div>
-                </div>
-            </section>
-
             {/* How it Works Section */}
             <section style={{ padding: '100px 24px', background: 'white', textAlign: 'center' }}>
                 <div style={{ maxWidth: 1000, margin: '0 auto', boxSizing: 'border-box' }}>
@@ -230,6 +197,7 @@ export default function LandingPage() {
                 </div>
             </section>
 
+
             {/* Benefits & Emotional Benefit */}
             <section style={{ padding: '80px 24px', background: '#f8fafc' }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 350px), 1fr))', gap: 60, boxSizing: 'border-box' }}>
@@ -264,8 +232,8 @@ export default function LandingPage() {
 
                     {/* Emotional */}
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <div style={{ display: 'inline-flex', background: '#dbeafe', color: '#1e40af', padding: '6px 12px', borderRadius: 20, fontSize: 13, fontWeight: 700, marginBottom: 16, width: 'fit-content' }}>
-                            EL SECRETO DEL ÉXITO
+                        <div style={{ display: 'inline-flex', background: '#dbeafe', color: '#1e40af', padding: '6px 12px', borderRadius: 20, fontSize: 13, fontWeight: 700, marginBottom: 16, width: 'fit-content', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            Por qué los profesionales nos eligen
                         </div>
                         <h3 style={{ fontSize: 40, fontWeight: 900, color: 'var(--gray-900)', marginBottom: 24, lineHeight: 1.1 }}>
                             Cerrá más trabajos
@@ -278,8 +246,8 @@ export default function LandingPage() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, fontWeight: 600 }}><Check size={20} color="var(--brand-accent)" /> Tenés el control total: encontrás todo en segundos</div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, fontWeight: 600 }}><Check size={20} color="var(--brand-accent)" /> No perdés más presupuestos en el caos de WhatsApp</div>
                         </div>
-                        <p style={{ fontSize: 16, fontStyle: 'italic', color: 'var(--gray-500)', borderLeft: '4px solid var(--gray-300)', paddingLeft: 16 }}>
-                            "La organización es la mitad del trabajo. Acceder a tus datos rápido te hace más productivo."
+                        <p style={{ fontSize: 16, fontStyle: 'italic', color: 'var(--gray-500)', borderLeft: '4px solid var(--brand-blue)', paddingLeft: 16, lineHeight: 1.5 }}>
+                            "Antes perdía presupuestos en el caos del chat. Ahora los envío en segundos, el cliente me ve profesional y cierro trabajos mucho más rápido."
                         </p>
                     </div>
 
@@ -440,7 +408,47 @@ export default function LandingPage() {
                 </div>
             </section>
 
+            {/* Video Demo Section */}
+            <section style={{
+                padding: '80px 24px',
+                background: 'white',
+                position: 'relative',
+                zIndex: 2
+            }}>
+                <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
+                    <div style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 8,
+                        background: '#eff6ff', color: 'var(--brand-blue)',
+                        padding: '8px 16px', borderRadius: 30, fontSize: 13, fontWeight: 700, marginBottom: 20
+                    }}>
+                        <Sparkles size={16} /> Mirá cómo funciona PresupuestosYA
+                    </div>
+                    <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 900, color: '#0f172a', marginBottom: 40, letterSpacing: '-1px' }}>
+                        De la idea a la firma en <span style={{ color: 'var(--brand-blue)' }}>menos de 2 minutos</span>
+                    </h2>
 
+                    <div style={{
+                        position: 'relative',
+                        borderRadius: 32,
+                        overflow: 'hidden',
+                        boxShadow: '0 40px 80px -15px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0,0,0,0.05)',
+                        background: '#000',
+                        aspectRatio: '16/9',
+                        border: '8px solid white'
+                    }}>
+                        <iframe
+                            width="100%"
+                            height="100%"
+                            src="https://www.youtube.com/embed/3UwMLo5TDFc?rel=0&modestbranding=1"
+                            title="PresupuestosYA Demo"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            style={{ display: 'block' }}
+                        ></iframe>
+                    </div>
+                </div>
+            </section>
 
             {/* Final CTA */}
             <section style={{ padding: '120px 24px', background: 'white', textAlign: 'center' }}>
@@ -477,7 +485,7 @@ export default function LandingPage() {
                         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                             <Link href="/login" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Iniciar Sesión</Link>
                             <Link href="/pricing" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Tarifas</Link>
-                            <a href="mailto:soporte.presupuestoya@gmail.com" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Soporte</a>
+                            <a href="mailto:soporte@presupuestosya.app" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontWeight: 500 }}>Soporte</a>
                         </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, fontSize: 14 }}>

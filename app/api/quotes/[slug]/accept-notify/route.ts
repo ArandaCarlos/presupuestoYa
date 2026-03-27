@@ -63,12 +63,22 @@ export async function POST(
             `
         })
  
-        if (resendError) {
-            console.error('Resend error full details:', JSON.stringify(resendError, null, 2))
-            return NextResponse.json({ 
-                error: 'Error al enviar el email',
-                details: resendError.message 
-            }, { status: 500 })
+        // 4. Enviar notificación por WhatsApp via n8n (si está configurado)
+        const n8nWebhook = process.env.N8N_WA_NOTIFY_WEBHOOK;
+        if (n8nWebhook) {
+            fetch(n8nWebhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'quote_accepted',
+                    professional_phone: professional.whatsapp_number,
+                    client_name: quote.client_signature_name,
+                    trade: quote.trade,
+                    total_amount: quote.total_amount,
+                    quote_url: quoteUrl,
+                    slug: quote.slug
+                })
+            }).catch(err => console.error('Error triggering n8n WA notification:', err));
         }
 
         return NextResponse.json({ success: true, id: data?.id })
