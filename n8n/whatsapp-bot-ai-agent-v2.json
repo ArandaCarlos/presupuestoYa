@@ -1,0 +1,157 @@
+{
+  "name": "WhatsApp Bot (AI Agent v2) - PresupuestoYa",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ]
+      },
+      "id": "e7c3ce18-8a58-42ef-bd0d-63b095857659",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databaseTable",
+        "operation": "getMany",
+        "databaseId": "professionals",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "whatsapp_number",
+              "value": "={{ $json.message.from }}"
+            }
+          ]
+        }
+      },
+      "id": "9d1ef4d7-2b95-48fc-a012-e6c82d092514",
+      "name": "Supabase (Identify Prof)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $node[\"WhatsApp Trigger\"].json.message.text }}",
+        "options": {
+          "systemMessage": "=Eres el asistente oficial de PresupuestoYA.\nTu objetivo es ayudar al profesional a crear un presupuesto de forma rápida.\n\nEl profesional es: {{ $node[\"Supabase (Identify Prof)\"].json.name }} (Oficio: {{ $node[\"Supabase (Identify Prof)\"].json.trade }}).\nID de profesional: {{ $node[\"Supabase (Identify Prof)\"].json.id }}\n\nREGLAS:\n1. Necesitas 3 datos obligatorios: Nombre del cliente, Monto total y Descripción del trabajo.\n2. Si el usuario te da una descripción corta, mejórala para que suene más profesional (ej: 'cambio caño' -> 'Reparación y sustitución de tubería dañada').\n3. Cuando tengas los 3 datos, llama a la herramienta 'crear_presupuesto'.\n4. Si falta algún dato, pídelo de forma amable y breve.\n5. El oficio '{{ $node[\"Supabase (Identify Prof)\"].json.trade }}' ya lo sabes, no es necesario preguntarlo."
+        }
+      },
+      "id": "ace738f8-8a58-42ef-bd0d-63b095857659",
+      "name": "AI Agent",
+      "type": "n8n-nodes-langchain.agent",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "398fdb72-b930-4b0a-a3f0-f55630d4377a",
+      "name": "OpenAI Model",
+      "type": "n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        750,
+        550
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "725f8143-68fe-4633-b806-e7c3ce188951",
+      "name": "Window Buffer Memory",
+      "type": "n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1,
+      "position": [
+        880,
+        550
+      ]
+    },
+    {
+      "parameters": {
+        "name": "crear_presupuesto",
+        "description": "Crea un presupuesto en la base de datos cuando se tiene nombre de cliente, monto y descripción.",
+        "workflowId": "LEAVE_EMPTY_OR_SET_ID"
+      },
+      "id": "e1c99598-020d-40f0-8192-723628f0bef9",
+      "name": "Tool: Create Quote",
+      "type": "n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1050,
+        550
+      ]
+    }
+  ],
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Supabase (Identify Prof)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase (Identify Prof)": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool: Create Quote": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

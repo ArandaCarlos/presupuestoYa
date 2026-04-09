@@ -1,0 +1,232 @@
+{
+  "name": "WhatsApp Bot PRO - PresupuestoYa v3",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["messages"]
+      },
+      "id": "node-wsp-trigger",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extraer datos clave del mensaje entrante de WhatsApp\nconst entry = $input.first().json;\n\n// Soporta mensajes de texto\nconst msg = entry?.messages?.[0] || entry?.message || {};\nconst from = msg.from || entry?.from || '';\nconst type = msg.type || 'text';\nconst text = msg.text?.body || msg.text || '';\nconst phoneId = entry?.metadata?.phone_number_id || entry?.phone_number_id || '';\n\nreturn [{\n  json: {\n    from,\n    type,\n    text,\n    phone_number_id: phoneId\n  }\n}];"
+      },
+      "id": "node-extract",
+      "name": "Extract Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "professionals",
+        "filterType": "string",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "whatsapp_number",
+              "keyValue": "={{ $json.from }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "node-supabase-find",
+      "name": "Supabase - Find Pro",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "cond-pro",
+              "leftValue": "={{ $json.plan }}",
+              "rightValue": "pro",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      },
+      "id": "node-check-pro",
+      "name": "Is PRO?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [920, 300]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "=Sos el asistente de PresupuestosYA.\nEl profesional se llama {{ $('Supabase - Find Pro').first().json.name }} y su oficio es {{ $('Supabase - Find Pro').first().json.trade }}. Su ID es {{ $('Supabase - Find Pro').first().json.id }}.\n\nTu único objetivo es extraer 3 datos del mensaje para crear un presupuesto:\n1. client_name (nombre del cliente)\n2. total_amount (monto total, solo número)\n3. description (descripción del trabajo - mejorarla para que suene profesional)\n\nSi el mensaje tiene los 3 datos, respondé SOLO con este JSON exacto (sin texto extra, sin bloques de código):\n{\"status\":\"ready\",\"client_name\":\"...\",\"total_amount\":12345,\"description\":\"...\"}\n\nSi falta algún dato, preguntá de forma amigable y breve solo por lo que falta. Ejemplo: \"¡Entendido! ¿A nombre de qué cliente lo pongo?\"\n\nNO uses emojis en el JSON. SÍ podés usarlos cuando preguntás."
+            },
+            {
+              "role": "user",
+              "content": "={{ $('Extract Message').first().json.text }}"
+            }
+          ]
+        },
+        "simplify": true
+      },
+      "id": "node-openai",
+      "name": "OpenAI - Extract Data",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [1140, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Intentar parsear la respuesta de la IA\nconst aiResponse = $input.first().json.text || $input.first().json.message?.content || '';\n\nlet parsed = null;\ntry {\n  // Buscar JSON en la respuesta\n  const match = aiResponse.match(/\\{[\\s\\S]*\\}/);\n  if (match) {\n    parsed = JSON.parse(match[0]);\n  }\n} catch(e) {\n  parsed = null;\n}\n\nconst isReady = parsed?.status === 'ready' &&\n  parsed?.client_name &&\n  parsed?.total_amount &&\n  parsed?.description;\n\nreturn [{\n  json: {\n    is_ready: isReady,\n    ai_message: isReady ? null : aiResponse,\n    client_name: parsed?.client_name || null,\n    total_amount: parsed?.total_amount || null,\n    description: parsed?.description || null,\n    professional_id: $('Supabase - Find Pro').first().json.id,\n    trade: $('Supabase - Find Pro').first().json.trade,\n    from: $('Extract Message').first().json.from,\n    phone_number_id: $('Extract Message').first().json.phone_number_id\n  }\n}];"
+      },
+      "id": "node-parse",
+      "name": "Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1360, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "id": "cond-ready",
+              "leftValue": "={{ $json.is_ready }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      },
+      "id": "node-check-ready",
+      "name": "Got all data?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1580, 200]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "tableId": "quotes",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "professional_id": "={{ $json.professional_id }}",
+            "trade": "={{ $json.trade }}",
+            "client_name": "={{ $json.client_name }}",
+            "total_amount": "={{ $json.total_amount }}",
+            "description": "={{ $json.description }}",
+            "channel": "whatsapp",
+            "status": "sent",
+            "labor_amount": "={{ $json.total_amount }}",
+            "validity_days": 15
+          }
+        }
+      },
+      "id": "node-supabase-create",
+      "name": "Supabase - Create Quote",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1800, 100]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $('Extract Message').first().json.phone_number_id }}",
+        "recipientPhoneNumber": "={{ $('Extract Message').first().json.from }}",
+        "textBody": "=✅ *¡Presupuesto Creado!*\n\nCliente: *{{ $('Parse AI Response').first().json.client_name }}*\nTrabajo: {{ $('Parse AI Response').first().json.trade }}\nMonto: ${{ $('Parse AI Response').first().json.total_amount }}\n\n🔗 Enviáselo a tu cliente:\nhttps://presupuestosya.app/p/{{ $json.slug }}"
+      },
+      "id": "node-wsp-confirm",
+      "name": "WhatsApp - Send Confirmation",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [2020, 100]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $('Extract Message').first().json.phone_number_id }}",
+        "recipientPhoneNumber": "={{ $('Extract Message').first().json.from }}",
+        "textBody": "={{ $('Parse AI Response').first().json.ai_message }}"
+      },
+      "id": "node-wsp-ask",
+      "name": "WhatsApp - Ask for Data",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [1800, 320]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $('Extract Message').first().json.phone_number_id }}",
+        "recipientPhoneNumber": "={{ $('Extract Message').first().json.from }}",
+        "textBody": "⚠️ Esta función es exclusiva del plan *PRO*.\n\nActivá tu cuenta PRO en: https://presupuestosya.app/pricing"
+      },
+      "id": "node-wsp-notpro",
+      "name": "WhatsApp - Not PRO",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [1140, 440]
+    }
+  ],
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [[{ "node": "Extract Message", "type": "main", "index": 0 }]]
+    },
+    "Extract Message": {
+      "main": [[{ "node": "Supabase - Find Pro", "type": "main", "index": 0 }]]
+    },
+    "Supabase - Find Pro": {
+      "main": [[{ "node": "Is PRO?", "type": "main", "index": 0 }]]
+    },
+    "Is PRO?": {
+      "main": [
+        [{ "node": "OpenAI - Extract Data", "type": "main", "index": 0 }],
+        [{ "node": "WhatsApp - Not PRO", "type": "main", "index": 0 }]
+      ]
+    },
+    "OpenAI - Extract Data": {
+      "main": [[{ "node": "Parse AI Response", "type": "main", "index": 0 }]]
+    },
+    "Parse AI Response": {
+      "main": [[{ "node": "Got all data?", "type": "main", "index": 0 }]]
+    },
+    "Got all data?": {
+      "main": [
+        [{ "node": "Supabase - Create Quote", "type": "main", "index": 0 }],
+        [{ "node": "WhatsApp - Ask for Data", "type": "main", "index": 0 }]
+      ]
+    },
+    "Supabase - Create Quote": {
+      "main": [[{ "node": "WhatsApp - Send Confirmation", "type": "main", "index": 0 }]]
+    }
+  }
+}

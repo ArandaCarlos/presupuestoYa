@@ -285,9 +285,33 @@ function NewQuoteForm() {
 
             {error && (
                 <div style={{
-                    background: '#fee2e2', borderRadius: 10, padding: '12px 16px',
-                    fontSize: 13, color: '#dc2626', marginBottom: 16
-                }}>{error}</div>
+                    background: '#fee2e2', borderRadius: 12, padding: '16px',
+                    fontSize: 14, color: '#dc2626', marginBottom: 20,
+                    border: '1.5px solid #fecaca',
+                    display: 'flex', flexDirection: 'column', gap: 8
+                }}>
+                    <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+                        ⚠ {error}
+                    </div>
+                    {error.includes('Límite') && (
+                        <Link href="/dashboard/upgrade" style={{ 
+                            color: '#b91c1c', 
+                            textDecoration: 'none', 
+                            fontWeight: 700,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 6,
+                            marginTop: 4,
+                            background: '#fff',
+                            padding: '10px 14px',
+                            borderRadius: 10,
+                            width: 'fit-content',
+                            boxShadow: '0 2px 4px rgba(220, 38, 38, 0.1)'
+                        }}>
+                             <Sparkles size={16} /> Pasate a PRO para tener presupuestos ilimitados →
+                        </Link>
+                    )}
+                </div>
             )}
 
             {/* PASO 1: Cliente */}

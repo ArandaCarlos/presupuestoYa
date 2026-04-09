@@ -1,0 +1,75 @@
+{
+  "name": "Acceptance Notification - PresupuestoYa",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "quote-accepted",
+        "options": {}
+      },
+      "id": "e7c3ce18-8a58-42ef-bd0d-63b095857659",
+      "name": "Webhook (Receive)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databaseTable",
+        "operation": "get",
+        "databaseId": "professionals",
+        "id": "={{ $json.body.professional_id }}"
+      },
+      "id": "9d1ef4d7-2b95-48fc-a012-e6c82d092514",
+      "name": "Supabase (Get Prof)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        620,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "YOUR_PHONE_NUMBER_ID",
+        "recipientPhoneNumber": "={{ $json.whatsapp_number }}",
+        "text": "🎉 *¡Presupuesto Aceptado!*\n\nEl cliente *{{ $node[\"Webhook (Receive)\"].json.body.client_name }}* acaba de aceptar tu presupuesto.\n\nRevisá los detalles en tu panel:\nhttps://presupuestosya.app/dashboard/quotes/{{ $node[\"Webhook (Receive)\"].json.body.quote_id }}"
+      },
+      "id": "90d860c9-5159-438b-bc3a-6b43d27e615f",
+      "name": "WhatsApp Send Alert",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        840,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook (Receive)": {
+      "main": [
+        [
+          {
+            "node": "Supabase (Get Prof)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase (Get Prof)": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
