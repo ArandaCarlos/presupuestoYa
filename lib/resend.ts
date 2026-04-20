@@ -8,4 +8,4 @@ if (!resendApiKey && process.env.NODE_ENV === 'production') {
 
 export const resend = new Resend(resendApiKey)
 
-export const DEFAULT_FROM_EMAIL = 'PresupuestosYA <contacto@presupuestosya.app>'
+export const DEFAULT_FROM_EMAIL = 'PresupuestosYA <soporte@presupuestosya.app>'
