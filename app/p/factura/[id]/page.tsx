@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 import InvoiceActions from './InvoiceActions'
 import { notFound } from 'next/navigation'
 
@@ -27,7 +27,7 @@ const renderMarkdown = (text: string | null | undefined) => {
 
 export default async function PublicInvoicePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
-    const supabase = createClient()
+    const supabase = await createClient()
 
     const { data: invoice, error } = await supabase
         .from('invoices')
@@ -90,10 +90,15 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
                     <div style={{ textAlign: 'right' }}>
                         <div style={{ display: 'flex', gap: 24 }}>
                             <div>
-                                <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase' }}>De</div>
-                                <div style={{ fontSize: 14, fontWeight: 600, color: '#374151' }}>{professional?.name || 'Profesional'}</div>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', marginBottom: 4 }}>De</div>
+                                <div style={{ fontSize: 15, fontWeight: 800, color: '#111827', lineHeight: 1.2 }}>
+                                    {professional?.name || invoice.trade || 'Profesional'}
+                                </div>
+                                {professional?.trade && (
+                                    <div style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>{professional.trade}</div>
+                                )}
                                 {professional?.whatsapp_number && (
-                                    <div style={{ fontSize: 13, color: '#6b7280' }}>WhatsApp: {professional.whatsapp_number}</div>
+                                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>📱 {professional.whatsapp_number}</div>
                                 )}
                             </div>
                             <div>
