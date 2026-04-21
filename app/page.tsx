@@ -148,7 +148,113 @@ export default function LandingPage() {
                 </div>
             </header>
 
+            {/* Two Paths Section */}
+            <section style={{ padding: '100px 24px', background: '#f8fafc' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 64 }}>
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8,
+                            background: '#eff6ff', color: 'var(--brand-blue)',
+                            padding: '8px 16px', borderRadius: 30, fontSize: 13, fontWeight: 700, marginBottom: 20
+                        }}>
+                            <Sparkles size={15} /> Dos herramientas en una
+                        </div>
+                        <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, color: '#0f172a', marginBottom: 16, lineHeight: 1.1 }}>
+                            Elegí lo que necesitás hoy
+                        </h2>
+                        <p style={{ fontSize: 18, color: '#64748b', maxWidth: 540, margin: '0 auto' }}>
+                            Cada trabajo es distinto. Por eso tenés los dos caminos disponibles desde el primer día.
+                        </p>
+                    </div>
 
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: 32, alignItems: 'stretch' }}>
+
+                        {/* Card: Presupuesto */}
+                        <div style={{
+                            background: 'white', borderRadius: 24, padding: 40,
+                            border: '2px solid #dbeafe',
+                            boxShadow: '0 8px 32px rgba(37, 99, 235, 0.07)',
+                            display: 'flex', flexDirection: 'column', gap: 24
+                        }}>
+                            <div style={{
+                                display: 'flex', alignItems: 'center', gap: 14
+                            }}>
+                                <div style={{
+                                    background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))',
+                                    borderRadius: 14, padding: 12, display: 'flex', flexShrink: 0
+                                }}>
+                                    <FileText size={22} color="white" />
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--brand-accent)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>Flujo 1</div>
+                                    <div style={{ fontSize: 22, fontWeight: 900, color: '#0f172a' }}>Presupuesto</div>
+                                </div>
+                            </div>
+                            <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.7, margin: 0 }}>
+                                Antes del trabajo. Describís el servicio, el precio y lo enviás por WhatsApp. Tu cliente lo aprueba con un clic — y vos tenés la confirmación por escrito.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {['Cotizás sin verte en persona', 'El cliente acepta o rechaza online', 'Convertís en factura cuando termina el trabajo'].map((item, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                        <div style={{ background: '#dbeafe', borderRadius: '50%', padding: 4, display: 'flex', flexShrink: 0 }}>
+                                            <Check size={12} color="var(--brand-blue)" strokeWidth={3} />
+                                        </div>
+                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ marginTop: 'auto', background: '#eff6ff', borderRadius: 12, padding: '12px 16px', fontSize: 13, fontWeight: 600, color: 'var(--brand-blue)' }}>
+                                💡 Ideal para cotizar antes de arrancar el trabajo
+                            </div>
+                        </div>
+
+                        {/* Card: Factura Directa */}
+                        <div style={{
+                            background: 'white', borderRadius: 24, padding: 40,
+                            border: '2px solid #ede9fe',
+                            boxShadow: '0 8px 32px rgba(124, 58, 237, 0.07)',
+                            display: 'flex', flexDirection: 'column', gap: 24,
+                            position: 'relative', overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                position: 'absolute', top: 16, right: 16,
+                                background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                                color: 'white', padding: '4px 10px', borderRadius: 20,
+                                fontSize: 11, fontWeight: 700
+                            }}>NUEVO</div>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                                    borderRadius: 14, padding: 12, display: 'flex', flexShrink: 0
+                                }}>
+                                    <Receipt size={22} color="white" />
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: 11, fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>Flujo 2</div>
+                                    <div style={{ fontSize: 22, fontWeight: 900, color: '#0f172a' }}>Factura directa</div>
+                                </div>
+                            </div>
+                            <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.7, margin: 0 }}>
+                                Después del trabajo, o cuando necesitás el cobro ya. Cargás los ítems uno a uno — mano de obra, materiales, extras — y en segundos tenés un comprobante listo.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {['Cargás los items que cobrás (sin límite)', 'Numeración correlativa automática', 'PDF o link listo para WhatsApp al toque'].map((item, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                        <div style={{ background: '#f5f3ff', borderRadius: '50%', padding: 4, display: 'flex', flexShrink: 0 }}>
+                                            <Check size={12} color="#7c3aed" strokeWidth={3} />
+                                        </div>
+                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ marginTop: 'auto', background: '#f5f3ff', borderRadius: 12, padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#7c3aed' }}>
+                                💡 Ideal para el trabajo que ya hiciste y querés cobrar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
             {/* How it Works Section */}
             <section style={{ padding: '100px 24px', background: 'white', textAlign: 'center' }}>
                 <div style={{ maxWidth: 1000, margin: '0 auto', boxSizing: 'border-box' }}>
@@ -254,93 +360,7 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Visual Quote Section */}
-            <section style={{ padding: '100px 24px', background: 'white', textAlign: 'center' }}>
-                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-                    <h2 style={{ fontSize: 40, fontWeight: 900, color: '#0f172a', marginBottom: 60, lineHeight: 1.1 }}>
-                        Así se ve el presupuesto <br /> que recibe tu cliente
-                    </h2>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center', textAlign: 'left' }}>
-                        {/* Mockup del Presupuesto */}
-                        <div style={{ position: 'relative' }}>
-                            <div style={{
-                                background: 'white', borderRadius: 24, overflow: 'hidden',
-                                boxShadow: '0 30px 60px rgba(0,0,0,0.12)', border: '1px solid #f1f5f9'
-                            }}>
-                                {/* Top bar */}
-                                <div style={{ background: '#16a34a', color: 'white', padding: '10px 16px', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <CheckCircle size={14} /> Presupuesto aceptado! El profesional fue notificado.
-                                </div>
-                                {/* Header */}
-                                <div style={{ background: '#1e3a8a', padding: 24, color: 'white' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                                        <div style={{ width: 40, height: 40, background: 'rgba(255,255,255,0.2)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>J</div>
-                                        <div>
-                                            <div style={{ fontWeight: 700, fontSize: 16 }}>Juan Garcia</div>
-                                            <div style={{ fontSize: 12, opacity: 0.7 }}>Electricista</div>
-                                        </div>
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, opacity: 0.6 }}>
-                                        <span>Presupuesto #D2QRYEG6</span>
-                                        <span>Válido hasta: 23 de marzo de 2026</span>
-                                    </div>
-                                </div>
-                                {/* Body */}
-                                <div style={{ padding: 24 }}>
-                                    <div style={{ fontSize: 12, fontWeight: 700, color: '#3b82f6', textTransform: 'uppercase', marginBottom: 4 }}>Trabajo a realizar</div>
-                                    <div style={{ fontSize: 16, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>Instalación eléctrica</div>
-                                    <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5, marginBottom: 20 }}>
-                                        Reemplazo de llaves térmicas antiguas por disyuntores normalizados, asegurando la máxima seguridad...
-                                    </div>
-
-                                    <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 20, marginBottom: 20 }}>
-                                        <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 12 }}>Detalle del presupuesto</div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 13 }}>
-                                            <span style={{ color: '#64748b' }}>Mano de obra</span>
-                                            <span style={{ fontWeight: 600 }}>$200.000</span>
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16, fontSize: 13 }}>
-                                            <span style={{ color: '#64748b' }}>Materiales</span>
-                                            <span style={{ fontWeight: 600 }}>$90.000</span>
-                                        </div>
-                                        <div style={{ background: '#1e3a8a', color: 'white', padding: '12px 16px', borderRadius: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <span style={{ fontSize: 12, fontWeight: 600 }}>TOTAL</span>
-                                            <span style={{ fontSize: 20, fontWeight: 800 }}>$290.000</span>
-                                        </div>
-                                    </div>
-
-                                    <div style={{ background: '#f0fdf4', border: '1px solid #dcfce7', borderRadius: 12, padding: 16, textAlign: 'center' }}>
-                                        <div style={{ color: '#16a34a', fontWeight: 800, fontSize: 14, marginBottom: 4 }}>¡Acuerdo Firmado!</div>
-                                        <div style={{ fontSize: 11, color: '#15803d' }}>El profesional fue notificado. Vas a recibir confirmación de contacto a la brevedad.</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Text Detail */}
-                        <div>
-                            <p style={{ fontSize: 18, color: '#64748b', lineHeight: 1.6, marginBottom: 40 }}>
-                                Tu cliente recibe un link que abre una página profesional con todos los detalles del trabajo y el precio. Sin archivos adjuntos, sin PDFs. Simple.
-                            </p>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                                {[
-                                    'Aspecto profesional',
-                                    'Precio claro y detallado',
-                                    'Botón para aceptar al instante'
-                                ].map((item, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                                        <div style={{ background: '#dcfce7', padding: 8, borderRadius: '50%', display: 'flex' }}>
-                                            <Check size={20} color="#16a34a" strokeWidth={3} />
-                                        </div>
-                                        <span style={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>{item}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* NEW: Invoice Preview Section */}
             <section style={{ padding: '100px 24px', background: '#f0fdf4', overflow: 'hidden' }}>
@@ -450,113 +470,7 @@ export default function LandingPage() {
                 </div>
             </section>
                 */}
-            {/* Two Paths Section */}
-            <section style={{ padding: '100px 24px', background: '#f8fafc' }}>
-                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-                    <div style={{ textAlign: 'center', marginBottom: 64 }}>
-                        <div style={{
-                            display: 'inline-flex', alignItems: 'center', gap: 8,
-                            background: '#eff6ff', color: 'var(--brand-blue)',
-                            padding: '8px 16px', borderRadius: 30, fontSize: 13, fontWeight: 700, marginBottom: 20
-                        }}>
-                            <Sparkles size={15} /> Dos herramientas en una
-                        </div>
-                        <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, color: '#0f172a', marginBottom: 16, lineHeight: 1.1 }}>
-                            Elegí lo que necesitás hoy
-                        </h2>
-                        <p style={{ fontSize: 18, color: '#64748b', maxWidth: 540, margin: '0 auto' }}>
-                            Cada trabajo es distinto. Por eso tenés los dos caminos disponibles desde el primer día.
-                        </p>
-                    </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: 32, alignItems: 'stretch' }}>
-
-                        {/* Card: Presupuesto */}
-                        <div style={{
-                            background: 'white', borderRadius: 24, padding: 40,
-                            border: '2px solid #dbeafe',
-                            boxShadow: '0 8px 32px rgba(37, 99, 235, 0.07)',
-                            display: 'flex', flexDirection: 'column', gap: 24
-                        }}>
-                            <div style={{
-                                display: 'flex', alignItems: 'center', gap: 14
-                            }}>
-                                <div style={{
-                                    background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))',
-                                    borderRadius: 14, padding: 12, display: 'flex', flexShrink: 0
-                                }}>
-                                    <FileText size={22} color="white" />
-                                </div>
-                                <div>
-                                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--brand-accent)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>Flujo 1</div>
-                                    <div style={{ fontSize: 22, fontWeight: 900, color: '#0f172a' }}>Presupuesto</div>
-                                </div>
-                            </div>
-                            <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.7, margin: 0 }}>
-                                Antes del trabajo. Describís el servicio, el precio y lo enviás por WhatsApp. Tu cliente lo aprueba con un clic — y vos tenés la confirmación por escrito.
-                            </p>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                                {['Cotizás sin verte en persona', 'El cliente acepta o rechaza online', 'Convertís en factura cuando termina el trabajo'].map((item, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                        <div style={{ background: '#dbeafe', borderRadius: '50%', padding: 4, display: 'flex', flexShrink: 0 }}>
-                                            <Check size={12} color="var(--brand-blue)" strokeWidth={3} />
-                                        </div>
-                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>{item}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div style={{ marginTop: 'auto', background: '#eff6ff', borderRadius: 12, padding: '12px 16px', fontSize: 13, fontWeight: 600, color: 'var(--brand-blue)' }}>
-                                💡 Ideal para cotizar antes de arrancar el trabajo
-                            </div>
-                        </div>
-
-                        {/* Card: Factura Directa */}
-                        <div style={{
-                            background: 'white', borderRadius: 24, padding: 40,
-                            border: '2px solid #ede9fe',
-                            boxShadow: '0 8px 32px rgba(124, 58, 237, 0.07)',
-                            display: 'flex', flexDirection: 'column', gap: 24,
-                            position: 'relative', overflow: 'hidden'
-                        }}>
-                            <div style={{
-                                position: 'absolute', top: 16, right: 16,
-                                background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
-                                color: 'white', padding: '4px 10px', borderRadius: 20,
-                                fontSize: 11, fontWeight: 700
-                            }}>NUEVO</div>
-
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                                <div style={{
-                                    background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
-                                    borderRadius: 14, padding: 12, display: 'flex', flexShrink: 0
-                                }}>
-                                    <Receipt size={22} color="white" />
-                                </div>
-                                <div>
-                                    <div style={{ fontSize: 11, fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>Flujo 2</div>
-                                    <div style={{ fontSize: 22, fontWeight: 900, color: '#0f172a' }}>Factura directa</div>
-                                </div>
-                            </div>
-                            <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.7, margin: 0 }}>
-                                Después del trabajo, o cuando necesitás el cobro ya. Cargás los ítems uno a uno — mano de obra, materiales, extras — y en segundos tenés un comprobante listo.
-                            </p>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                                {['Cargás los items que cobrás (sin límite)', 'Numeración correlativa automática', 'PDF o link listo para WhatsApp al toque'].map((item, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                        <div style={{ background: '#f5f3ff', borderRadius: '50%', padding: 4, display: 'flex', flexShrink: 0 }}>
-                                            <Check size={12} color="#7c3aed" strokeWidth={3} />
-                                        </div>
-                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>{item}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div style={{ marginTop: 'auto', background: '#f5f3ff', borderRadius: 12, padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#7c3aed' }}>
-                                💡 Ideal para el trabajo que ya hiciste y querés cobrar
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* Invoice Value Section */}
             <section style={{ padding: '100px 24px', background: 'white' }}>
