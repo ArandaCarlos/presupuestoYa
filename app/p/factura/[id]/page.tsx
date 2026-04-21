@@ -43,6 +43,10 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
     }
 
     const professional = invoice.professionals as any
+    const items: { descripcion: string; monto: number }[] =
+        Array.isArray(invoice.items_snapshot) && invoice.items_snapshot.length > 0
+            ? invoice.items_snapshot as { descripcion: string; monto: number }[]
+            : []
 
     return (
         <div style={{ minHeight: '100vh', background: '#d1d5db', fontFamily: 'system-ui, sans-serif' }}>
@@ -128,33 +132,50 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                            <td style={{ padding: '16px 8px' }}>
-                                <div style={{ fontSize: 15, fontWeight: 600, color: '#111827', marginBottom: 4 }}>{invoice.trade} (Mano de obra)</div>
-                                {invoice.description && (
-                                    <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
-                                        {renderMarkdown(invoice.description)}
-                                    </div>
+                        {/* Facturas directas con ítems dinámicos */}
+                        {items.length > 0 ? (
+                            items.map((item, idx) => (
+                                <tr key={idx} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                                    <td style={{ padding: '16px 8px' }}>
+                                        <div style={{ fontSize: 15, fontWeight: 500, color: '#111827' }}>{item.descripcion}</div>
+                                    </td>
+                                    <td style={{ padding: '16px 8px', textAlign: 'right', fontSize: 15, fontWeight: 500, color: '#111827' }}>
+                                        {formatCurrency(item.monto)}
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            /* Facturas generadas desde presupuesto (comportamiento original) */
+                            <>
+                                <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                                    <td style={{ padding: '16px 8px' }}>
+                                        <div style={{ fontSize: 15, fontWeight: 600, color: '#111827', marginBottom: 4 }}>{invoice.trade} (Mano de obra)</div>
+                                        {invoice.description && (
+                                            <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+                                                {renderMarkdown(invoice.description)}
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td style={{ padding: '16px 8px', textAlign: 'right', verticalAlign: 'top', fontSize: 15, fontWeight: 500, color: '#111827' }}>
+                                        {formatCurrency(invoice.labor_amount)}
+                                    </td>
+                                </tr>
+                                {invoice.materials_amount > 0 && (
+                                    <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                                        <td style={{ padding: '16px 8px' }}>
+                                            <div style={{ fontSize: 15, fontWeight: 600, color: '#111827' }}>Materiales</div>
+                                            {invoice.materials_detail && (
+                                                <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4, whiteSpace: 'pre-wrap' }}>
+                                                    {renderMarkdown(invoice.materials_detail)}
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td style={{ padding: '16px 8px', textAlign: 'right', fontSize: 15, fontWeight: 500, color: '#111827' }}>
+                                            {formatCurrency(invoice.materials_amount)}
+                                        </td>
+                                    </tr>
                                 )}
-                            </td>
-                            <td style={{ padding: '16px 8px', textAlign: 'right', verticalAlign: 'top', fontSize: 15, fontWeight: 500, color: '#111827' }}>
-                                {formatCurrency(invoice.labor_amount)}
-                            </td>
-                        </tr>
-                        {invoice.materials_amount > 0 && (
-                            <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                                <td style={{ padding: '16px 8px' }}>
-                                    <div style={{ fontSize: 15, fontWeight: 600, color: '#111827' }}>Materiales</div>
-                                    {invoice.materials_detail && (
-                                        <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4, whiteSpace: 'pre-wrap' }}>
-                                            {renderMarkdown(invoice.materials_detail)}
-                                        </div>
-                                    )}
-                                </td>
-                                <td style={{ padding: '16px 8px', textAlign: 'right', fontSize: 15, fontWeight: 500, color: '#111827' }}>
-                                    {formatCurrency(invoice.materials_amount)}
-                                </td>
-                            </tr>
+                            </>
                         )}
                     </tbody>
                 </table>

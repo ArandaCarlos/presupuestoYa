@@ -12,8 +12,8 @@ import {
  
 const NAV = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/dashboard/quotes', label: 'Presupuestos', icon: FileText },
-    { href: '/dashboard/quotes/new', label: 'Nuevo presupuesto', icon: Plus, highlight: true },
+    { href: '/dashboard/quotes', label: 'Documentos', icon: FileText },
+    { href: '/dashboard/new', label: 'Nuevo documento', icon: Plus, highlight: true },
     { href: '/dashboard/settings', label: 'Mi perfil', icon: Settings },
 ]
  
@@ -153,10 +153,10 @@ export default function DashboardLayoutClient({
                 boxShadow: '0 -2px 10px rgba(0,0,0,0.05)'
             }} className={`mobile-nav ${isKeyboardVisible ? 'kb-hidden' : ''}`}>
                 <NavItem href="/dashboard" label="Inicio" icon={LayoutDashboard} pathname={pathname} />
-                <NavItem href="/dashboard/quotes" label="Historial" icon={FileText} pathname={pathname} />
+                <NavItem href="/dashboard/quotes" label="Documentos" icon={FileText} pathname={pathname} />
                 
                 {/* Fixed Center PLUS button */}
-                <Link href="/dashboard/quotes/new" style={{
+                <Link href="/dashboard/new" style={{
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
                     textDecoration: 'none', color: 'var(--brand-blue)', flex: 1, position: 'relative'
                 }}>

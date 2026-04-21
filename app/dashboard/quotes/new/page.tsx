@@ -6,6 +6,86 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Save, ArrowLeft, ChevronRight, Sparkles, Copy } from 'lucide-react'
 import Link from 'next/link'
 
+// ─────────────────────────────────────────────────────────────────
+// ClientAutocomplete: busca clientes previos en quotes + invoices
+// ─────────────────────────────────────────────────────────────────
+interface PreviousClient { client_name: string; client_phone: string | null; client_address: string | null }
+
+function ClientAutocomplete({
+    value, onChange, onSelect, professionalId, inputStyle,
+}: {
+    value: string
+    onChange: (v: string) => void
+    onSelect: (c: PreviousClient) => void
+    professionalId: string | null
+    inputStyle: React.CSSProperties
+}) {
+    const [suggestions, setSuggestions] = useState<PreviousClient[]>([])
+    const [open, setOpen] = useState(false)
+
+    useEffect(() => {
+        if (!professionalId || value.trim().length < 1) { setSuggestions([]); setOpen(false); return }
+        const timer = setTimeout(async () => {
+            const supabase = createClient()
+            const term = `%${value.trim()}%`
+            const { data: fromQ } = await supabase.from('quotes').select('client_name, client_phone, address')
+                .eq('professional_id', professionalId).ilike('client_name', term).not('client_name', 'is', null).limit(5)
+            const { data: fromI } = await supabase.from('invoices').select('client_name, client_phone, client_address')
+                .eq('professional_id', professionalId).ilike('client_name', term).not('client_name', 'is', null).limit(5)
+            const seen = new Set<string>()
+            const combined: PreviousClient[] = []
+            for (const q of (fromQ || [])) {
+                const k = (q.client_name as string).toLowerCase()
+                if (!seen.has(k)) { seen.add(k); combined.push({ client_name: q.client_name as string, client_phone: q.client_phone ?? null, client_address: q.address ?? null }) }
+            }
+            for (const i of (fromI || [])) {
+                const k = (i.client_name as string).toLowerCase()
+                if (!seen.has(k)) { seen.add(k); combined.push({ client_name: i.client_name as string, client_phone: i.client_phone ?? null, client_address: i.client_address ?? null }) }
+            }
+            setSuggestions(combined); setOpen(combined.length > 0)
+        }, 200)
+        return () => clearTimeout(timer)
+    }, [value, professionalId])
+
+    return (
+        <div style={{ position: 'relative' }}>
+            <input style={inputStyle} placeholder="Ej: Juan García" value={value}
+                onChange={e => onChange(e.target.value)}
+                onBlur={() => setTimeout(() => setOpen(false), 150)}
+                onFocus={() => suggestions.length > 0 && setOpen(true)}
+                autoComplete="off"
+            />
+            {open && (
+                <div style={{
+                    position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50,
+                    background: 'white', borderRadius: 10, marginTop: 4,
+                    border: '1.5px solid var(--gray-200)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)', overflow: 'hidden'
+                }}>
+                    {suggestions.map((s, i) => (
+                        <button key={i} type="button" onMouseDown={() => { onSelect(s); setOpen(false) }}
+                            style={{
+                                width: '100%', textAlign: 'left', padding: '10px 14px', border: 'none',
+                                background: 'transparent', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 2,
+                                borderBottom: i < suggestions.length - 1 ? '1px solid var(--gray-100)' : 'none',
+                            }}
+                            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = '#eff6ff'}
+                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'transparent'}
+                        >
+                            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--gray-900)' }}>{s.client_name}</span>
+                            {(s.client_phone || s.client_address) && (
+                                <span style={{ fontSize: 12, color: 'var(--gray-400)' }}>
+                                    {[s.client_phone, s.client_address].filter(Boolean).join(' · ')}
+                                </span>
+                            )}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
+
 const TRADES = [
     'Instalación eléctrica', 'Plomería y desagüe', 'Gas y calefacción',
     'Pintura interior', 'Pintura exterior', 'Carpintería',
@@ -28,6 +108,7 @@ function NewQuoteForm() {
     const [quotaBlocked, setQuotaBlocked] = useState(false)
     const [quotaInfo, setQuotaInfo] = useState({ count: 0, plan: 'free' })
     const [checkingQuota, setCheckingQuota] = useState(true)
+    const [professionalId, setProfessionalId] = useState<string | null>(null)
 
     const [form, setForm] = useState({
         client_name: '',
@@ -53,22 +134,23 @@ function NewQuoteForm() {
 
             const { data: prof } = await supabase
                 .from('professionals')
-                .select('plan, monthly_quote_count, quota_reset_at')
+                .select('id, plan, monthly_quote_count, quota_reset_at')
                 .eq('user_id', user.id)
                 .maybeSingle()
 
             if (prof) {
-                const isPlanFree = prof.plan === 'free'
-                const now = new Date()
-                const resetAt = prof.quota_reset_at ? new Date(prof.quota_reset_at) : now
-                const sameMonth = now.getMonth() === resetAt.getMonth() && now.getFullYear() === resetAt.getFullYear()
-                const currentCount = sameMonth ? (prof.monthly_quote_count || 0) : 0
+                    setProfessionalId(prof.id)
+                    const isPlanFree = prof.plan === 'free'
+                    const now = new Date()
+                    const resetAt = prof.quota_reset_at ? new Date(prof.quota_reset_at) : now
+                    const sameMonth = now.getMonth() === resetAt.getMonth() && now.getFullYear() === resetAt.getFullYear()
+                    const currentCount = sameMonth ? (prof.monthly_quote_count || 0) : 0
 
-                setQuotaInfo({ count: currentCount, plan: prof.plan })
-                if (isPlanFree && currentCount >= 5) {
-                    setQuotaBlocked(true)
+                    setQuotaInfo({ count: currentCount, plan: prof.plan })
+                    if (isPlanFree && currentCount >= 5) {
+                        setQuotaBlocked(true)
+                    }
                 }
-            }
             setCheckingQuota(false)
         }
         checkQuota()
@@ -323,8 +405,16 @@ function NewQuoteForm() {
 
                     <div className="input-group">
                         <label className="input-label">Nombre del cliente <span style={{ color: 'var(--gray-400)', fontWeight: 400 }}>(opcional)</span></label>
-                        <input style={inputStyle} placeholder="Ej: Juan García"
-                            value={form.client_name} onChange={e => set('client_name', e.target.value)} />
+                        <ClientAutocomplete
+                            value={form.client_name}
+                            onChange={v => set('client_name', v)}
+                            onSelect={c => {
+                                set('client_name', c.client_name)
+                                if (c.client_phone) set('client_phone', c.client_phone)
+                            }}
+                            professionalId={professionalId}
+                            inputStyle={inputStyle}
+                        />
                     </div>
 
                     <div className="input-group">

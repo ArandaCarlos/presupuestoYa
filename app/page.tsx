@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Zap, CheckCircle2, ArrowRight, XCircle, Search, Smartphone, Star, ShieldCheck, Check, Sparkles, FileText, Send, CheckCircle } from 'lucide-react'
+import { Zap, CheckCircle2, ArrowRight, XCircle, Search, Smartphone, Star, ShieldCheck, Check, Sparkles, FileText, Send, CheckCircle, Receipt, BookOpen, Briefcase } from 'lucide-react'
 
 export default function LandingPage() {
     return (
@@ -408,7 +408,7 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Video Demo Section */}
+            {/* Video Demo Section 
             <section style={{
                 padding: '80px 24px',
                 background: 'white',
@@ -446,6 +446,192 @@ export default function LandingPage() {
                             allowFullScreen
                             style={{ display: 'block' }}
                         ></iframe>
+                    </div>
+                </div>
+            </section>
+                */}
+            {/* Two Paths Section */}
+            <section style={{ padding: '100px 24px', background: '#f8fafc' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 64 }}>
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8,
+                            background: '#eff6ff', color: 'var(--brand-blue)',
+                            padding: '8px 16px', borderRadius: 30, fontSize: 13, fontWeight: 700, marginBottom: 20
+                        }}>
+                            <Sparkles size={15} /> Dos herramientas en una
+                        </div>
+                        <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, color: '#0f172a', marginBottom: 16, lineHeight: 1.1 }}>
+                            Elegí lo que necesitás hoy
+                        </h2>
+                        <p style={{ fontSize: 18, color: '#64748b', maxWidth: 540, margin: '0 auto' }}>
+                            Cada trabajo es distinto. Por eso tenés los dos caminos disponibles desde el primer día.
+                        </p>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: 32, alignItems: 'stretch' }}>
+
+                        {/* Card: Presupuesto */}
+                        <div style={{
+                            background: 'white', borderRadius: 24, padding: 40,
+                            border: '2px solid #dbeafe',
+                            boxShadow: '0 8px 32px rgba(37, 99, 235, 0.07)',
+                            display: 'flex', flexDirection: 'column', gap: 24
+                        }}>
+                            <div style={{
+                                display: 'flex', alignItems: 'center', gap: 14
+                            }}>
+                                <div style={{
+                                    background: 'linear-gradient(135deg, var(--brand-blue), var(--brand-accent))',
+                                    borderRadius: 14, padding: 12, display: 'flex', flexShrink: 0
+                                }}>
+                                    <FileText size={22} color="white" />
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--brand-accent)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>Flujo 1</div>
+                                    <div style={{ fontSize: 22, fontWeight: 900, color: '#0f172a' }}>Presupuesto</div>
+                                </div>
+                            </div>
+                            <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.7, margin: 0 }}>
+                                Antes del trabajo. Describís el servicio, el precio y lo enviás por WhatsApp. Tu cliente lo aprueba con un clic — y vos tenés la confirmación por escrito.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {['Cotizás sin verte en persona', 'El cliente acepta o rechaza online', 'Convertís en factura cuando termina el trabajo'].map((item, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                        <div style={{ background: '#dbeafe', borderRadius: '50%', padding: 4, display: 'flex', flexShrink: 0 }}>
+                                            <Check size={12} color="var(--brand-blue)" strokeWidth={3} />
+                                        </div>
+                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ marginTop: 'auto', background: '#eff6ff', borderRadius: 12, padding: '12px 16px', fontSize: 13, fontWeight: 600, color: 'var(--brand-blue)' }}>
+                                💡 Ideal para cotizar antes de arrancar el trabajo
+                            </div>
+                        </div>
+
+                        {/* Card: Factura Directa */}
+                        <div style={{
+                            background: 'white', borderRadius: 24, padding: 40,
+                            border: '2px solid #ede9fe',
+                            boxShadow: '0 8px 32px rgba(124, 58, 237, 0.07)',
+                            display: 'flex', flexDirection: 'column', gap: 24,
+                            position: 'relative', overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                position: 'absolute', top: 16, right: 16,
+                                background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                                color: 'white', padding: '4px 10px', borderRadius: 20,
+                                fontSize: 11, fontWeight: 700
+                            }}>NUEVO</div>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                                    borderRadius: 14, padding: 12, display: 'flex', flexShrink: 0
+                                }}>
+                                    <Receipt size={22} color="white" />
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: 11, fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>Flujo 2</div>
+                                    <div style={{ fontSize: 22, fontWeight: 900, color: '#0f172a' }}>Factura directa</div>
+                                </div>
+                            </div>
+                            <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.7, margin: 0 }}>
+                                Después del trabajo, o cuando necesitás el cobro ya. Cargás los ítems uno a uno — mano de obra, materiales, extras — y en segundos tenés un comprobante listo.
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {['Cargás los items que cobrás (sin límite)', 'Numeración correlativa automática', 'PDF o link listo para WhatsApp al toque'].map((item, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                        <div style={{ background: '#f5f3ff', borderRadius: '50%', padding: 4, display: 'flex', flexShrink: 0 }}>
+                                            <Check size={12} color="#7c3aed" strokeWidth={3} />
+                                        </div>
+                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ marginTop: 'auto', background: '#f5f3ff', borderRadius: 12, padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#7c3aed' }}>
+                                💡 Ideal para el trabajo que ya hiciste y querés cobrar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Invoice Value Section */}
+            <section style={{ padding: '100px 24px', background: 'white' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 64 }}>
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8,
+                            background: '#fef9c3', color: '#854d0e',
+                            padding: '8px 16px', borderRadius: 30, fontSize: 13, fontWeight: 700, marginBottom: 20
+                        }}>
+                            🇦🇷 Para los que trabajan en Argentina
+                        </div>
+                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 900, color: '#0f172a', marginBottom: 16, lineHeight: 1.1 }}>
+                            Una factura informal vale <span style={{ color: '#7c3aed' }}>más de lo que parece</span>
+                        </h2>
+                        <p style={{ fontSize: 17, color: '#64748b', maxWidth: 580, margin: '0 auto', lineHeight: 1.6 }}>
+                            No es para el fisco. Es para vos. Para el cliente. Para que dejes de perder trabajos en el caos de WhatsApp.
+                        </p>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 28 }}>
+                        {[
+                            {
+                                icon: '🏢',
+                                badge: 'Imagen profesional',
+                                badgeColor: '#1e40af',
+                                badgeBg: '#dbeafe',
+                                title: 'Te ven como una empresa, no como un trabajador suelto',
+                                desc: 'Un PDF con logo, número correlativo y desglose prolijo genera confianza instantánea. Y la confianza justifica cobrar mejor.',
+                                accent: '#dbeafe'
+                            },
+                            {
+                                icon: '📂',
+                                badge: 'Tu Registro Personal',
+                                badgeColor: '#7c3aed',
+                                badgeBg: '#f5f3ff',
+                                title: 'Sabés cuánto hiciste, a quién le cobraste y cuándo',
+                                desc: 'Hoy todo está lost en WhatsApp. Con PresupuestosYA tenés el historial completo de todos tus trabajos en un solo lugar.',
+                                accent: '#f5f3ff'
+                            },
+                            {
+                                icon: '🧾',
+                                badge: 'El cliente también lo necesita',
+                                badgeColor: '#15803d',
+                                badgeBg: '#dcfce7',
+                                title: 'Empresas y consorcios necesitan un comprobante aunque no sea fiscal',
+                                desc: 'Un PDF ordenado cumple esa función. El cliente te paga más rápido y sin excusas — y vos quedás como el profesional que resolvió el problema sin drama.',
+                                accent: '#dcfce7'
+                            }
+                        ].map((card, i) => (
+                            <div key={i} style={{
+                                background: 'white', borderRadius: 20, padding: 36,
+                                border: '1.5px solid var(--gray-100)',
+                                boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
+                                display: 'flex', flexDirection: 'column', gap: 16,
+                                transition: 'transform 0.2s, box-shadow 0.2s'
+                            }}
+                                className="btn-hover"
+                            >
+                                <div style={{ fontSize: 36 }}>{card.icon}</div>
+                                <div style={{
+                                    display: 'inline-flex', width: 'fit-content',
+                                    background: card.badgeBg, color: card.badgeColor,
+                                    padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700
+                                }}>
+                                    {card.badge}
+                                </div>
+                                <h3 style={{ fontSize: 17, fontWeight: 800, color: '#0f172a', lineHeight: 1.3, margin: 0 }}>
+                                    {card.title}
+                                </h3>
+                                <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.7, margin: 0 }}>
+                                    {card.desc}
+                                </p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
