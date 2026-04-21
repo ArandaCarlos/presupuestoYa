@@ -13,6 +13,7 @@ function LoginContent() {
     const [password, setPassword] = useState('')
     const [showPass, setShowPass] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [loadingGoogle, setLoadingGoogle] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
     
@@ -24,6 +25,23 @@ function LoginContent() {
         if (m === 'register') setMode('register')
         if (m === 'login') setMode('login')
     }, [searchParams])
+
+    const handleGoogleSignIn = async () => {
+        setLoadingGoogle(true)
+        setError('')
+        const supabase = createClient()
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: `${window.location.origin}/auth/callback`,
+            },
+        })
+        if (error) {
+            setError('No se pudo conectar con Google. Intentá de nuevo.')
+            setLoadingGoogle(false)
+        }
+        // Si no hay error el browser redirige automáticamente a Google
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -144,6 +162,52 @@ function LoginContent() {
                                 </button>
                             ))}
                         </div>
+                    )}
+
+                    {/* Botón Google */}
+                    {mode !== 'forgot' && (
+                        <>
+                            <button
+                                type="button"
+                                onClick={handleGoogleSignIn}
+                                disabled={loadingGoogle || loading}
+                                style={{
+                                    width: '100%',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                                    padding: '11px 16px',
+                                    background: 'white',
+                                    border: '1.5px solid #e2e8f0',
+                                    borderRadius: 10,
+                                    fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                                    color: '#374151',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.07)',
+                                    transition: 'all 0.15s',
+                                    marginBottom: 16,
+                                    opacity: loadingGoogle ? 0.7 : 1,
+                                }}
+                            >
+                                {loadingGoogle ? (
+                                    <span style={{ color: '#6b7280' }}>Conectando...</span>
+                                ) : (
+                                    <>
+                                        <svg width="18" height="18" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M47.532 24.552c0-1.636-.146-3.2-.418-4.698H24.48v8.88h12.984c-.56 3.018-2.252 5.574-4.8 7.288v6.056h7.764c4.544-4.186 7.104-10.35 7.104-17.526z" fill="#4285F4"/>
+                                            <path d="M24.48 48c6.52 0 11.99-2.162 15.986-5.858l-7.764-6.056c-2.156 1.446-4.912 2.302-8.222 2.302-6.322 0-11.678-4.27-13.594-10.01H2.87v6.248C6.848 42.61 15.07 48 24.48 48z" fill="#34A853"/>
+                                            <path d="M10.886 28.378A14.44 14.44 0 0 1 9.948 24c0-1.52.26-2.992.938-4.378v-6.248H2.87A23.976 23.976 0 0 0 .48 24c0 3.868.928 7.528 2.39 10.626l8.016-6.248z" fill="#FBBC05"/>
+                                            <path d="M24.48 9.612c3.562 0 6.756 1.224 9.276 3.632l6.948-6.948C36.466 2.424 30.998 0 24.48 0 15.07 0 6.848 5.39 2.87 13.374l8.016 6.248c1.916-5.74 7.272-10.01 13.594-10.01z" fill="#EA4335"/>
+                                        </svg>
+                                        Continuar con Google
+                                    </>
+                                )}
+                            </button>
+
+                            {/* Separador */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                                <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                                <span style={{ fontSize: 12, color: '#9ca3af', fontWeight: 500, whiteSpace: 'nowrap' }}>O continuá con email</span>
+                                <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                            </div>
+                        </>
                     )}
 
                     {error && (
